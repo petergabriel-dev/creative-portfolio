@@ -1,0 +1,895 @@
+{
+  "name": "Creative Portfolio — implementation handoff",
+  "generated": "2026-11-09",
+  "designSystem": "Cinematic Chapters",
+  "viewports": {
+    "desktop": "1440 px wide (CMS sidebar 264 px)",
+    "mobile": "390 px wide"
+  },
+  "links": {
+    "buildSpec": "https://claude.ai/artifact/Ce8HoZLvrg3DdQ2zMZihbS",
+    "prototype": "https://claude.ai/artifact/KLHKn717jgjPLW38tpBuD8"
+  },
+  "screens": [
+    {
+      "id": "01-home",
+      "title": "Home",
+      "area": "Site",
+      "route": "/",
+      "specSections": "Front-end pages › Home · Globals › home",
+      "prototypeArtboard": "Main.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/01-home.png",
+          "cssWidth": 1440,
+          "cssHeight": 6309,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/01-home.png",
+          "cssWidth": 390,
+          "cssHeight": 11100,
+          "scale": 1
+        }
+      },
+      "staticHtml": "screens/html/01-home.html"
+    },
+    {
+      "id": "02-portfolio",
+      "title": "Portfolio",
+      "area": "Site",
+      "route": "/portfolio",
+      "specSections": "Front-end pages › Portfolio",
+      "prototypeArtboard": "Portfolio.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/02-portfolio.png",
+          "cssWidth": 1440,
+          "cssHeight": 2323,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/02-portfolio.png",
+          "cssWidth": 390,
+          "cssHeight": 4505,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/02-portfolio.html"
+    },
+    {
+      "id": "03-collection-photography",
+      "title": "Collection — Photography (layout: projects)",
+      "area": "Site",
+      "route": "/portfolio/photography",
+      "specSections": "Front-end pages › Collection (projects) · Content model › disciplines",
+      "prototypeArtboard": "Photography.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/03-collection-photography.png",
+          "cssWidth": 1440,
+          "cssHeight": 3435,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/03-collection-photography.png",
+          "cssWidth": 390,
+          "cssHeight": 6264,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/03-collection-photography.html"
+    },
+    {
+      "id": "04-collection-film",
+      "title": "Collection — Film & Video (layout: projects)",
+      "area": "Site",
+      "route": "/portfolio/film-video",
+      "specSections": "Front-end pages › Collection (projects)",
+      "prototypeArtboard": "Film.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/04-collection-film.png",
+          "cssWidth": 1440,
+          "cssHeight": 3145,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/04-collection-film.png",
+          "cssWidth": 390,
+          "cssHeight": 4372,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/04-collection-film.html"
+    },
+    {
+      "id": "05-collection-design",
+      "title": "Collection — Design & Illustration (layout: projects)",
+      "area": "Site",
+      "route": "/portfolio/design-illustration",
+      "specSections": "Front-end pages › Collection (projects)",
+      "prototypeArtboard": "Design.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/05-collection-design.png",
+          "cssWidth": 1440,
+          "cssHeight": 3434,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/05-collection-design.png",
+          "cssWidth": 390,
+          "cssHeight": 5969,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/05-collection-design.html"
+    },
+    {
+      "id": "06-collection-writing",
+      "title": "Collection — Writing & More (layout: list)",
+      "area": "Site",
+      "route": "/portfolio/writing-more",
+      "specSections": "Front-end pages › Collection (list)",
+      "prototypeArtboard": "Writing.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/06-collection-writing.png",
+          "cssWidth": 1440,
+          "cssHeight": 2608,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/06-collection-writing.png",
+          "cssWidth": 390,
+          "cssHeight": 2928,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/06-collection-writing.html"
+    },
+    {
+      "id": "07-project",
+      "title": "Project page",
+      "area": "Site",
+      "route": "/portfolio/[collection]/[project]",
+      "specSections": "Front-end pages › Project · Story blocks · Content model › projects",
+      "prototypeArtboard": "Project.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/07-project.png",
+          "cssWidth": 1440,
+          "cssHeight": 5110,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/07-project.png",
+          "cssWidth": 390,
+          "cssHeight": 5399,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/07-project.html"
+    },
+    {
+      "id": "08-about",
+      "title": "About",
+      "area": "Site",
+      "route": "/about",
+      "specSections": "Front-end pages › About · Globals › about",
+      "prototypeArtboard": "About.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/08-about.png",
+          "cssWidth": 1440,
+          "cssHeight": 2423,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/08-about.png",
+          "cssWidth": 390,
+          "cssHeight": 3110,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/08-about.html"
+    },
+    {
+      "id": "09-journal",
+      "title": "Journal (page 1 + pagination)",
+      "area": "Site",
+      "route": "/journal",
+      "specSections": "Front-end pages › Journal · Content model › posts",
+      "prototypeArtboard": "Journal.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/09-journal.png",
+          "cssWidth": 1440,
+          "cssHeight": 3314,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/09-journal.png",
+          "cssWidth": 390,
+          "cssHeight": 3598,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/09-journal.html"
+    },
+    {
+      "id": "10-journal-entry",
+      "title": "Journal entry",
+      "area": "Site",
+      "route": "/journal/[slug]",
+      "specSections": "Front-end pages › Journal entry · Story blocks",
+      "prototypeArtboard": "Entry.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/10-journal-entry.png",
+          "cssWidth": 1440,
+          "cssHeight": 3988,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/10-journal-entry.png",
+          "cssWidth": 390,
+          "cssHeight": 3871,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/10-journal-entry.html"
+    },
+    {
+      "id": "11-book-me",
+      "title": "Book Me",
+      "area": "Site",
+      "route": "/book",
+      "specSections": "Book Me & inquiries · Front-end pages › Book Me",
+      "prototypeArtboard": "BookMe.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        },
+        {
+          "key": "errors",
+          "label": "Field errors (empty submit)"
+        },
+        {
+          "key": "sent",
+          "label": "Thank-you panel"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/11-book-me.png",
+          "cssWidth": 1440,
+          "cssHeight": 1789,
+          "scale": 2
+        },
+        "desktop:errors": {
+          "file": "screens/desktop/11-book-me--errors.png",
+          "cssWidth": 1440,
+          "cssHeight": 1881,
+          "scale": 2
+        },
+        "desktop:sent": {
+          "file": "screens/desktop/11-book-me--sent.png",
+          "cssWidth": 1440,
+          "cssHeight": 1789,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/11-book-me.png",
+          "cssWidth": 390,
+          "cssHeight": 2516,
+          "scale": 2
+        },
+        "mobile:errors": {
+          "file": "screens/mobile/11-book-me--errors.png",
+          "cssWidth": 390,
+          "cssHeight": 2662,
+          "scale": 2
+        },
+        "mobile:sent": {
+          "file": "screens/mobile/11-book-me--sent.png",
+          "cssWidth": 390,
+          "cssHeight": 2280,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/11-book-me.html"
+    },
+    {
+      "id": "12-not-found",
+      "title": "404 — Not found",
+      "area": "Site",
+      "route": "any missing route (not-found.tsx)",
+      "specSections": "Front-end pages › 404",
+      "prototypeArtboard": "NotFound.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/12-not-found.png",
+          "cssWidth": 1440,
+          "cssHeight": 872,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/12-not-found.png",
+          "cssWidth": 390,
+          "cssHeight": 1206,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/12-not-found.html"
+    },
+    {
+      "id": "20-cms-login",
+      "title": "Log in",
+      "area": "Studio CMS",
+      "route": "/admin/login",
+      "specSections": "Access control · Admin (Studio)",
+      "prototypeArtboard": "CmsLogin.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        },
+        {
+          "key": "error",
+          "label": "Sign-in error"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/20-cms-login.png",
+          "cssWidth": 1440,
+          "cssHeight": 800,
+          "scale": 2
+        },
+        "desktop:error": {
+          "file": "screens/desktop/20-cms-login--error.png",
+          "cssWidth": 1440,
+          "cssHeight": 800,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/20-cms-login.png",
+          "cssWidth": 390,
+          "cssHeight": 844,
+          "scale": 2
+        },
+        "mobile:error": {
+          "file": "screens/mobile/20-cms-login--error.png",
+          "cssWidth": 390,
+          "cssHeight": 863,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/20-cms-login.html"
+    },
+    {
+      "id": "21-cms-overview",
+      "title": "Overview dashboard",
+      "area": "Studio CMS",
+      "route": "/admin",
+      "specSections": "Admin (Studio) › Overview — custom",
+      "prototypeArtboard": "CmsOverview.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/21-cms-overview.png",
+          "cssWidth": 1440,
+          "cssHeight": 1096,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/21-cms-overview.png",
+          "cssWidth": 390,
+          "cssHeight": 2771,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/21-cms-overview.html"
+    },
+    {
+      "id": "22-cms-projects",
+      "title": "Projects list",
+      "area": "Studio CMS",
+      "route": "/admin/collections/projects",
+      "specSections": "Admin (Studio) › Projects list · Collection filter pills",
+      "prototypeArtboard": "CmsProjects.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/22-cms-projects.png",
+          "cssWidth": 1440,
+          "cssHeight": 1086,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/22-cms-projects.png",
+          "cssWidth": 390,
+          "cssHeight": 2198,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/22-cms-projects.html"
+    },
+    {
+      "id": "23-cms-project-editor",
+      "title": "Project editor",
+      "area": "Studio CMS",
+      "route": "/admin/collections/projects/[id]",
+      "specSections": "Admin (Studio) › Project editor · Content model › projects",
+      "prototypeArtboard": "CmsProjectEdit.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        },
+        {
+          "key": "seo",
+          "label": "SEO tab"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/23-cms-project-editor.png",
+          "cssWidth": 1440,
+          "cssHeight": 2549,
+          "scale": 2
+        },
+        "desktop:seo": {
+          "file": "screens/desktop/23-cms-project-editor--seo.png",
+          "cssWidth": 1440,
+          "cssHeight": 2549,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/23-cms-project-editor.png",
+          "cssWidth": 390,
+          "cssHeight": 4867,
+          "scale": 2
+        },
+        "mobile:seo": {
+          "file": "screens/mobile/23-cms-project-editor--seo.png",
+          "cssWidth": 390,
+          "cssHeight": 1903,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/23-cms-project-editor.html"
+    },
+    {
+      "id": "24-cms-collection-editor",
+      "title": "Collection editor",
+      "area": "Studio CMS",
+      "route": "/admin/collections/disciplines/[id]",
+      "specSections": "Content model › disciplines",
+      "prototypeArtboard": "CmsCollectionEdit.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        },
+        {
+          "key": "list",
+          "label": "Writing & More, list layout"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/24-cms-collection-editor.png",
+          "cssWidth": 1440,
+          "cssHeight": 1362,
+          "scale": 2
+        },
+        "desktop:list": {
+          "file": "screens/desktop/24-cms-collection-editor--list.png",
+          "cssWidth": 1440,
+          "cssHeight": 1362,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/24-cms-collection-editor.png",
+          "cssWidth": 390,
+          "cssHeight": 3442,
+          "scale": 2
+        },
+        "mobile:list": {
+          "file": "screens/mobile/24-cms-collection-editor--list.png",
+          "cssWidth": 390,
+          "cssHeight": 2974,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/24-cms-collection-editor.html"
+    },
+    {
+      "id": "25-cms-journal",
+      "title": "Journal posts + categories",
+      "area": "Studio CMS",
+      "route": "/admin/collections/posts",
+      "specSections": "Admin (Studio) › Journal · Content model › posts, categories",
+      "prototypeArtboard": "CmsJournal.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/25-cms-journal.png",
+          "cssWidth": 1440,
+          "cssHeight": 921,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/25-cms-journal.png",
+          "cssWidth": 390,
+          "cssHeight": 1836,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/25-cms-journal.html"
+    },
+    {
+      "id": "26-cms-post-editor",
+      "title": "Post editor",
+      "area": "Studio CMS",
+      "route": "/admin/collections/posts/[id]",
+      "specSections": "Content model › posts · Story blocks",
+      "prototypeArtboard": "CmsPostEdit.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/26-cms-post-editor.png",
+          "cssWidth": 1440,
+          "cssHeight": 2349,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/26-cms-post-editor.png",
+          "cssWidth": 390,
+          "cssHeight": 3888,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/26-cms-post-editor.html"
+    },
+    {
+      "id": "27-cms-inquiries",
+      "title": "Inquiries inbox (two-panel)",
+      "area": "Studio CMS",
+      "route": "/admin/collections/inquiries",
+      "specSections": "Admin (Studio) › Inquiries + Two-panel inbox · Book Me & inquiries",
+      "prototypeArtboard": "CmsInquiries.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/27-cms-inquiries.png",
+          "cssWidth": 1440,
+          "cssHeight": 921,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/27-cms-inquiries.png",
+          "cssWidth": 390,
+          "cssHeight": 2237,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/27-cms-inquiries.html"
+    },
+    {
+      "id": "28-cms-media",
+      "title": "Media library",
+      "area": "Studio CMS",
+      "route": "/admin/collections/media",
+      "specSections": "Content model › media · Media handling",
+      "prototypeArtboard": "CmsMedia.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/28-cms-media.png",
+          "cssWidth": 1440,
+          "cssHeight": 1143,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/28-cms-media.png",
+          "cssWidth": 390,
+          "cssHeight": 3730,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/28-cms-media.html"
+    },
+    {
+      "id": "29-cms-site-settings",
+      "title": "Site settings",
+      "area": "Studio CMS",
+      "route": "/admin/globals/site-settings",
+      "specSections": "Globals › site-settings · Admin › Accent swatches",
+      "prototypeArtboard": "CmsSettings.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/29-cms-site-settings.png",
+          "cssWidth": 1440,
+          "cssHeight": 1551,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/29-cms-site-settings.png",
+          "cssWidth": 390,
+          "cssHeight": 3601,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/29-cms-site-settings.html"
+    },
+    {
+      "id": "30-cms-home",
+      "title": "Home page global",
+      "area": "Studio CMS",
+      "route": "/admin/globals/home",
+      "specSections": "Globals › home · Admin › “Changed from the prototype”",
+      "prototypeArtboard": "CmsHome.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/30-cms-home.png",
+          "cssWidth": 1440,
+          "cssHeight": 2249,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/30-cms-home.png",
+          "cssWidth": 390,
+          "cssHeight": 4690,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/30-cms-home.html"
+    },
+    {
+      "id": "31-cms-about",
+      "title": "About page global",
+      "area": "Studio CMS",
+      "route": "/admin/globals/about",
+      "specSections": "Globals › about",
+      "prototypeArtboard": "CmsAbout.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/31-cms-about.png",
+          "cssWidth": 1440,
+          "cssHeight": 1488,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/31-cms-about.png",
+          "cssWidth": 390,
+          "cssHeight": 2876,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/31-cms-about.html"
+    },
+    {
+      "id": "40-site-header",
+      "title": "Site header (light tone; dark tone shown on page openers)",
+      "area": "Components",
+      "route": "component",
+      "specSections": "Front-end pages › Shared pieces · Design system",
+      "prototypeArtboard": "SiteHeader.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/40-site-header.png",
+          "cssWidth": 1440,
+          "cssHeight": 94,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/40-site-header.png",
+          "cssWidth": 390,
+          "cssHeight": 200,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/40-site-header.html"
+    },
+    {
+      "id": "41-site-footer",
+      "title": "Site footer",
+      "area": "Components",
+      "route": "component",
+      "specSections": "Front-end pages › Shared pieces",
+      "prototypeArtboard": "SiteFooter.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/41-site-footer.png",
+          "cssWidth": 1440,
+          "cssHeight": 232,
+          "scale": 2
+        },
+        "mobile": {
+          "file": "screens/mobile/41-site-footer.png",
+          "cssWidth": 390,
+          "cssHeight": 443,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/41-site-footer.html"
+    },
+    {
+      "id": "42-cms-sidebar",
+      "title": "Studio sidebar (admin.group nav)",
+      "area": "Components",
+      "route": "component",
+      "specSections": "Admin (Studio) › Sidebar, Logo, “3 new” badge",
+      "prototypeArtboard": "CmsNav.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/42-cms-sidebar.png",
+          "cssWidth": 264,
+          "cssHeight": 921,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/42-cms-sidebar.html"
+    },
+    {
+      "id": "43-ui-kit",
+      "title": "UI kit — colour, type, rhythm, buttons, photos, cards",
+      "area": "Components",
+      "route": "reference",
+      "specSections": "Design system",
+      "prototypeArtboard": "UIKit.dc.html",
+      "states": [
+        {
+          "key": "default",
+          "label": "Default"
+        }
+      ],
+      "images": {
+        "desktop": {
+          "file": "screens/desktop/43-ui-kit.png",
+          "cssWidth": 1440,
+          "cssHeight": 4961,
+          "scale": 2
+        }
+      },
+      "staticHtml": "screens/html/43-ui-kit.html"
+    }
+  ]
+}

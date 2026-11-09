@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head><style>
+    .sc-placeholder{background:color-mix(in srgb,currentColor 8%,transparent);
+      border:1px solid color-mix(in srgb,currentColor 50%,transparent);
+      border-radius:2px;box-sizing:border-box;overflow:hidden}
+    @keyframes sc-shine{0%{background-position:100% 50%}100%{background-position:0% 50%}}
+    html.sc-dc-streaming .sc-placeholder,
+    html.sc-dc-streaming .sc-interp.sc-missing{position:relative;
+      background:color-mix(in srgb,currentColor 5%,transparent);
+      border-color:transparent}
+    html.sc-dc-streaming .sc-placeholder::before,
+    html.sc-dc-streaming .sc-interp.sc-missing::before{content:'';
+      position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(90deg,rgba(217,119,87,0) 25%,rgba(247,225,211,.95) 37%,rgba(217,119,87,0) 63%);
+      background-size:400% 100%;animation:sc-shine 1.4s ease infinite}
+    html.sc-dc-streaming .sc-placeholder:nth-child(n+9 of .sc-placeholder)::before,
+    html.sc-dc-streaming .sc-interp.sc-missing:nth-child(n+9 of .sc-interp.sc-missing)::before{animation:none;
+      background:color-mix(in srgb,currentColor 8%,transparent)}
+    .sc-placeholder-error{padding:4px 8px;font:11px/1.4 ui-monospace,monospace;
+      color:color-mix(in srgb,currentColor 70%,transparent);word-break:break-word}
+    .sc-interp.sc-missing{display:inline-block;width:2em;height:1em;overflow:hidden;
+      vertical-align:text-bottom;background:rgba(255,255,255,.3);border:1px solid rgba(0,0,0,.5);
+      border-radius:2px;box-sizing:border-box;color:transparent;
+      user-select:none}
+    .sc-interp.sc-unresolved{font-family:ui-monospace,monospace;font-size:.85em;
+      color:color-mix(in srgb,currentColor 50%,transparent);
+      background:color-mix(in srgb,currentColor 10%,transparent);border-radius:3px;
+      padding:0 3px}
+    .sc-host.sc-has-error{position:relative}
+    .sc-logic-error{position:absolute;top:8px;left:8px;z-index:2147483647;max-width:60ch;
+      padding:6px 10px;background:#b00020;color:#fff;font:12px/1.4 ui-monospace,monospace;
+      border-radius:4px;white-space:pre-wrap;pointer-events:none}
+    /* Mirrors PRINT_BASELINE_CSS in apps/web deck-stage-export.ts — keep both
+       in sync until dc-runtime regains a build step. */
+    @media print {
+      @page { margin: 0.5cm; }
+      figure, table { break-inside: avoid; }
+      #dc-root, #dc-root > .sc-host { height: auto; }
+      *, *::before, *::after {
+        print-color-adjust: exact; -webkit-print-color-adjust: exact;
+        backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+        animation-delay: -99s !important; animation-duration: .001s !important;
+        animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+        animation-play-state: running !important; transition-duration: 0s !important;
+      }
+    }
+  </style>
+<meta charset="utf-8">
+<title>Page not found — Your Name</title>
+<style>x-dc{display:none!important}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;500;600&amp;display=swap" data-dc-tpl="1"><style data-dc-tpl="2">
+body{margin:0;background:#2B2925}
+a{color:#1B1A17;text-decoration:none;transition:opacity .15s ease}
+a:hover{opacity:.75}
+a:focus-visible,button:focus-visible{outline:2px solid #1B1A17;outline-offset:2px;box-shadow:0 0 0 4px #F3F1EC !important}
+</style><style data-dc-tpl="2">
+body{margin:0}
+</style><style data-dc-tpl="2">
+body{margin:0}
+</style><style></style></head>
+<body>
+<div id="dc-root"><div class="sc-host" data-sc-name="NotFound"><div data-dc-tpl="3" style="font-family: Inter, system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif; color: rgb(27, 26, 23); background: rgb(243, 241, 236); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;"><section data-dc-tpl="4" aria-labelledby="nf-title" style="background: rgb(43, 41, 37); color: rgb(243, 241, 236); min-height: 640px; display: flex; flex-direction: column;"><div class="sc-host" data-sc-name="SiteHeader" data-dc-tpl="5"><header data-dc-tpl="3" style="padding: 24px clamp(20px, 5vw, 64px); background: transparent; color: rgb(243, 241, 236); font-family: Inter, system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif; line-height: 1.6;"><div data-dc-tpl="4" style="max-width: 1312px; margin: 0px auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px;"><a data-dc-tpl="5" href="01-home.html" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: rgb(243, 241, 236); font-size: 14px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; text-decoration: none;"><svg data-dc-tpl="6" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4"><circle data-dc-tpl="7" cx="13" cy="13" r="11.5"></circle><circle data-dc-tpl="8" cx="13" cy="13" r="5"></circle></svg><span data-dc-tpl="9">Your Name</span></a><nav data-dc-tpl="10" aria-label="Primary" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 36px; font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;"><a data-dc-tpl="11" href="01-home.html" aria-current="false" style="padding: 14px 0px 10px; border-bottom: 2px solid transparent; color: rgb(243, 241, 236); text-decoration: none;">Home</a><a data-dc-tpl="12" href="02-portfolio.html" aria-current="false" style="padding: 14px 0px 10px; border-bottom: 2px solid transparent; color: rgb(243, 241, 236); text-decoration: none;">Portfolio</a><a data-dc-tpl="13" href="08-about.html" aria-current="false" style="padding: 14px 0px 10px; border-bottom: 2px solid transparent; color: rgb(243, 241, 236); text-decoration: none;">About</a><a data-dc-tpl="14" href="09-journal.html" aria-current="false" style="padding: 14px 0px 10px; border-bottom: 2px solid transparent; color: rgb(243, 241, 236); text-decoration: none;">Journal</a><a data-dc-tpl="15" href="11-book-me.html" aria-current="false" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0px 22px; border: 1px solid rgba(243, 241, 236, 0.7); border-radius: 999px; background: transparent; color: rgb(243, 241, 236); text-decoration: none;">Book Me</a></nav></div></header></div><div data-dc-tpl="6" style="flex: 1 1 0%; display: flex; align-items: flex-end; padding: 48px clamp(20px, 5vw, 64px) 80px;"><div data-dc-tpl="7" style="width: 100%; max-width: 1312px; margin: 0px auto; display: flex; flex-direction: column; gap: 20px;"><span data-dc-tpl="8" aria-hidden="true" style="width: 28px; height: 2px; background: rgb(243, 241, 236);"></span><p data-dc-tpl="9" style="margin: -4px 0px 0px; font-size: 18px; color: rgb(230, 225, 216);">404 · Page not found</p><h1 data-dc-tpl="10" id="nf-title" style="margin: 0px; font-family: &quot;Bebas Neue&quot;, Oswald, Impact, &quot;Arial Narrow&quot;, sans-serif; font-weight: 400; font-size: clamp(88px, 12vw, 184px); line-height: 0.86;">Nothing here</h1><p data-dc-tpl="11" style="margin: 0px; max-width: 48ch; font-size: 16px; line-height: 1.7; color: rgb(207, 200, 187);">The page you're after has moved, or never existed. Try one of these instead.</p><div data-dc-tpl="12" style="display: flex; flex-wrap: wrap; gap: 12px 16px; padding-top: 6px;"><a data-dc-tpl="13" href="01-home.html" style="display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0px 28px; border: 1px solid rgba(243, 241, 236, 0.7); border-radius: 999px; color: rgb(243, 241, 236); font-size: 13px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;">Back to home</a><a data-dc-tpl="14" href="02-portfolio.html" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0px 8px; color: rgb(243, 241, 236); font-size: 14px; font-weight: 500; text-decoration: underline; text-underline-offset: 5px;">Browse the portfolio →</a></div></div></div></section><div class="sc-host" data-sc-name="SiteFooter" data-dc-tpl="15"><footer data-dc-tpl="3" style="background: rgb(27, 26, 23); color: rgb(207, 200, 187); padding: 56px clamp(20px, 5vw, 64px) 40px; font-family: Inter, system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif; font-size: 14px; line-height: 1.6;"><div data-dc-tpl="4" style="max-width: 1312px; margin: 0px auto; display: flex; flex-direction: column; gap: 40px;"><div data-dc-tpl="5" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 32px 48px;"><div data-dc-tpl="6" style="display: flex; flex-direction: column; gap: 8px;"><a data-dc-tpl="7" href="01-home.html" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: rgb(243, 241, 236); font-size: 14px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; text-decoration: none;"><svg data-dc-tpl="8" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4"><circle data-dc-tpl="9" cx="13" cy="13" r="11.5"></circle><circle data-dc-tpl="10" cx="13" cy="13" r="5"></circle></svg><span data-dc-tpl="11">Your Name</span></a><span data-dc-tpl="12">Multidisciplinary creative · [City, Country]</span></div><nav data-dc-tpl="13" aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 4px 28px;"><a data-dc-tpl="14" href="01-home.html" style="padding: 12px 0px; color: rgb(207, 200, 187); text-decoration: none;">Home</a><a data-dc-tpl="15" href="02-portfolio.html" style="padding: 12px 0px; color: rgb(207, 200, 187); text-decoration: none;">Portfolio</a><a data-dc-tpl="16" href="08-about.html" style="padding: 12px 0px; color: rgb(207, 200, 187); text-decoration: none;">About</a><a data-dc-tpl="17" href="09-journal.html" style="padding: 12px 0px; color: rgb(207, 200, 187); text-decoration: none;">Journal</a><a data-dc-tpl="18" href="11-book-me.html" style="padding: 12px 0px; color: rgb(207, 200, 187); text-decoration: none;">Book Me</a></nav><div data-dc-tpl="19" style="display: flex; flex-direction: column; gap: 6px;"><span data-dc-tpl="20">[your@email.com]</span><span data-dc-tpl="21">[Instagram] · [Other social]</span></div></div><p data-dc-tpl="22" style="margin: 0px; font-size: 13px; color: rgb(183, 177, 166);">© 2026 Your Name. All work by Your Name.</p></div></footer></div></div></div></div>
+
+
+
+</body></html>
