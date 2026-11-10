@@ -1,0 +1,57 @@
+/* Shared by CollectionTile and ProjectCard: one block link, image then text. */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+  color: var(--color-text);
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.meta {
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+.title {
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--fs-card);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-card);
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.body {
+  color: var(--color-text-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.cta {
+  align-self: flex-start;
+  color: var(--color-text);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  text-decoration-line: underline;
+  text-underline-offset: var(--underline-offset);
+}
+
+/* Hover and active thicken the underline; colours never change. */
+.card:hover .cta,
+.card:active .cta {
+  text-decoration-thickness: var(--border-strong);
+}

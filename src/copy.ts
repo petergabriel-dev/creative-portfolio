@@ -45,6 +45,26 @@ export const copy = {
     /** Leading arrow on "Back to portfolio"; hidden from screen readers. */
     backArrow: '←',
   },
+  portfolio: {
+    contextLine: 'Four collections · photography, film, design and words',
+    title: 'Portfolio',
+    lead: 'Each collection gathers my strongest work, with individual projects inside — so you can see how each one came together, start to finish.',
+    tileLabel: (n: number) => `Collection ${String(n).padStart(2, '0')}`,
+    viewCollection: 'View collection',
+  },
+  collection: {
+    contextLine: (n: number) => `Collection ${String(n).padStart(2, '0')}`,
+    seeProjects: 'See the projects',
+    highlights: 'Highlights',
+    highlightsAside: 'A best-of selection across every project in this collection.',
+    projects: 'Projects',
+    selectedPieces: 'Selected pieces',
+    /** Shown instead of a grid when a collection has no published projects. */
+    empty: 'New work is on its way',
+    moreProjects: 'More projects',
+    viewProject: 'View project',
+    read: 'Read',
+  },
   details: {
     collection: 'Collection',
     type: 'Type',

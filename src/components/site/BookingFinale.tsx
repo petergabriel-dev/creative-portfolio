@@ -32,9 +32,11 @@ export function BookingFinale({ headline, body, bookingLabel, secondary }: Booki
               {secondary.label}
             </Button>
           ) : null}
-          <Button href={BOOK_HREF} size="primary" variant="gold">
-            {bookingLabel}
-          </Button>
+          {bookingLabel.trim() ? (
+            <Button href={BOOK_HREF} size="primary" variant="gold">
+              {bookingLabel}
+            </Button>
+          ) : null}
         </div>
       </div>
     </section>
