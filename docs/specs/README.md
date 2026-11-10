@@ -17,7 +17,7 @@ Status values: `Draft` → `Ready` (blocking questions resolved) → `In progres
 
 When sources disagree, the higher one wins:
 
-1. User decisions from 2026-11-10, recorded in this README and in [`docs/engineering/decisions/`](../engineering/decisions/README.md)
+1. User decisions from 2026-11-10, recorded in this README, in each phase spec's "Owner decisions" section and in [`docs/engineering/decisions/`](../engineering/decisions/README.md)
 2. The Build Spec, [`build-spec.md`](../design/reference/creative-portfolio/build-spec.md) (6 Nov 2026)
 3. Handoff captures (9 Nov 2026). These are the visual target.
 
@@ -36,7 +36,7 @@ The Build Spec has its own eight-step build order, layer by layer ("Build order 
 | Phase | Spec | Goal | Depends on | Site screens | Studio screens | Status |
 |---|---|---|---|---|---|---|
 | P0 Foundation | `phase-0-foundation.md` | A deployable Next.js + Payload app on a Vercel preview. Site header, footer and 404 read `site-settings`; media uploads to Blob | — | 12, 40, 41 (43 as reference) | 20, 28, 29 as default views | Done |
-| P1 Portfolio | `phase-1-portfolio.md` | The owner publishes projects into four collections. Visitors browse Portfolio → collection → project | P0 | 02–07 | 22, 23, 24 as default views | Draft |
+| P1 Portfolio | `phase-1-portfolio.md` | The owner publishes projects into four collections. Visitors browse Portfolio → collection → project | P0 | 02–07 | 22, 23, 24 as default views | In progress |
 | P2 Journal | `phase-2-journal.md` | The owner publishes journal posts. Visitors read the paged list and the entries | P1 | 09, 10 | 25, 26 as default views | Draft |
 | P3 Book Me | `phase-3-book-me.md` | Visitors send inquiries. The owner gets an email alert and handles inquiries in the Studio | P0, P1 | 11 (+ errors, sent) | 27 as default view | Draft |
 | P4 Home + About | `phase-4-home-about.md` | The `home` and `about` globals drive the Home and About pages. Adds the hero slider and Selected work | P1, P2 | 01, 08 | 30, 31 as default views | Draft |
@@ -157,7 +157,7 @@ The owner answers these. Resolve a **Blocking** question before running `/pi-pla
 | Question | Phase | Blocking | Status |
 |---|---|---|---|
 | Which region should the Vercel functions and Neon use? | P0 | Yes | Resolved 2026-11-10: Singapore (`sin1`, `aws-ap-southeast-1`) |
-| Where should slug redirects be stored: a small `redirects` collection or Payload's redirects plugin? | P1 | Yes | Open |
+| Where should slug redirects be stored: a small `redirects` collection or Payload's redirects plugin? | P1 | Yes | Resolved 2026-11-10: neither. Old slugs stay on the doc (`previousSlugs`) and old URLs 308 to the canonical one |
 | If `/journal?page=N` is out of range or not a number, show a 404 or clamp to a valid page? The spec proposes 404. | P2 | No | Open |
 | Should visitors get an automatic "I've got your message" email, or only the editor alert? | P3 | No | Open |
 | How long are inquiries kept before they are archived or deleted? | P3 | No | Open |
