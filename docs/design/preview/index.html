@@ -4,24 +4,109 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Design system gallery</title>
-  <!-- Add stylesheet links for tokenFiles declared in ../manifest.json. -->
+  <!-- tokenFiles from ../manifest.json -->
+  <link rel="stylesheet" href="../../../src/styles/tokens.css">
 </head>
-<body>
-  <!-- Projects with a .dark-class base system (for example, shadcn) should toggle that class instead. -->
-  <button type="button" data-theme-toggle aria-pressed="false">Toggle theme</button>
-  <header><h1>Design system gallery</h1></header>
+<!--
+  Creative Portfolio has one colour scheme (see ../README.md), so there is no theme toggle.
+  These are token-only approximations for review: inline styles use var(--*) values only,
+  so layout is a single stacked column. The specs in ../components/ are authoritative.
+-->
+<body style="background-color: var(--color-page); color: var(--color-text); font-family: var(--font-body); font-size: var(--fs-body); line-height: var(--lh-body)">
+  <header style="padding: var(--space-8) var(--gutter)">
+    <h1 style="font-family: var(--font-display); font-size: var(--fs-section); font-weight: var(--fw-regular); line-height: var(--lh-section)">DESIGN SYSTEM GALLERY</h1>
+    <p style="color: var(--color-text-muted)">Creative Portfolio · Cinematic Chapters · P1 components.</p>
+  </header>
   <main>
-    <!-- Single-column vertical layout: stack sections; do not use grid galleries. -->
-    <nav aria-label="Preview examples"><a href="example.html">Example screen</a></nav>
+    <nav aria-label="Preview examples" style="padding: var(--space-2) var(--gutter)"><a href="example.html">Example screen</a></nav>
+
+    <section aria-labelledby="pv-opener" style="background-color: var(--color-surface-opener-photo); color: var(--color-on-dark-heading); padding: var(--space-12) var(--gutter) var(--space-20)">
+      <h2 id="pv-opener" style="font-size: var(--fs-label); letter-spacing: var(--tracking-label); color: var(--color-on-dark-subtle)">CHAPTEROPENER · SPLIT · PHOTO TINT · BREADCRUMB</h2>
+      <p style="font-size: var(--fs-lead); color: var(--color-on-dark-strong)"><a href="#pv-opener" style="color: var(--color-on-dark-strong); text-underline-offset: var(--underline-offset)">Portfolio</a> <span aria-hidden="true">·</span> Collection 01</p>
+      <p style="font-family: var(--font-display); font-size: var(--fs-display); line-height: var(--lh-display)">PHOTOGRAPHY</p>
+      <p style="max-width: var(--measure-body); color: var(--color-on-dark); line-height: var(--lh-body-loose)">People, places and occasions — weddings and events, portraits and the outdoors.</p>
+      <p>
+        <a href="#pv-opener" style="background-color: var(--color-booking); color: var(--color-on-booking); border-radius: var(--radius-pill); padding: var(--space-3) var(--space-7); font-size: var(--fs-label-lg); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label)">BOOK ME</a>
+        <a href="#pv-opener" style="color: var(--color-on-dark-heading); border: var(--border-hairline) solid var(--color-outline-on-dark); border-radius: var(--radius-pill); padding: var(--space-3) var(--space-7); font-size: var(--fs-label-lg); letter-spacing: var(--tracking-label)">SEE THE PROJECTS</a>
+      </p>
+      <dl style="border-top: var(--border-hairline) solid var(--color-rule-on-dark); padding-top: var(--space-6)">
+        <dt style="font-size: var(--fs-label); letter-spacing: var(--tracking-label); color: var(--color-on-dark-subtle)">COLLECTION</dt>
+        <dd style="color: var(--color-on-dark-heading)">[Collection]</dd>
+        <dt style="font-size: var(--fs-label); letter-spacing: var(--tracking-label); color: var(--color-on-dark-subtle)">MY ROLE</dt>
+        <dd style="color: var(--color-on-dark-heading)">[Your role] · DetailsStrip, tone dark</dd>
+      </dl>
+    </section>
+
+    <section aria-labelledby="pv-chapter" style="padding: var(--section-y) var(--gutter)">
+      <p style="font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">CHAPTER 01</p>
+      <h2 id="pv-chapter" style="font-family: var(--font-display); font-size: var(--fs-section); font-weight: var(--fw-regular); line-height: var(--lh-section)">HIGHLIGHTS</h2>
+      <p style="max-width: var(--measure-body); color: var(--color-text-muted)">ChapterHeading with aside: a best-of selection across every project in this collection.</p>
+    </section>
+
+    <section aria-labelledby="pv-filmstrip" style="padding-bottom: var(--section-y)">
+      <h2 id="pv-filmstrip" style="padding: var(--space-4) var(--gutter); font-size: var(--fs-label); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">FILMSTRIP · BLEED · MEDIAIMAGE FRAMES (TINT WHILE LOADING)</h2>
+      <div aria-hidden="true" style="background-color: var(--color-frame); padding-block: var(--space-20); margin-bottom: var(--gap-photos)"></div>
+      <div aria-hidden="true" style="background-color: var(--color-frame-alt); padding-block: var(--space-20); margin-bottom: var(--gap-photos)"></div>
+      <div aria-hidden="true" style="background-color: var(--color-frame); padding-block: var(--space-20)"></div>
+    </section>
+
+    <section aria-labelledby="pv-cards" style="padding: var(--section-y) var(--gutter)">
+      <h2 id="pv-cards" style="font-size: var(--fs-label); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">COLLECTIONTILE · PROJECTCARD</h2>
+      <a href="#pv-cards" style="color: var(--color-text)">
+        <div aria-hidden="true" style="background-color: var(--color-frame); padding-block: var(--space-20)"></div>
+        <span style="font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">COLLECTION 01</span><br>
+        <span style="font-family: var(--font-display); font-size: var(--fs-card); line-height: var(--lh-card)">PHOTOGRAPHY</span><br>
+        <span style="color: var(--color-text-muted)">People, places and occasions.</span><br>
+        <span style="font-size: var(--fs-sm); font-weight: var(--fw-medium); text-underline-offset: var(--underline-offset)">View collection <span aria-hidden="true">→</span></span>
+      </a>
+      <p style="padding-top: var(--space-12)">
+        <span style="font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">WEDDING · [YEAR]</span><br>
+        <a href="#pv-cards" style="font-family: var(--font-display); font-size: var(--fs-card); line-height: var(--lh-card); color: var(--color-text)">[COUPLE NAMES]</a>
+      </p>
+    </section>
+
+    <section aria-labelledby="pv-rows" style="padding: var(--section-y) var(--gutter)">
+      <h2 id="pv-rows" style="font-size: var(--fs-label); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">PIECEROW · REVEALMORE</h2>
+      <p style="border-top: var(--border-hairline) solid var(--color-rule); border-bottom: var(--border-hairline) solid var(--color-rule); padding-block: var(--space-9)">
+        <span style="font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">ESSAY · [PUBLICATION] · [YEAR]</span><br>
+        <a href="#pv-rows" style="font-family: var(--font-display); font-size: var(--fs-card); line-height: var(--lh-card); color: var(--color-text)">[ESSAY TITLE]</a><br>
+        <span style="font-size: var(--fs-lead); color: var(--color-text-muted)">[The opening line of the essay.]</span>
+      </p>
+      <p style="padding-top: var(--space-10)"><button type="button" style="min-height: var(--tap-primary); padding: var(--space-3) var(--space-7); border: var(--border-hairline) solid var(--color-action); border-radius: var(--radius-pill); background-color: var(--color-page); color: var(--color-text); font-size: var(--fs-label-lg); font-weight: var(--fw-medium); letter-spacing: var(--tracking-label)">MORE PROJECTS</button></p>
+    </section>
+
+    <section aria-labelledby="pv-story" style="padding: var(--section-y) var(--gutter)">
+      <h2 id="pv-story" style="font-size: var(--fs-label); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">STORYBLOCKS · TEXT, QUOTE · DETAILSSTRIP LIGHT</h2>
+      <p style="max-width: var(--measure-story); font-size: var(--fs-lead); line-height: var(--lh-story)">[What the project was, who it was for, and what it needed to say.] <a href="#pv-story" style="color: var(--color-text); text-underline-offset: var(--underline-offset)">A safe link</a>.</p>
+      <figure style="max-width: var(--max-width-narrow); padding-block: var(--space-10)">
+        <blockquote style="font-family: var(--font-display); font-size: var(--fs-quote); line-height: var(--lh-card)">[A LINE FROM THE CLIENT OR COLLABORATOR ABOUT THE WORK.]</blockquote>
+        <figcaption style="font-size: var(--fs-sm); color: var(--color-text-muted)">[Name, role]</figcaption>
+      </figure>
+      <dl style="max-width: var(--max-width-story); border-top: var(--border-hairline) solid var(--color-rule)">
+        <dt style="padding-top: var(--space-5); font-size: var(--fs-label); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">COLLABORATORS</dt>
+        <dd style="padding-bottom: var(--space-5); border-bottom: var(--border-hairline) solid var(--color-rule)">[Names and roles]</dd>
+      </dl>
+    </section>
+
+    <section aria-labelledby="pv-video" style="padding: var(--section-y) var(--gutter)">
+      <h2 id="pv-video" style="font-size: var(--fs-label); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">VIDEOEMBED · NO POSTER (TINTED FRAME)</h2>
+      <figure style="max-width: var(--max-width-story)">
+        <div style="background-color: var(--color-surface-opener); padding: var(--space-20) var(--gutter)">
+          <button type="button" aria-label="Play video: [Caption]" style="width: var(--play-size); height: var(--play-size); border: var(--border-hairline) solid var(--color-outline-on-dark); border-radius: var(--radius-pill); background-color: var(--color-play-scrim); color: var(--color-on-dark-heading)"><span aria-hidden="true">▶</span></button>
+        </div>
+        <figcaption style="padding-top: var(--space-2); font-size: var(--fs-caption); color: var(--color-text-muted)">[Caption] · nothing loads from the provider until the click</figcaption>
+      </figure>
+    </section>
+
+    <section aria-labelledby="pv-finale" style="background-color: var(--color-surface-finale); color: var(--color-on-dark-heading); padding: var(--finale-y) var(--gutter)">
+      <p style="font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label); color: var(--color-booking)">BOOK ME</p>
+      <h2 id="pv-finale" style="max-width: var(--max-width-narrow); font-family: var(--font-display); font-size: var(--fs-finale); font-weight: var(--fw-regular); line-height: var(--lh-finale)">HAVE A PROJECT IN MIND?</h2>
+      <p style="max-width: var(--measure-body); font-size: var(--fs-lead); color: var(--color-on-dark)">BookingFinale: the discipline's finale copy on project pages.</p>
+      <p style="padding-top: var(--space-2)">
+        <a href="#pv-finale" style="color: var(--color-on-dark-heading); border: var(--border-hairline) solid var(--color-outline-on-dark); border-radius: var(--radius-pill); padding: var(--space-3) var(--space-7); font-size: var(--fs-label-lg); letter-spacing: var(--tracking-label)"><span aria-hidden="true">←</span> BACK TO PORTFOLIO</a>
+        <a href="#pv-finale" style="background-color: var(--color-booking); color: var(--color-on-booking); border-radius: var(--radius-pill); padding: var(--space-3) var(--space-7); font-size: var(--fs-label-lg); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label)">BOOK ME</a>
+      </p>
+    </section>
   </main>
-  <script>
-    const themeToggle = document.querySelector("[data-theme-toggle]");
-    themeToggle?.addEventListener("click", () => {
-      const root = document.documentElement;
-      const dark = root.dataset.theme !== "dark";
-      root.dataset.theme = dark ? "dark" : "light";
-      themeToggle.setAttribute("aria-pressed", String(dark));
-    });
-  </script>
 </body>
 </html>
