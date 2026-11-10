@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["sin1"],
+  "buildCommand": "pnpm payload migrate && pnpm build",
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  }
+}
