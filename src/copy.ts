@@ -9,4 +9,12 @@ export const copy = {
   },
   /** Trailing arrow on text-link buttons; hidden from screen readers. */
   arrow: '→',
+  nav: {
+    /** aria-label of the header navigation. */
+    label: 'Main',
+    home: 'Home',
+    portfolio: 'Portfolio',
+    about: 'About',
+    journal: 'Journal',
+  },
 } as const
