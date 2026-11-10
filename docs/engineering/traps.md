@@ -41,12 +41,20 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 
 ## Next.js
 
+- **Preview builds can fail transiently in `next/font/google`** (Turbopack): "Can't resolve '@vercel/turbopack-next/internal/font/google/font'" / "next/font/google queries have exactly one entry". The same commit built fine on redeploy (`vercel redeploy <deployment> --environment preview`).
+
 - **The 404 needs JavaScript to display.** With two root layouts, `notFound()` from `(frontend)/[...slug]` is handled by Next's error-recovery path: HTTP 404, a minimal `__next_error__` HTML shell, and the page drawn from the RSC payload.
   - It is correct in any browser with JavaScript, and blank without it.
   - Neither a same-segment `not-found.tsx` nor `dynamic = 'force-static'` changes this.
   - `force-static` would also cache every random URL for a year, so the catch-all stays dynamic.
   - `global-not-found` is experimental in 16.4 and static, so it would show stale settings.
 - **`next build` needs a migrated database**, because the root layout reads site-settings while prerendering.
+
+## Studio (Payload admin)
+
+- **Payload's default admin has accessibility gaps.** Its own CSS lives in `@layer payload-default`, so `src/app/(payload)/custom.scss` overrides it without `!important`: a focus ring (the default focus was barely visible on inputs and invisible on links), stronger help-text colours and 24 px array controls.
+  - Remaining axe findings sit in Payload's markup (empty `aria-label` on row checkboxes, unnamed popup buttons, react-select labels, drag handle, document tabs) and are recorded in the P0 QA log as exceptions.
+- **Vercel runtime logs carry no HTTP status codes** (`vercel logs --json` lists only console output per request). Protected previews can't be `curl`ed without a bypass, so status codes are checked on a local production build.
 
 ## Local machine
 

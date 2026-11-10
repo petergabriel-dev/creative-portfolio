@@ -21,6 +21,7 @@ How code in this repo is written. Established in Phase 0.
 - Mobile-first: base styles are for small screens; wider layouts are added with `min-width` queries.
 - Motion: colour and border transitions only, `--duration-fast`, switched off under `prefers-reduced-motion`.
 - `docs/design/` specs are authoritative; `docs/design/reference/` is visual data only.
+- Studio CSS goes in `src/app/(payload)/custom.scss`, using Payload's theme variables (`--theme-text`, `--theme-elevation-*`) so light and dark admin themes keep contrast. The P5 theme moves it onto the design tokens.
 
 ## Text
 
