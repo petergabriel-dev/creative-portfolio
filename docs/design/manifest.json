@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "kind": "design-docs",
+  "tokenFiles": [
+    "src/styles/tokens.css"
+  ]
+}
