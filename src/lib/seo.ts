@@ -4,7 +4,7 @@ import type { Media } from '@/payload-types'
 
 type Meta = { title?: string | null; description?: string | null; image?: Media | number | null } | null | undefined
 
-/** Open Graph images for the first populated media, at the `feature` size; undefined keeps the layout default. */
+/** Open Graph images for the first populated media, at the `feature` size; undefined when there is none. */
 export function ogImages(...candidates: (Media | number | null | undefined)[]): Metadata['openGraph'] {
   const media = candidates.find((candidate): candidate is Media => typeof candidate === 'object' && !!candidate?.url)
   if (!media) return undefined
@@ -29,10 +29,13 @@ export function pageMetadata({
   images: (Media | number | null | undefined)[]
 }): Metadata {
   const metaTitle = meta?.title?.trim()
+  const openGraph = ogImages(meta?.image, ...images)
   return {
     title: metaTitle ? { absolute: metaTitle } : title,
     description: meta?.description?.trim() || description || undefined,
     alternates: { canonical },
-    openGraph: ogImages(meta?.image, ...images),
+    // Leave the key out without an image: Next replaces the layout's openGraph (and its default
+    // image) with any key a page returns, even `openGraph: undefined`.
+    ...(openGraph && { openGraph }),
   }
 }
