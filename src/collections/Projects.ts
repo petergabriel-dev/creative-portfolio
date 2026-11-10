@@ -1,10 +1,32 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, PayloadRequest } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { publishedOnly } from '@/access/publishedOnly'
 import { storyField } from '@/blocks/story'
 import { slugFields } from '@/fields/slug'
 import { recordProjectSlug, revalidateDeletedProject, revalidateProject } from '@/hooks/revalidateProject'
+import { previewUrl } from '@/lib/preview'
+import { projectPath } from '@/lib/publishing'
+
+/**
+ * Draft-mode URL for a project as it is being edited (its current slug and collection). Relative,
+ * so live preview works on every preview deployment without setting Payload's serverURL.
+ */
+async function projectPreviewUrl(data: Record<string, unknown> | undefined, req: PayloadRequest) {
+  const collection = data?.collection as number | { id: number } | null | undefined
+  const disciplineId = typeof collection === 'object' ? collection?.id : collection
+  if (disciplineId == null || typeof data?.slug !== 'string' || !data.slug) return null
+  const discipline = await req.payload.findByID({
+    collection: 'disciplines',
+    id: disciplineId,
+    depth: 0,
+    select: { slug: true },
+    disableErrors: true,
+    overrideAccess: true,
+    req,
+  })
+  return discipline?.slug ? previewUrl(projectPath(discipline.slug, data.slug)) : null
+}
 
 /** The core of the portfolio (Build Spec › Content model › projects). */
 export const Projects: CollectionConfig = {
@@ -14,6 +36,16 @@ export const Projects: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'collection', 'projectType', 'year', '_status', 'showOnHome'],
     listSearchableFields: ['title'],
+    // Live preview pane (Build Spec › Publishing) and the "Preview" button ("View draft").
+    livePreview: {
+      url: ({ data, req }) => projectPreviewUrl(data, req),
+      breakpoints: [
+        { label: 'Mobile', name: 'mobile', width: 390, height: 844 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+      ],
+    },
+    preview: (doc, { req }) => projectPreviewUrl(doc, req),
   },
   versions: {
     drafts: { autosave: true },

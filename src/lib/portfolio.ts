@@ -1,5 +1,5 @@
 import config from '@payload-config'
-import { getPayload } from 'payload'
+import { getPayload, type TypedUser } from 'payload'
 import { cache } from 'react'
 
 import type { Discipline, Project } from '@/payload-types'
@@ -87,14 +87,20 @@ export type ProjectMatch = {
  * collection slug, or a project that moved collection.
  */
 export const findProject = cache(
-  async (collectionSlug: string, projectSlug: string): Promise<ProjectMatch | null> => {
+  async (
+    collectionSlug: string,
+    projectSlug: string,
+    /** A logged-in editor in draft mode sees the latest draft; everyone else the published doc. */
+    editor: TypedUser | null = null,
+  ): Promise<ProjectMatch | null> => {
     const payload = await getPayload({ config })
     const query = {
       collection: 'projects',
       depth: 1,
       limit: 1,
-      draft: false,
+      draft: editor !== null,
       overrideAccess: false,
+      user: editor ?? undefined,
     } as const
     let byOldSlug = false
     let { docs } = await payload.find({ ...query, where: { slug: { equals: projectSlug } } })
