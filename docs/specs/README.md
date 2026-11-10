@@ -35,7 +35,7 @@ The Build Spec has its own eight-step build order, layer by layer ("Build order 
 
 | Phase | Spec | Goal | Depends on | Site screens | Studio screens | Status |
 |---|---|---|---|---|---|---|
-| P0 Foundation | `phase-0-foundation.md` | A deployable Next.js + Payload app on a Vercel preview. Site header, footer and 404 read `site-settings`; media uploads to Blob | — | 12, 40, 41 (43 as reference) | 20, 28, 29 as default views | In progress |
+| P0 Foundation | `phase-0-foundation.md` | A deployable Next.js + Payload app on a Vercel preview. Site header, footer and 404 read `site-settings`; media uploads to Blob | — | 12, 40, 41 (43 as reference) | 20, 28, 29 as default views | Done |
 | P1 Portfolio | `phase-1-portfolio.md` | The owner publishes projects into four collections. Visitors browse Portfolio → collection → project | P0 | 02–07 | 22, 23, 24 as default views | Draft |
 | P2 Journal | `phase-2-journal.md` | The owner publishes journal posts. Visitors read the paged list and the entries | P1 | 09, 10 | 25, 26 as default views | Draft |
 | P3 Book Me | `phase-3-book-me.md` | Visitors send inquiries. The owner gets an email alert and handles inquiries in the Studio | P0, P1 | 11 (+ errors, sent) | 27 as default view | Draft |
@@ -55,6 +55,7 @@ A phase is done only when all of these pass, together with its own acceptance cr
 - **Preview.** The phase is running on a Vercel preview deployment.
 - **Seed data.** Seed data for the phase's collections and globals exists, and running it twice creates no duplicates.
 - **Studio scope.** Studio screens must match their captures only in P5 (20, 21, 42) and P6 (22–31). In P0–P4 they only need to work, but the keyboard, axe, test and preview items above still apply to them.
+  - Accessibility findings that sit inside Payload's own built-in admin components (not our collections, fields, components or `custom.scss`) are recorded as exceptions in the phase's QA log and carried to P5/P6 and upstream (owner decision, 2026-11-10). Anything CSS can fix is fixed in `src/app/(payload)/custom.scss`.
 
 ## Cross-phase rules
 

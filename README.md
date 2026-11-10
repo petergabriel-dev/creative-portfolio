@@ -2,7 +2,7 @@
 
 A personal portfolio site for a multidisciplinary creative, with its own CMS (the "Studio"). The work is shown in four collections: **Photography**, **Film & Video**, **Design & Illustration** and **Writing & More**. The site's main job is to turn interest into **Book Me** inquiries. The journal is a secondary path.
 
-> **Status: Phase 0 (Foundation) in progress.** The app shell, database, media, site settings, header, footer and 404 are built on Vercel previews. See the [roadmap](#roadmap) and [`docs/engineering/dev-workflow.md`](docs/engineering/dev-workflow.md) to run it.
+> **Status: Phase 0 (Foundation) done.** The app shell, database, media, site settings, header, footer and 404 run on Vercel previews. Next: P1 Portfolio. See the [roadmap](#roadmap) and [`docs/engineering/dev-workflow.md`](docs/engineering/dev-workflow.md) to run it.
 
 ## What gets built
 
@@ -40,7 +40,7 @@ The build runs in eight vertical phases. Each phase delivers one feature end to 
 
 | Phase | Spec | Delivers | Status |
 |---|---|---|---|
-| P0 | [Foundation](docs/specs/phase-0-foundation.md) | App shell on a Vercel preview, database, media, site settings, header, footer, 404 | In progress |
+| P0 | [Foundation](docs/specs/phase-0-foundation.md) | App shell on a Vercel preview, database, media, site settings, header, footer, 404 | Done |
 | P1 | [Portfolio](docs/specs/phase-1-portfolio.md) | Collections, projects, story blocks, drafts and preview, portfolio pages | Draft |
 | P2 | [Journal](docs/specs/phase-2-journal.md) | Categories, posts, the paginated journal and its entries | Draft |
 | P3 | [Book Me](docs/specs/phase-3-book-me.md) | Inquiry form, inquiries collection, email alerts | Draft |

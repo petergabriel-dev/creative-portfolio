@@ -1,0 +1,25 @@
+// Studio accessibility fixes until the P5 theme (owner decision 2026-11-10).
+// Payload's own CSS lives in @layer payload-default, so these unlayered rules
+// win without !important. Colours come from Payload's theme variables, so
+// light and dark admin themes both keep contrast.
+
+// WCAG 2.4.7: a clearly visible keyboard focus ring on every control.
+:focus-visible {
+  outline: 2px solid var(--theme-text);
+  outline-offset: 2px;
+}
+
+// WCAG 1.4.3: help text, "Add row" labels and upload details were too faint.
+.field-description,
+.array-field__add-row,
+.array-field__add-row .btn__label,
+.upload-relationship-details__meta {
+  color: var(--theme-elevation-700);
+}
+
+// WCAG 2.5.8: array row controls get at least a 24 × 24 px target.
+.array-actions__button,
+.collapsible__drag {
+  min-width: 24px;
+  min-height: 24px;
+}
