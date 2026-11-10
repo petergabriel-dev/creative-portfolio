@@ -1,0 +1,9 @@
+/* Credits sit in the story column after the last chapter. */
+.credits {
+  padding: 0 var(--gutter) var(--section-y);
+}
+
+.creditsInner {
+  max-width: var(--max-width-story);
+  margin-inline: auto;
+}
