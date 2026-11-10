@@ -2,7 +2,7 @@
 
 A personal portfolio site for a multidisciplinary creative, with its own CMS (the "Studio"). The work is shown in four collections: **Photography**, **Film & Video**, **Design & Illustration** and **Writing & More**. The site's main job is to turn interest into **Book Me** inquiries. The journal is a secondary path.
 
-> **Status: planning complete, no application code yet.** The next step is Phase 0, Foundation. See the [roadmap](#roadmap).
+> **Status: Phase 0 (Foundation) done.** The app shell, database, media, site settings, header, footer and 404 run on Vercel previews. Next: P1 Portfolio. See the [roadmap](#roadmap) and [`docs/engineering/dev-workflow.md`](docs/engineering/dev-workflow.md) to run it.
 
 ## What gets built
 
@@ -32,7 +32,7 @@ Recorded in [ADR-0001](docs/engineering/decisions/ADR-0001-stack-nextjs-payload-
 | Media | Vercel Blob, uploaded straight from the browser |
 | Email | Resend (inquiry alerts) |
 | SEO | `@payloadcms/plugin-seo` |
-| Hosting | Vercel (Pro plan before the domain goes live) |
+| Hosting | Vercel Hobby, functions in Singapore (`sin1`) |
 
 ## Roadmap
 
@@ -40,7 +40,7 @@ The build runs in eight vertical phases. Each phase delivers one feature end to 
 
 | Phase | Spec | Delivers | Status |
 |---|---|---|---|
-| P0 | [Foundation](docs/specs/phase-0-foundation.md) | App shell on a Vercel preview, database, media, site settings, header, footer, 404 | Draft |
+| P0 | [Foundation](docs/specs/phase-0-foundation.md) | App shell on a Vercel preview, database, media, site settings, header, footer, 404 | Done |
 | P1 | [Portfolio](docs/specs/phase-1-portfolio.md) | Collections, projects, story blocks, drafts and preview, portfolio pages | Draft |
 | P2 | [Journal](docs/specs/phase-2-journal.md) | Categories, posts, the paginated journal and its entries | Draft |
 | P3 | [Book Me](docs/specs/phase-3-book-me.md) | Inquiry form, inquiries collection, email alerts | Draft |
@@ -55,7 +55,6 @@ The shared Definition of Done, the cross-phase rules and the coverage tables are
 
 | Decision | Needed before |
 |---|---|
-| Region for the Vercel functions and the Neon database | P0 |
 | Where slug redirects live: a small `redirects` collection or Payload's redirects plugin | P1 |
 
 The remaining open questions are in the [open questions register](docs/specs/README.md#open-questions).

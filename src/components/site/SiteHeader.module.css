@@ -1,0 +1,120 @@
+.header {
+  padding: var(--space-6) var(--gutter);
+  font-family: var(--font-body);
+  line-height: var(--lh-body);
+}
+
+.light {
+  --header-hover: var(--color-text-muted);
+  background-color: var(--color-page);
+  color: var(--color-text);
+}
+
+.dark {
+  --header-hover: var(--color-on-dark);
+  background-color: transparent;
+  color: var(--color-on-dark-heading);
+}
+
+/* Mobile first: row 1 wordmark + pill, row 2 the four links. No JavaScript. */
+.inner {
+  display: grid;
+  grid-template-areas:
+    'mark booking'
+    'nav nav';
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--space-4);
+  row-gap: var(--space-3);
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+/* Layout only; the wordmark's own styles live in Wordmark.module.css. */
+.wordmark {
+  grid-area: mark;
+}
+
+.nav {
+  grid-area: nav;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-6);
+  row-gap: var(--space-1);
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking-nav);
+  text-transform: uppercase;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  border-bottom: var(--border-strong) solid transparent;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.link:hover,
+.link:active {
+  border-bottom-color: var(--header-hover);
+}
+
+.link[aria-current='page'] {
+  border-bottom-color: currentColor;
+}
+
+.booking {
+  grid-area: booking;
+  flex: none;
+}
+
+/* Very small phones: tighter link gap keeps the four links on one row. */
+@media (max-width: 374px) {
+  .links {
+    column-gap: var(--space-2);
+  }
+}
+
+/* 768 px and up: one row. The name shrinks and clamps so links and pill never move.
+   Tablet widths use tighter gaps so the name keeps room; 1024 px and up match capture 40. */
+@media (min-width: 768px) {
+  .inner {
+    display: flex;
+    column-gap: var(--space-6);
+  }
+
+  .wordmark {
+    flex: 0 1 auto;
+    margin-inline-end: auto;
+  }
+
+  .nav {
+    flex: none;
+  }
+
+  .links {
+    flex-wrap: nowrap;
+    column-gap: var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .inner,
+  .links {
+    column-gap: var(--space-9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

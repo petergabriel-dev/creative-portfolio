@@ -1,0 +1,180 @@
+/*
+  Creative Portfolio design tokens (Cinematic Chapters).
+  Canonical token file, listed in docs/design/manifest.json tokenFiles.
+  Values promoted from the Build Spec design system and the handoff tokens.
+  One colour scheme only: dark chapter sections are a tone, not a theme.
+  Components use the semantic layer. Raw values live only in the primitive layer.
+*/
+
+/* @primitive */
+:root {
+  /* Colour: site */
+  --chapter: #2B2925;
+  --tint-photo: #2F2A28;
+  --tint-film: #2C2A2E;
+  --tint-design: #28302B;
+  --tint-writing: #302A26;
+  --ink: #1B1A17;
+  --bone: #F3F1EC;
+  --bone-70: rgb(243 241 236 / 0.7);
+  --stone: #EAE6DF;
+  --frame: #DCD6CC;
+  --frame-alt: #D3CCC0;
+  --muted: #5E5A52;
+  --on-dark: #CFC8BB;
+  --on-dark-strong: #E6E1D8;
+  --rule: #D6D0C6;
+  --field-border: #8C867B;
+  --card: #5A554E;
+
+  /* Colour: states and Studio */
+  --error: #9B2C1F;
+  --surface: #FBFAF7;
+  --field-bg: #FFFFFF;
+  --rule-soft: #E4DFD6;
+  --on-ink-muted: #B7B1A6;
+  --chip-published-bg: #E1E8E0;
+  --chip-published-fg: #2F4A3A;
+  --chip-draft-bg: #EAE6DF;
+  --chip-draft-fg: #5E5A52;
+
+  /* Colour: accent options for site-settings.accent */
+  --accent-gold: #E9B44C;
+  --accent-terracotta: #E07A5F;
+  --accent-sage: #9FC3A8;
+  --accent-offwhite: #F3F1EC;
+
+  /* Type: families used when next/font variables are absent */
+  --font-stack-display: 'Bebas Neue', Oswald, Impact, 'Arial Narrow', sans-serif;
+  --font-stack-body: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Type: scale */
+  --fs-display: clamp(80px, 11vw, 168px);
+  --lh-display: 0.86;
+  --fs-finale: clamp(64px, 9vw, 136px);
+  --lh-finale: 0.88;
+  --fs-section: clamp(52px, 6vw, 84px);
+  --lh-section: 0.92;
+  --fs-card: clamp(30px, 4vw, 60px);
+  --lh-card: 0.95;
+  --fs-lead: 18px;
+  --fs-body: 16px;
+  --lh-body: 1.6;
+  --lh-body-loose: 1.7;
+  --fs-sm: 14px;
+  --fs-caption: 13px;
+  --fs-label-lg: 13px;
+  --fs-label: 12px;
+  --lh-label: 1.5;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --tracking-label: 0.14em;
+  --tracking-nav: 0.16em;
+  --tracking-wordmark: 0.24em;
+  --measure-body: 48ch;
+  --underline-offset: 5px;
+
+  /* Space */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-20: 80px;
+
+  /* Layout */
+  --max-width: 1312px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --section-y: clamp(72px, 8vw, 104px);
+  --finale-y: clamp(96px, 10vw, 136px);
+  --gap-photos: 4px;
+  --opener-min-h: 600px;
+
+  /* Shape and lines */
+  --radius-pill: 999px;
+  --radius-site: 0;
+  --radius-story-card: 14px;
+  --radius-cms-card: 10px;
+  --radius-cms-field: 6px;
+  --border-hairline: 1px;
+  --border-strong: 2px;
+  --rule-short: 28px;
+  --mark-size: 26px;
+  --pill-pad-x: 22px;
+  --opacity-disabled: 0.5;
+
+  /* Targets */
+  --tap-min: 44px;
+  --tap-primary: 52px;
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --ease-standard: ease;
+}
+
+/* @semantic */
+:root {
+  /* Accent: the root layout overrides --gold inline from site-settings.accent */
+  --gold: var(--accent-gold);
+  --color-booking: var(--gold);
+  --color-on-booking: var(--ink);
+
+  /* Light sections */
+  --color-page: var(--bone);
+  --color-text: var(--ink);
+  --color-text-muted: var(--muted);
+  --color-surface-band: var(--stone);
+  --color-rule: var(--rule);
+  --color-field-border: var(--field-border);
+  --color-error: var(--error);
+  --color-frame: var(--frame);
+  --color-frame-alt: var(--frame-alt);
+
+  /* Dark sections */
+  --color-surface-opener: var(--chapter);
+  --color-surface-opener-photo: var(--tint-photo);
+  --color-surface-opener-film: var(--tint-film);
+  --color-surface-opener-design: var(--tint-design);
+  --color-surface-opener-writing: var(--tint-writing);
+  --color-surface-footer: var(--ink);
+  --color-surface-story-card: var(--card);
+  --color-on-dark-heading: var(--bone);
+  --color-on-dark-strong: var(--on-dark-strong);
+  --color-on-dark: var(--on-dark);
+  --color-on-dark-subtle: var(--on-ink-muted);
+  --color-outline-on-dark: var(--bone-70);
+
+  /* Actions */
+  --color-action: var(--ink);
+  --color-on-action: var(--bone);
+
+  /* Focus ring: ink outline with a bone halo, visible on light and dark */
+  --focus-ring-color: var(--ink);
+  --focus-halo-color: var(--bone);
+  --focus-ring-width: var(--border-strong);
+  --focus-ring-offset: var(--border-strong);
+  --focus-halo-width: var(--space-1);
+
+  /* Type */
+  --font-display: var(--font-bebas-neue, var(--font-stack-display));
+  --font-body: var(--font-inter, var(--font-stack-body));
+}
+
+/* Focus ring: dual so it shows on bone, stone and every dark tint */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-halo-width) var(--focus-halo-color);
+}
