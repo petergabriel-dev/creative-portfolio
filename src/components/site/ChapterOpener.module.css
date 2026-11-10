@@ -66,10 +66,11 @@
   text-decoration-thickness: var(--border-strong);
 }
 
+/* Mobile first: a smaller display size so long words fit 320-420 px screens (owner decision). */
 .title {
   color: var(--color-on-dark-heading);
   font-family: var(--font-display);
-  font-size: var(--fs-display);
+  font-size: var(--fs-display-sm);
   font-weight: var(--fw-regular);
   line-height: var(--lh-display);
   text-transform: uppercase;
@@ -104,6 +105,10 @@
 }
 
 @media (min-width: 768px) {
+  .title {
+    font-size: var(--fs-display);
+  }
+
   .actions {
     flex-direction: row;
     flex-wrap: wrap;

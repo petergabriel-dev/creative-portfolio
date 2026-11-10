@@ -14,7 +14,10 @@ Content block: padding `--space-12` top, `--space-20` bottom, `--gutter` inline;
 2. **Context line:** `<p>`, `--fs-lead`, `--color-on-dark-strong`.
    - With `breadcrumb`, the line starts with one link per crumb, each followed by the separator from `copy.ts` (" · ", `aria-hidden`), then the `contextLine` text.
    - Breadcrumb links are inline-flex with min-height `--tap-min`, colour `--color-on-dark-strong`, and are underlined at `--underline-offset`; the underline thickens to `--border-strong` on hover.
-3. **Title:** `<h1>`, `--font-display`, `--fw-regular`, `--fs-display`, `--lh-display`, `--color-on-dark-heading`, uppercase (Bebas Neue is caps-only; uppercase keeps fallback fonts consistent). Captures 12, 02, 03 and 07 use slightly different sizes; the Build Spec display size wins.
+3. **Title:** `<h1>`, `--font-display`, `--fw-regular`, `--lh-display`, `--color-on-dark-heading`, uppercase (Bebas Neue is caps-only; uppercase keeps fallback fonts consistent).
+   - Size: `--fs-display-sm` below 768 px, `--fs-display` from 768 px.
+   - `--fs-display-sm` (`clamp(56px, 19vw, 80px)`) lets the longest collection word, "PHOTOGRAPHY" (4.36 em in Bebas Neue), fit on one line at 320–420 px instead of breaking mid-word. From 421 px it equals the Build Spec minimum, 80 px (owner decision, 2026-11-10).
+   - Captures 12, 02, 03 and 07 use slightly different sizes; the Build Spec display size wins.
 4. **Lead** (optional): `<p>`, max-width `--measure-body`, `--fs-body`, `--lh-body-loose`, `--color-on-dark`.
 5. **Actions** (optional): a row with row gap `--space-3` and column gap `--space-4`, `--space-2` above.
 6. **Details** (optional, P1): a slot after the lead and actions, full content width. The project page puts a DetailsStrip (`tone="dark"`) here.
@@ -82,7 +85,7 @@ Server component.
 ## Responsive
 
 - **768 px and up:** actions sit in one row; with `layout="split"`, beside the lead.
-- **Below 768 px:** actions stack in a column, aligned to the start, below the lead, for both layouts. The display title wraps when it has to: "Nothing here" fits on one line at 390 px with `--fs-display` and takes two lines at 320 px (capture 12 uses a larger size and wraps at 390).
+- **Below 768 px:** actions stack in a column, aligned to the start, below the lead, for both layouts. The display title uses `--fs-display-sm` and wraps between words when it has to. "Nothing here" and "Photography" each fit on one line from 320 px (capture 12 uses a larger size and wraps at 390).
 - No horizontal scroll at 320 px or 390 px.
 
 ## Usage

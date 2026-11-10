@@ -43,6 +43,7 @@ The surface's job is to **persuade**: show selected work and turn interest into 
   - Story blocks always stack top to bottom. Capture 07 sets Chapter 01's text beside an image, but the Build Spec blocks have no layout field (P1).
   - Project cards are at most two per row (Build Spec "cards, 2 up"), not the three in capture 03 (P1).
   - Story chapter headings use `--fs-section`, not the smaller size in capture 07 (P1).
+  - Below 768 px, opener titles use `--fs-display-sm` (`clamp(56px, 19vw, 80px)`), smaller than the Build Spec's 80 px minimum on 320–420 px screens. Long words like "PHOTOGRAPHY" then fit on one line instead of breaking mid-word (owner decision 2026-11-10).
   - A video block without a poster shows a tinted frame, never the provider's thumbnail (owner decision 2026-11-10; replaces the Build Spec wording).
 
 ### One colour scheme
