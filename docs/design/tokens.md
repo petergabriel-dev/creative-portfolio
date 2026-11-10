@@ -1,6 +1,6 @@
 # Design Tokens
 
-<!-- token-hash: 6d0a7002d3507a8e4b95b57d4800d920a3209ff3f2ad2010df20e64493b4ca63 -->
+<!-- token-hash: 9eaca6731a7d8641f5b769dd96a7854e7059fc84c6bc5f7b02d529775b27dc21 -->
 
 ## Primitive
 
@@ -35,6 +35,7 @@
 | --fs-caption | 13px | — |
 | --fs-card | clamp(30px, 4vw, 60px) | — |
 | --fs-display | clamp(80px, 11vw, 168px) | — |
+| --fs-display-sm | clamp(56px, 19vw, 80px) | — |
 | --fs-finale | clamp(64px, 9vw, 136px) | — |
 | --fs-label | 12px | — |
 | --fs-label-lg | 13px | — |

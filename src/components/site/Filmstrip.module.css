@@ -1,0 +1,29 @@
+.strip {
+  display: grid;
+  gap: var(--gap-photos);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.auto {
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-photo), 100%), 1fr));
+}
+
+/* Mobile first: a pair stacks, then sits two up. */
+.pair {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Inside a padded section; the parent owns the gutter. */
+.contained {
+  width: 100%;
+  max-width: var(--max-width-story);
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

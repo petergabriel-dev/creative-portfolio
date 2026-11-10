@@ -31,4 +31,25 @@ export const copy = {
     /** Joins role line and location, and social links. */
     separator: '·',
   },
+  /** Joins breadcrumb links and meta parts ("Portfolio · Collection 01"); hidden from screen readers. */
+  separator: '·',
+  chapter: {
+    /** "Chapter 01": the number is counted at render time, never stored. */
+    label: (n: number) => `Chapter ${String(n).padStart(2, '0')}`,
+  },
+  finale: {
+    label: 'Book me',
+    /** Body under site-settings.finaleHeadline where no discipline finale applies (Portfolio). */
+    defaultBody: "Seen something close to what you have in mind? Tell me about it and we'll start from there.",
+    backToPortfolio: 'Back to portfolio',
+    /** Leading arrow on "Back to portfolio"; hidden from screen readers. */
+    backArrow: '←',
+  },
+  details: {
+    collection: 'Collection',
+    type: 'Type',
+    year: 'Year',
+    client: 'Client',
+    role: 'My role',
+  },
 } as const

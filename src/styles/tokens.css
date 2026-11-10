@@ -52,6 +52,8 @@
 
   /* Type: scale */
   --fs-display: clamp(80px, 11vw, 168px);
+  /* Below 768 px: long words ("PHOTOGRAPHY", 4.36em) fit 320-420 px screens; 80 px from 421 px up */
+  --fs-display-sm: clamp(56px, 19vw, 80px);
   --lh-display: 0.86;
   --fs-finale: clamp(64px, 9vw, 136px);
   --lh-finale: 0.88;

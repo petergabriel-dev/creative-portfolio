@@ -1,0 +1,50 @@
+/* Mobile first: label, heading and aside stack. */
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.label {
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+.title {
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--fs-section);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-section);
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.aside {
+  max-width: var(--measure-body);
+  color: var(--color-text-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+@media (min-width: 768px) {
+  .heading {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-4) var(--space-12);
+  }
+}
