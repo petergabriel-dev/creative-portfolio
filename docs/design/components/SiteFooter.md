@@ -52,7 +52,7 @@ Server component, no client JavaScript.
 ## Accessibility
 
 - `<footer>` landmark; the links group is a `<nav>` with its own `aria-label`, distinct from the header's.
-- Social links use the platform name as link text and `rel="me noopener"`. URLs are already validated as http(s) at save time.
+- Social links use the platform name as link text and `rel="me noopener"`. A platform of "Other" shows the link's host name (for example `example.org`), so the link text says where it goes. URLs are validated as http(s) at save time and filtered again before rendering.
 - Every target at least 44 px tall.
 - Text contrast: `--on-dark` on ink 10.5:1; copyright 8.2:1.
 

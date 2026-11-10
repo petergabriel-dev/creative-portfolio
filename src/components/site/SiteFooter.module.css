@@ -1,0 +1,102 @@
+.footer {
+  padding: var(--space-14) var(--gutter) var(--space-10);
+  background-color: var(--color-surface-footer);
+  color: var(--color-on-dark);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+/* Mobile first: one stacked column in source order. */
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.brand,
+.contact {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brand {
+  gap: var(--space-2);
+}
+
+.wordmark {
+  align-self: flex-start;
+  max-width: 100%;
+  color: var(--color-on-dark-heading);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-7);
+  row-gap: var(--space-1);
+  padding: 0;
+  list-style: none;
+}
+
+.link,
+.socials a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: var(--underline-offset);
+  transition: text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+
+.link:hover,
+.link:active,
+.socials a:hover,
+.socials a:active {
+  text-decoration-color: currentColor;
+}
+
+/* Long emails have no spaces; let them break instead of pushing the page wider. */
+.email {
+  overflow-wrap: anywhere;
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--space-2);
+}
+
+.copyright {
+  color: var(--color-on-dark-subtle);
+  font-size: var(--fs-caption);
+}
+
+@media (min-width: 768px) {
+  .top {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-8) var(--space-12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .socials a {
+    transition: none;
+  }
+}

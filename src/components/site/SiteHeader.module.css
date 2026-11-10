@@ -30,45 +30,9 @@
   margin-inline: auto;
 }
 
+/* Layout only; the wordmark's own styles live in Wordmark.module.css. */
 .wordmark {
   grid-area: mark;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-  min-width: 0;
-  min-height: var(--tap-min);
-  color: inherit;
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--tracking-wordmark);
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-.mark {
-  flex: none;
-  width: var(--mark-size);
-  height: var(--mark-size);
-}
-
-/* Long names wrap and stop at two lines; the full name stays in the DOM. */
-.name {
-  display: -webkit-box;
-  min-width: 0;
-  overflow: hidden;
-  overflow-wrap: anywhere;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-}
-
-.visuallyHidden {
-  position: absolute;
-  width: var(--border-hairline);
-  height: var(--border-hairline);
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
 }
 
 .nav {

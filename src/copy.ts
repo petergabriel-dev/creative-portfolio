@@ -17,4 +17,11 @@ export const copy = {
     about: 'About',
     journal: 'Journal',
   },
+  footer: {
+    /** aria-label of the footer navigation (distinct from the header's). */
+    navLabel: 'Footer',
+    copyrightSymbol: '©',
+    /** Joins role line and location, and social links. */
+    separator: '·',
+  },
 } as const
