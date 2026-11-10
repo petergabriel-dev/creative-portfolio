@@ -1,11 +1,15 @@
+import config from '@payload-config'
 import type { Metadata } from 'next'
+import { draftMode, headers } from 'next/headers'
 import { notFound, permanentRedirect } from 'next/navigation'
+import { getPayload } from 'payload'
 
 import { BookingFinale } from '@/components/site/BookingFinale'
 import { ChapterOpener } from '@/components/site/ChapterOpener'
 import { DetailsStrip } from '@/components/site/DetailsStrip'
 import { SiteFooter } from '@/components/site/SiteFooter'
 import { SiteHeader } from '@/components/site/SiteHeader'
+import { LivePreviewListener } from '@/components/story/LivePreviewListener'
 import { StoryBlocks } from '@/components/story/StoryBlocks'
 import { MediaImage } from '@/components/ui/MediaImage'
 import { copy } from '@/copy'
@@ -35,10 +39,23 @@ export async function generateMetadata({ params }: PageProps<'/portfolio/[collec
   })
 }
 
+/**
+ * The editor behind a draft-mode request, checked at render time: the draft-mode cookie is the
+ * same for every visitor of a deployment, so on its own it never unlocks drafts. headers() is only
+ * read inside draft mode, so public requests keep the static page.
+ */
+async function draftEditor() {
+  if (!(await draftMode()).isEnabled) return null
+  const payload = await getPayload({ config })
+  const { user } = await payload.auth({ headers: await headers() })
+  return user ?? null
+}
+
 /** Project page (screen 07): opener, 21:9 cover, story, credits, the discipline's finale. */
 export default async function ProjectPage({ params }: PageProps<'/portfolio/[collection]/[project]'>) {
   const { collection, project: slug } = await params
-  const match = await findProject(collection, slug)
+  const editor = await draftEditor()
+  const match = await findProject(collection, slug, editor)
   if (!match) notFound()
   // Old project slug, old collection slug or a moved project: one hop to the canonical URL.
   if (match.redirect) permanentRedirect(match.canonical)
@@ -49,6 +66,7 @@ export default async function ProjectPage({ params }: PageProps<'/portfolio/[col
 
   return (
     <>
+      {editor ? <LivePreviewListener /> : null}
       <ChapterOpener
         breadcrumb={[
           { label: copy.nav.portfolio, href: '/portfolio' },
