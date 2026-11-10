@@ -1,6 +1,6 @@
 # Phase 0 — Foundation
 
-Status: Draft
+Status: In progress
 Depends on: —
 Build Spec refs: Decisions & stack · Architecture · Site map & routes (route rules) · Content model: collections › users, media · Globals › site-settings · Access control & auth · Media handling · Design system · Accessibility, SEO & performance · Environments, deployment & migrations · Front-end pages (shared pieces, 404)
 
@@ -19,8 +19,8 @@ Produce one deployable Next.js app with Payload 3 inside it, running on a Vercel
 - Vercel Blob connected through `@payloadcms/storage-vercel-blob`.
 - Environment variables, names only: `PAYLOAD_SECRET`, `POSTGRES_URL` (or `DATABASE_URL`), `BLOB_READ_WRITE_TOKEN`, `NEXT_PUBLIC_SERVER_URL`. Each environment gets its own `PAYLOAD_SECRET`.
 - Migrations:
-  - Local development uses Payload's push mode.
-  - Before merging, a migration is created with `payload migrate:create <name>` against a database that has never used push mode, and committed.
+  - Local development uses Payload's push mode, on the Docker Postgres database only (push is enabled only for localhost database URLs).
+  - Before merging, a migration is created with `payload migrate:create <name>` and committed. It diffs the committed schema snapshot, not a database, and never pushes.
   - The Vercel build command is `payload migrate && next build`.
   - Push mode and migrations are never mixed on the same database.
 
@@ -45,7 +45,7 @@ Produce one deployable Next.js app with Payload 3 inside it, running on a Vercel
 - Access follows the Build Spec access table for these three. Session cookies are HTTP-only, and secure in production.
 
 **Design foundation**
-- The first task of the P0 plan is a `[DOCS:design]` task:
+- The `[DOCS:design]` task is the first task after the scaffold and CI task (owner decision, 2026-11-10: nothing can merge into `dev` before CI exists) and comes before any component work:
   - scaffold `docs/design/` (`/docs init --design`);
   - promote [`handoff/tokens/tokens.css`](../design/reference/creative-portfolio/handoff/tokens/tokens.css) into a canonical `tokens.css` with `/* @primitive */` and `/* @semantic */` layers;
   - list it in the `docs/design/manifest.json` `tokenFiles`, and generate `docs/design/tokens.md` with `/docs update-tokens`.
@@ -121,7 +121,7 @@ Produce one deployable Next.js app with Payload 3 inside it, running on a Vercel
 - **`site-settings`:**
   - The header, footer and 404 page show its values.
   - Editing `name` or `bookingLabel` updates every page without a redeploy.
-  - Changing `accent` changes the booking button colour.
+  - Changing `accent` changes `--gold` on `<html>` to the matching accent token (owner decision, 2026-11-10). The header's Book Me pill is ink or outline per captures 40 and 12, so the first visible gold booking button, and its colour check, arrive with BookingFinale in P1.
 - **Header:**
   - At 320 px and 390 px it shows the two rows, with no horizontal scroll and no overlap with a 30-character site name.
   - All of its targets are at least 44 × 44 px.
@@ -139,13 +139,15 @@ Produce one deployable Next.js app with Payload 3 inside it, running on a Vercel
 
 ## Open questions
 
-- **Blocking: region.** Which region should the Vercel functions and the Neon database use? The Build Spec suggests Singapore if most clients are in Southeast Asia, and says to pick where most visitors are. Both must be in the same region.
-- **Local database.** Use a Neon dev branch or a local Postgres? The Build Spec allows either; decide in `/pi-plan`.
-- **Vercel plan during the build.** The Build Spec requires Pro only before the domain goes live (P7). The owner should confirm that Hobby is acceptable for private previews until then.
+All resolved by the owner on 2026-11-10:
+
+- **Region:** Singapore. Vercel functions `sin1`, Neon `aws-ap-southeast-1`.
+- **Local database:** Docker Postgres (`docker-compose.yml`). Neon is used only by Vercel previews and production, never by the Development environment.
+- **Vercel plan:** Hobby throughout, including after launch.
 
 ## Risks
 
-- **Migrations and Neon pooling.** Running migrations through Neon's pooled connection may fail. Check whether `payload migrate` needs the unpooled URL during the build.
+- **Migrations and Neon pooling.** Checked: `payload migrate` works over Neon's pooled `POSTGRES_URL`.
 - **Push mode and migrations.** Mixing them on one database corrupts the migration state. Local databases that use push mode must never receive migrations.
 - **Shared preview storage.** Preview deployments share one Blob store under the `preview/` prefix, so uploads made from previews pile up there. Cleanup is manual.
 - **Payload version.** Payload 3 minor releases can change the admin and adapters. Pin exact versions.

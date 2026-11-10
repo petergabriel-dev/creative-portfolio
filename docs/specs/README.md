@@ -35,7 +35,7 @@ The Build Spec has its own eight-step build order, layer by layer ("Build order 
 
 | Phase | Spec | Goal | Depends on | Site screens | Studio screens | Status |
 |---|---|---|---|---|---|---|
-| P0 Foundation | `phase-0-foundation.md` | A deployable Next.js + Payload app on a Vercel preview. Site header, footer and 404 read `site-settings`; media uploads to Blob | — | 12, 40, 41 (43 as reference) | 20, 28, 29 as default views | Draft |
+| P0 Foundation | `phase-0-foundation.md` | A deployable Next.js + Payload app on a Vercel preview. Site header, footer and 404 read `site-settings`; media uploads to Blob | — | 12, 40, 41 (43 as reference) | 20, 28, 29 as default views | In progress |
 | P1 Portfolio | `phase-1-portfolio.md` | The owner publishes projects into four collections. Visitors browse Portfolio → collection → project | P0 | 02–07 | 22, 23, 24 as default views | Draft |
 | P2 Journal | `phase-2-journal.md` | The owner publishes journal posts. Visitors read the paged list and the entries | P1 | 09, 10 | 25, 26 as default views | Draft |
 | P3 Book Me | `phase-3-book-me.md` | Visitors send inquiries. The owner gets an email alert and handles inquiries in the Studio | P0, P1 | 11 (+ errors, sent) | 27 as default view | Draft |
@@ -60,6 +60,8 @@ A phase is done only when all of these pass, together with its own acceptance cr
 
 - **Stack.** Next.js App Router with Payload 3 inside it, on Vercel, with Neon Postgres, Vercel Blob, Resend and `@payloadcms/plugin-seo`. See the Build Spec, "Decisions & stack".
 - **Paid services need owner approval.** No paid plan or paid service signup without the owner's approval. This covers Vercel Pro, a paid Neon plan, a paid Resend plan and Upstash. The spec of the phase that needs one lists it.
+- **Vercel Hobby throughout** (owner decision, 2026-11-10). The project stays on Hobby, including after launch; this supersedes the Build Spec's "Pro before launch". Re-check Vercel's commercial-use terms for Hobby before P7 go-live.
+- **Region** (owner decision, 2026-11-10): Vercel functions in `sin1` and Neon in `aws-ap-southeast-1` (Singapore).
 - **What P0 owns.** The `site-settings` global and the `media` collection land in P0, because the header, footer, accent colour and `defaultMeta.image` depend on them. Resend lands in P3, where it is first used.
 - **Story blocks.** They are built once in P1 and reused unchanged by `posts` in P2.
 - **Studio before P5.** In P1–P4, collections use Payload's built-in views with no theme. Still, each collection gets its `admin.group`, list columns, `useAsTitle` and field positions from the Build Spec as soon as it is created.
@@ -78,7 +80,7 @@ A phase is done only when all of these pass, together with its own acceptance cr
   - It never runs against production and never creates user credentials.
 - **Access.**
   - Front-end Local API queries pass `overrideAccess: false` and `draft: false`; preview requests pass `draft: true` only after the editor's session is checked.
-  - The `submitInquiry` server action is the only code path that writes with `overrideAccess: true`.
+  - The `submitInquiry` server action is the only request-time code path that writes with `overrideAccess: true`. The guarded, offline seed is the one other place (it has no user to act as).
   - GraphQL is off.
 - **Copy.** Text that is not CMS content (button words, labels such as "Chapter 01") lives in one `copy.ts`.
 - **Secrets.** Docs and specs name environment variables but never contain their values.
@@ -110,7 +112,7 @@ These are the 22 boxes from the Build Spec section "Build order & acceptance cri
 | 8.1 | Keyboard-only pass on every page and the admin's main flows; automated scan shows no serious issues | P7 | Every phase (Definition of Done) |
 | 8.2 | Core Web Vitals targets met on a mid-range phone profile | P7 | — |
 | 8.3 | Metadata, sitemap and structured data validate | P7 | P1, P2 (`generateMetadata` per route) |
-| 8.4 | Real content entered; Vercel on Pro; domain and Resend sending domain verified | P7 | — |
+| 8.4 | Real content entered; ~~Vercel on Pro~~ Vercel on Hobby (owner decision 2026-11-10); domain and Resend sending domain verified | P7 | — |
 
 ## Screen coverage
 
@@ -153,7 +155,7 @@ The owner answers these. Resolve a **Blocking** question before running `/pi-pla
 
 | Question | Phase | Blocking | Status |
 |---|---|---|---|
-| Which region should the Vercel functions and Neon use? | P0 | Yes | Open |
+| Which region should the Vercel functions and Neon use? | P0 | Yes | Resolved 2026-11-10: Singapore (`sin1`, `aws-ap-southeast-1`) |
 | Where should slug redirects be stored: a small `redirects` collection or Payload's redirects plugin? | P1 | Yes | Open |
 | If `/journal?page=N` is out of range or not a number, show a 404 or clamp to a valid page? The spec proposes 404. | P2 | No | Open |
 | Should visitors get an automatic "I've got your message" email, or only the editor alert? | P3 | No | Open |

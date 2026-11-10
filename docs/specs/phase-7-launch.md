@@ -46,7 +46,13 @@ Finish SEO, prove accessibility and performance across the whole site and Studio
 - The seed never runs against production. The production database starts from migrations alone, and its first user is created on first run.
 
 **Production and ops** (each item that costs money needs the owner's approval first)
-- Upgrade the Vercel team to **Pro** before the domain goes live. Hobby is non-commercial only.
+- Vercel stays on **Hobby** (owner decision, 2026-11-10; supersedes the Build Spec's "Pro before launch"). Before go-live, re-check Vercel's current terms: the Build Spec notes that Hobby is non-commercial and that a portfolio advertising services may count as commercial.
+- Production deployments are disabled until now (`git.deploymentEnabled.main: false` in `vercel.json`). To enable them safely:
+  1. create the production `PAYLOAD_SECRET` and the production Blob store;
+  2. remove the `deploymentEnabled` override and deploy while the `*.vercel.app` URL is still behind Vercel Authentication;
+  3. create the owner user on production (Payload's create-first-user screen is open while the users table is empty);
+  4. only then connect the domain.
+- Define the hotfix flow (none exists before launch): likely `hotfix/*` off `main` → PR into `main` → patch tag → merge `main` back into `dev`, which means the `dev` ruleset must also allow merge commits.
 - Production uses the Neon main branch and the production Blob store. Variables are set by name only: `PAYLOAD_SECRET` (a new value for production), `POSTGRES_URL`, `BLOB_READ_WRITE_TOKEN`, `RESEND_API_KEY`, `NEXT_PUBLIC_SERVER_URL` and `PREVIEW_SECRET`.
 - The Vercel functions and the Neon database run in the same region (the P0 decision).
 - Connect the domain to Vercel.
@@ -90,7 +96,7 @@ No changes.
   - publishing or unpublishing a project updates the sitemap without a redeploy.
 - **8.4:**
   - the real content is entered;
-  - Vercel is on Pro;
+  - Vercel is on Hobby (owner decision) and its commercial-use terms have been re-checked;
   - the domain is live;
   - the Resend sending domain is verified, and a production test inquiry delivers an alert from it.
 - **Production state:**
@@ -112,5 +118,5 @@ None. Production must never be seeded.
 ## Risks
 
 - **DNS timing.** Domain and email DNS changes take time to propagate. Start the Resend domain verification early, because inquiry alerts depend on it.
-- **Plan timing.** Upgrading to Vercel Pro late can delay go-live. Get approval and upgrade before the domain switch.
+- **Hobby commercial use.** If Vercel's terms rule out Hobby for this site, a paid plan needs the owner's approval before the domain switch.
 - **Placeholder copy.** Bracketed copy can hide in `copy.ts` or in unused globals. Search the code and the published content for `[` before go-live.
