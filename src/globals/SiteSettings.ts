@@ -4,6 +4,7 @@ import { anyone } from '@/access/anyone'
 import { authenticated } from '@/access/authenticated'
 import { revalidateLayout } from '@/hooks/revalidateLayout'
 import { ACCENT_OPTIONS, DEFAULT_ACCENT } from '@/lib/accent'
+import { SOCIAL_PLATFORMS } from '@/lib/socialPlatforms'
 import { validateHttpUrl } from '@/lib/validateHttpUrl'
 
 /** Identity, labels, accent and default SEO (Build Spec › Globals › site-settings). */
@@ -41,14 +42,7 @@ export const SiteSettings: GlobalConfig = {
           name: 'platform',
           type: 'select',
           required: true,
-          options: [
-            { label: 'Instagram', value: 'instagram' },
-            { label: 'Vimeo', value: 'vimeo' },
-            { label: 'YouTube', value: 'youtube' },
-            { label: 'Behance', value: 'behance' },
-            { label: 'Dribbble', value: 'dribbble' },
-            { label: 'Other', value: 'other' },
-          ],
+          options: SOCIAL_PLATFORMS.map(({ label, value }) => ({ label, value })),
         },
         { name: 'url', type: 'text', required: true, validate: validateHttpUrl },
       ],
