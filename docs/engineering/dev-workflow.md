@@ -25,6 +25,7 @@ Names only; values never go in the repo, docs, CI or logs.
 | Name | Local | Preview (Vercel) | Production (Vercel) |
 |---|---|---|---|
 | `PAYLOAD_SECRET` | `.env` | Vercel env (secret) | not set until P7 |
+| `PREVIEW_SECRET` | `.env` | Vercel env (secret), Preview only | not set until P7 |
 | `POSTGRES_URL` | `.env` (docker) | Neon integration, per-preview branch | Neon integration, `main` branch |
 | `BLOB_READ_WRITE_TOKEN` | `.env.local` (Development env) or empty | Blob store | not set until P7 |
 | `NEXT_PUBLIC_SERVER_URL` | optional | not set | not set until P7 |
@@ -33,7 +34,7 @@ Names only; values never go in the repo, docs, CI or logs.
 
 - Neon is **never** connected to the Development environment: local work always uses Docker Postgres.
 - `.env`, `.env*.local` and `.vercel/` are gitignored. `.env.local` is written by `vercel link` / `vercel env pull`.
-- Payload `serverURL` is deliberately unset in P0 (see [traps](traps.md#payload-serverurl-and-csrf)).
+- Payload `serverURL` is deliberately unset, including for live preview (see [traps](traps.md#payload-serverurl-and-csrf)).
 
 ## Scripts
 
@@ -69,9 +70,17 @@ Names only; values never go in the repo, docs, CI or logs.
 
 ## Seed
 
-`pnpm seed` creates one placeholder image (`seed-placeholder.webp`, alt "[Placeholder image]") and fills site-settings with bracketed placeholder copy.
+`pnpm seed` fills a fresh database with placeholder content:
 
-- Safe to run twice: the image is found by filename, and site-settings is only filled while it is empty. It never overwrites real edits and never touches users.
+- one placeholder image (`seed-placeholder.webp`) for the default SEO image, and six frames (`seed-frame-1…6.webp`, alternating the two loading tints);
+- site-settings, with bracketed placeholder copy;
+- the four disciplines (Build Spec tints, layouts, aspects and orders) and 23 bracketed projects:
+  - Photography: 10 published + 1 draft, so "More projects" has cards to reveal;
+  - Film & Video: 3 published + 1 draft;
+  - Design & Illustration and Writing & More (`list` layout): 4 each.
+- `[Couple names] wedding` uses all six Story blocks; its video is the Blender Foundation's openly licensed *Big Buck Bunny*.
+
+- Safe to run twice: images are found by filename and disciplines and projects by slug, and only missing ones are created; site-settings is only filled while it is empty. It never overwrites real edits and never touches users.
 - It refuses `VERCEL_ENV=production`, a missing `POSTGRES_URL`, and any non-local database unless `SEED_ALLOW_REMOTE=true` is set on purpose (e.g. to seed a Neon preview branch).
 - Writes pass `context.disableRevalidate`, because `revalidatePath` only works inside a Next.js request.
 
@@ -134,3 +143,8 @@ Production deploys stay disabled until P7. Before enabling them: create a produc
 
 - **Auth, uploads, settings:** run `pnpm dev` against a throwaway database (`POSTGRES_URL=…/<db> pnpm dev`), exercise the REST API with a test user, then stop the server and drop the database.
 - **Visual QA:** a temporary route under `src/app/(frontend)/` that renders the component's stress cases, plus `playwright-cli` screenshots at 320, 390, 768 and 1440 px. Delete the route before committing; `playwright-cli` writes a `.playwright-cli/` folder into the current directory, so run it from a scratch directory.
+  - Long full-page screenshots at 390 px are unreadable when scaled down; crop them into ~1,700 px segments (`sharp`) before reviewing.
+  - Log the browser into the Studio with `playwright-cli cookie-set payload-token <JWT> --domain localhost --path /` (JWT from `POST /api/users/first-register` or `/api/users/login` on a throwaway database). Leaving a dirty Studio form opens a `beforeunload` dialog; clear it with `playwright-cli dialog-accept`.
+- **Accessibility:** inject axe-core from cdnjs inside `playwright-cli eval` (an async function that adds the script tag), then run `axe.run` with the `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa` and `wcag22aa` tags.
+- **Production behaviour** (route table, 308s, cache headers, draft mode): on a throwaway database run `pnpm payload migrate`, `pnpm seed`, `pnpm build` and `pnpm start` (no push mode), then check with `curl -sg -D -` (`x-nextjs-cache`, `location`, `set-cookie`).
+- **Draft mode and live preview locally:** `PREVIEW_SECRET` must be set in `.env`. Log in at `/admin`, open a project and use **Live Preview** (Mobile 390, Tablet 768, Desktop 1440) or **Preview**. Both go through `/next/preview`, which needs the secret, an editor session and a site-relative path.
