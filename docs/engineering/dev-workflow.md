@@ -82,7 +82,7 @@ Names only; values never go in the repo, docs, CI or logs.
 
 ## Branches, PRs and releases
 
-Recorded in [ADR-0003](decisions/README.md).
+Recorded in [ADR-0003](decisions/ADR-0003-branching-and-release-versioning.md).
 
 - `main` ← `dev` ← `<type>/p<N>-<slug>` (types: `feat`, `fix`, `chore`, `docs`), one branch per plan task.
 - Every change reaches `dev` and `main` through a PR with green checks; direct pushes are rejected.
