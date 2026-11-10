@@ -1,0 +1,67 @@
+/* Layout for the Portfolio and collection pages. Grids follow the Build Spec auto-fit rule. */
+.section {
+  padding: var(--section-y) var(--gutter);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+/* Highlights: the heading sits in the padded column, the strip runs edge to edge. */
+.highlights {
+  padding-top: var(--section-y);
+}
+
+.highlightsHeading {
+  padding: 0 var(--gutter) var(--space-12);
+}
+
+.highlightsHeading > * {
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+/* "See the projects" lands below the edge of the viewport, not under it. */
+.anchor {
+  scroll-margin-top: var(--space-6);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-tile), 100%), 1fr));
+  gap: var(--space-12) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* At most two cards per row (Build Spec "cards, 2 up"). */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(max(min(var(--grid-min-card), 100%), calc((100% - var(--space-6)) / 2)), 1fr)
+  );
+  gap: var(--space-12) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  border-bottom: var(--border-hairline) solid var(--color-rule);
+  list-style: none;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+}

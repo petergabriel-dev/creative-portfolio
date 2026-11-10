@@ -51,6 +51,8 @@ type ButtonProps = {
   children: React.ReactNode
   disabled?: boolean // <button> only
   type?: 'button' | 'submit' | 'reset' // <button> only, default 'button'
+  onClick?: MouseEventHandler<HTMLButtonElement> // <button> only, from client components (RevealMore)
+  'aria-controls'?: string // <button> only, e.g. the list RevealMore expands
 }
 ```
 

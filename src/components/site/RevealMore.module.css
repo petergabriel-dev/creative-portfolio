@@ -1,0 +1,6 @@
+/* Centred below the grid (capture 03). */
+.more {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-10);
+}
