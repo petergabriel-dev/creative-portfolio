@@ -8,6 +8,7 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { SiteSettings } from './globals/SiteSettings'
 import { MAX_UPLOAD_BYTES } from './lib/media/uploadLimit'
 
 const filename = fileURLToPath(import.meta.url)
@@ -26,6 +27,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media],
+  globals: [SiteSettings],
   editor: lexicalEditor(),
   // GraphQL is off; the admin uses REST at /api and the site uses the Local API.
   graphQL: {
