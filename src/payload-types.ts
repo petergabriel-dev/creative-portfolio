@@ -87,8 +87,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -407,6 +411,82 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  name: string;
+  roleLine: string;
+  location: string;
+  /**
+   * Receives inquiry alerts and is shown on Book Me.
+   */
+  contactEmail: string;
+  replyTime: string;
+  socials?:
+    | {
+        platform: 'instagram' | 'vimeo' | 'youtube' | 'behance' | 'dribbble' | 'other';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Used for Book Me buttons and progress lines only.
+   */
+  accent: 'gold' | 'terracotta' | 'sage' | 'offwhite';
+  bookingLabel: string;
+  headline: string;
+  finaleHeadline: string;
+  footerNote: string;
+  /**
+   * Fallback SEO for pages without their own.
+   */
+  defaultMeta: {
+    /**
+     * Use %s for the page title, e.g. "%s · Your Name".
+     */
+    titleTemplate: string;
+    description: string;
+    image: number | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  name?: T;
+  roleLine?: T;
+  location?: T;
+  contactEmail?: T;
+  replyTime?: T;
+  socials?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  accent?: T;
+  bookingLabel?: T;
+  headline?: T;
+  finaleHeadline?: T;
+  footerNote?: T;
+  defaultMeta?:
+    | T
+    | {
+        titleTemplate?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
