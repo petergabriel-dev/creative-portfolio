@@ -3,6 +3,11 @@ import type { CollectionConfig } from 'payload'
 import { anyone } from '@/access/anyone'
 import { authenticated } from '@/access/authenticated'
 import { slugFields } from '@/fields/slug'
+import {
+  recordDisciplineSlug,
+  revalidateDeletedDiscipline,
+  revalidateDiscipline,
+} from '@/hooks/revalidateDiscipline'
 
 /** Opener tint options: names stored, hex shown (Build Spec › disciplines › openerTint). */
 export const OPENER_TINTS = [
@@ -32,6 +37,11 @@ export const Disciplines: CollectionConfig = {
     create: authenticated,
     update: authenticated,
     delete: authenticated,
+  },
+  hooks: {
+    beforeChange: [recordDisciplineSlug],
+    afterChange: [revalidateDiscipline],
+    afterDelete: [revalidateDeletedDiscipline],
   },
   fields: [
     // First field is a tabs field so the SEO plugin adds its tab here and sidebar fields stay top-level.

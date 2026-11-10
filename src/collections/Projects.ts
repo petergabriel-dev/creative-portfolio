@@ -4,6 +4,7 @@ import { authenticated } from '@/access/authenticated'
 import { publishedOnly } from '@/access/publishedOnly'
 import { storyField } from '@/blocks/story'
 import { slugFields } from '@/fields/slug'
+import { recordProjectSlug, revalidateDeletedProject, revalidateProject } from '@/hooks/revalidateProject'
 
 /** The core of the portfolio (Build Spec › Content model › projects). */
 export const Projects: CollectionConfig = {
@@ -23,6 +24,12 @@ export const Projects: CollectionConfig = {
     create: authenticated,
     update: authenticated,
     delete: authenticated,
+  },
+  // Refresh pages and record old slugs only when the published state changes (never on drafts).
+  hooks: {
+    beforeChange: [recordProjectSlug],
+    afterChange: [revalidateProject],
+    afterDelete: [revalidateDeletedProject],
   },
   fields: [
     // First field is a tabs field so the SEO plugin adds its tab here and sidebar fields stay top-level.
