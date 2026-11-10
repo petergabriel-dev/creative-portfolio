@@ -65,11 +65,19 @@ export const copy = {
     viewProject: 'View project',
     read: 'Read',
   },
+  video: {
+    /** Play button label; the caption is appended when there is one. */
+    play: 'Play video',
+    /** iframe title when the video has no caption. */
+    title: 'Video',
+  },
   details: {
     collection: 'Collection',
     type: 'Type',
     year: 'Year',
     client: 'Client',
     role: 'My role',
+    /** Accessible name of the project credits section. */
+    credits: 'Credits',
   },
 } as const

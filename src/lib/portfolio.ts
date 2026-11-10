@@ -70,3 +70,64 @@ export const getPublishedProjects = cache(async (disciplineId: number): Promise<
   })
   return docs as ProjectSummary[]
 })
+
+export type ProjectMatch = {
+  project: Project
+  /** The discipline the project belongs to now (populated). */
+  discipline: Discipline
+  /** Canonical URL: /portfolio/<discipline slug>/<project slug>. */
+  canonical: string
+  /** True when the requested URL is not the canonical one (old slug or wrong collection segment). */
+  redirect: boolean
+}
+
+/**
+ * Finds a published project by its slug (unique across projects), else by a previous slug (owner
+ * decision 1). Any URL that isn't the canonical one should 308 there: an old project slug, an old
+ * collection slug, or a project that moved collection.
+ */
+export const findProject = cache(
+  async (collectionSlug: string, projectSlug: string): Promise<ProjectMatch | null> => {
+    const payload = await getPayload({ config })
+    const query = {
+      collection: 'projects',
+      depth: 1,
+      limit: 1,
+      draft: false,
+      overrideAccess: false,
+    } as const
+    let byOldSlug = false
+    let { docs } = await payload.find({ ...query, where: { slug: { equals: projectSlug } } })
+    if (!docs[0]) {
+      byOldSlug = true
+      ;({ docs } = await payload.find({
+        ...query,
+        where: { previousSlugs: { in: [projectSlug] } },
+        sort: '-updatedAt',
+      }))
+    }
+    const project = docs[0]
+    const discipline = project && typeof project.collection === 'object' ? project.collection : null
+    if (!project || !discipline) return null
+    const canonical = `/portfolio/${discipline.slug}/${project.slug}`
+    return { project, discipline, canonical, redirect: byOldSlug || discipline.slug !== collectionSlug }
+  },
+)
+
+/** Every published project with its discipline slug, for generateStaticParams. */
+export const getPublishedProjectParams = cache(async () => {
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'projects',
+    depth: 1,
+    pagination: false,
+    draft: false,
+    overrideAccess: false,
+    select: { slug: true, collection: true },
+  })
+  return docs.flatMap((project) =>
+    typeof project.collection === 'object' && project.collection
+      ? [{ collection: project.collection.slug, project: project.slug }]
+      : [],
+  )
+})
