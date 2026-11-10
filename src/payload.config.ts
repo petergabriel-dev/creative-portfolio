@@ -9,6 +9,7 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { SiteSettings } from './globals/SiteSettings'
+import { isLocalDatabaseUrl } from './lib/isLocalDatabaseUrl'
 import { MAX_UPLOAD_BYTES } from './lib/media/uploadLimit'
 
 const filename = fileURLToPath(import.meta.url)
@@ -41,6 +42,8 @@ export default buildConfig({
     pool: {
       connectionString: process.env.POSTGRES_URL || '',
     },
+    // Push mode only ever on the local docker database; Neon gets migrations only.
+    push: isLocalDatabaseUrl(process.env.POSTGRES_URL),
   }),
   sharp,
   // Direct (multipart) uploads: reject anything over the limit with HTTP 413.
