@@ -50,6 +50,22 @@
   font-size: var(--fs-lead);
 }
 
+/* Breadcrumb links keep a 44 px target inside the line (invariant 17). */
+.crumb {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: inherit;
+  text-decoration-line: underline;
+  text-underline-offset: var(--underline-offset);
+  transition: text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+
+.crumb:hover,
+.crumb:active {
+  text-decoration-thickness: var(--border-strong);
+}
+
 .title {
   color: var(--color-on-dark-heading);
   font-family: var(--font-display);
@@ -76,10 +92,35 @@
   padding-top: var(--space-2);
 }
 
+/* Split layout: lead and actions share a row from 768 px (captures 02, 03). */
+.split {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.details {
+  width: 100%;
+}
+
 @media (min-width: 768px) {
   .actions {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+  }
+
+  .split {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-5) var(--space-12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crumb {
+    transition: none;
   }
 }

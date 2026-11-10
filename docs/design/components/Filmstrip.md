@@ -15,7 +15,7 @@ A row of square-cornered photos with `--gap-photos` gaps that wraps on small scr
 | `strip` | `repeat(auto-fit, minmax(min(var(--grid-min-photo), 100%), 1fr))` | — |
 | `pair` | 1 below 768 px, 2 equal columns from 768 px | — |
 | `bleed` (with `strip`) | as `strip` | Edge to edge: full viewport width, no gutter (Highlights) |
-| contained (default) | — | Max-width `--max-width-story`, centred, `--gutter` inline padding (gallery block) |
+| contained (default) | — | Max-width `--max-width-story`, centred; the parent section owns the `--gutter` (gallery block) |
 
 With few images, auto-fit stretches them to fill the row. In capture 03, five highlights fill 1440 px; in capture 07, three gallery images fill 1200 px.
 
