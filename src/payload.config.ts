@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
@@ -6,8 +7,10 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users'
+import { Disciplines } from './collections/Disciplines'
 import { Media } from './collections/Media'
+import { Projects } from './collections/Projects'
+import { Users } from './collections/Users'
 import { SiteSettings } from './globals/SiteSettings'
 import { isLocalDatabaseUrl } from './lib/isLocalDatabaseUrl'
 import { MAX_UPLOAD_BYTES } from './lib/media/uploadLimit'
@@ -27,7 +30,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  // Sidebar order within a group follows this list (Portfolio: Projects, Collections).
+  collections: [Projects, Disciplines, Media, Users],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   // GraphQL is off; the admin uses REST at /api and the site uses the Local API.
@@ -53,6 +57,12 @@ export default buildConfig({
     },
   },
   plugins: [
+    // Meta title, description and image in an SEO tab (Build Spec › Decisions & stack).
+    seoPlugin({
+      collections: ['disciplines', 'projects'],
+      uploadsCollection: 'media',
+      tabbedUI: true,
+    }),
     vercelBlobStorage({
       // Same schema with or without a token, so migrations match everywhere.
       alwaysInsertFields: true,
