@@ -2,14 +2,16 @@
  * Seed: `pnpm seed` (payload run src/seed/index.ts).
  *
  * Fills a fresh database with placeholder content. Safe to run twice: the
- * placeholder image is created once, and site-settings is only filled while
- * it is still empty, so it never overwrites real edits. Never creates users.
+ * placeholder images, disciplines and projects are created once (found by
+ * filename or slug), and site-settings is only filled while it is still empty,
+ * so it never overwrites real edits. Never creates users.
  */
 import { getPayload } from 'payload'
 import sharp from 'sharp'
 
 import config from '../payload.config'
 import { assertSeedAllowed } from './guard'
+import { seedPortfolio } from './portfolio'
 
 const PLACEHOLDER_FILENAME = 'seed-placeholder.webp'
 // Seeds run outside a Next.js request, where revalidatePath cannot work.
@@ -82,6 +84,8 @@ async function seed() {
     })
     payload.logger.info('Seed: filled site-settings with placeholder content')
   }
+
+  await seedPortfolio(payload)
 }
 
 try {
