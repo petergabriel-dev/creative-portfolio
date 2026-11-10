@@ -53,10 +53,11 @@ Server component, no client JavaScript.
 
 ## Responsive
 
-- **768 px and up:** one row. Wordmark left; nav and pill right. Row gap `--space-3`, column gap `--space-8`; nav column gap `--space-9`.
+- **1024 px and up:** one row, matching capture 40. Wordmark left; nav and pill right. Gaps between wordmark, nav and pill, and between links: `--space-9`.
+- **768–1023 px:** the same single row with `--space-6` gaps, so the name keeps about 200 px (owner decision 2026-11-10). The name shrinks (`min-width: 0`) and clamps to two lines; links and pill never move.
 - **Below 768 px:** two rows, no menu button, no JavaScript.
   - Row 1: wordmark (left) and pill (right). The pill never shrinks; the name takes the remaining width (`min-width: 0`), wraps, and is clamped to two lines with an ellipsis.
-  - Row 2: Home, Portfolio, About, Journal, column gap about 24 px (`--space-6`), wrapping if needed.
+  - Row 2: Home, Portfolio, About, Journal, column gap `--space-6` (about 24 px); below 375 px `--space-2` so all four stay on one row (they measure 252 px against 280 px of room at 320 px).
 - No horizontal scroll at 320 px or 390 px, including with a 30-character name.
 
 ## Usage
