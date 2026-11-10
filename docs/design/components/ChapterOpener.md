@@ -47,6 +47,7 @@ type ChapterOpenerProps = {
   lead?: string
   actions?: React.ReactNode
   header: React.ReactNode // a SiteHeader with tone="dark"
+  as?: 'main' | 'div' // element for the content block; default 'div'
 }
 ```
 
@@ -55,13 +56,15 @@ Server component.
 ## Accessibility
 
 - Exactly one `h1` per page, and it is this title.
+- Landmarks: the header slot renders before the content block, so the site header stays the banner landmark. Pages that are only an opener (404, the P0 Home placeholder) pass `as="main"` so the opener content is the `<main>` landmark; pages with chapters wrap their own `<main>` from P1 on.
+- An empty `contextLine` is not rendered.
 - On-dark text contrast: title 12.9:1, context line 11.2:1, lead 8.7:1 on `--chapter`.
 - The rule is decorative and hidden from assistive tech.
 
 ## Responsive
 
 - **768 px and up:** actions sit in one row.
-- **Below 768 px:** actions stack in a column, aligned to the start. The display title wraps (two lines for "Nothing here" at 390 px).
+- **Below 768 px:** actions stack in a column, aligned to the start. The display title wraps when it has to: "Nothing here" fits on one line at 390 px with `--fs-display` and takes two lines at 320 px (capture 12 uses a larger size and wraps at 390).
 - No horizontal scroll at 320 px or 390 px.
 
 ## Usage

@@ -45,6 +45,6 @@ describe('Button', () => {
         Browse the portfolio
       </Button>,
     )
-    expect(html).toContain('Browse the portfolio<span aria-hidden="true">→</span>')
+    expect(html).toContain('Browse the portfolio<span aria-hidden="true"> →</span>')
   })
 })

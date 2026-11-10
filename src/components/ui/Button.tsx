@@ -40,7 +40,8 @@ export function Button(props: LinkButtonProps | ActionButtonProps) {
   const content = (
     <>
       {children}
-      {trailingArrow && <span aria-hidden="true">{copy.arrow}</span>}
+      {/* Non-breaking space keeps one continuous underline under label and arrow. */}
+      {trailingArrow && <span aria-hidden="true">{` ${copy.arrow}`}</span>}
     </>
   )
 

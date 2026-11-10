@@ -17,6 +17,13 @@ export const copy = {
     about: 'About',
     journal: 'Journal',
   },
+  notFound: {
+    contextLine: '404 · Page not found',
+    title: 'Nothing here',
+    lead: "The page you're after has moved, or never existed. Try one of these instead.",
+    backHome: 'Back to home',
+    browsePortfolio: 'Browse the portfolio',
+  },
   footer: {
     /** aria-label of the footer navigation (distinct from the header's). */
     navLabel: 'Footer',

@@ -1,0 +1,85 @@
+.opener {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--opener-min-h);
+  background-color: var(--color-surface-opener);
+  color: var(--color-on-dark-heading);
+}
+
+.photo {
+  background-color: var(--color-surface-opener-photo);
+}
+
+.film {
+  background-color: var(--color-surface-opener-film);
+}
+
+.design {
+  background-color: var(--color-surface-opener-design);
+}
+
+.writing {
+  background-color: var(--color-surface-opener-writing);
+}
+
+/* Header sits on top; the content block is pushed to the bottom. */
+.content {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  padding: var(--space-12) var(--gutter) var(--space-20);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+.rule {
+  width: var(--rule-short);
+  height: var(--border-strong);
+  background-color: var(--color-on-dark-heading);
+}
+
+.contextLine {
+  color: var(--color-on-dark-strong);
+  font-size: var(--fs-lead);
+}
+
+.title {
+  color: var(--color-on-dark-heading);
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-display);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+
+.lead {
+  max-width: var(--measure-body);
+  color: var(--color-on-dark);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body-loose);
+}
+
+/* Mobile first: actions stack, aligned to the start. */
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3) var(--space-4);
+  padding-top: var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+}
