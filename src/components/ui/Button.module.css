@@ -1,0 +1,91 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap-min);
+  padding-inline: var(--pill-pad-x);
+  border: var(--border-hairline) solid transparent;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking-nav);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: var(--underline-offset);
+  cursor: pointer;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+
+.primary {
+  min-height: var(--tap-primary);
+  padding-inline: var(--space-7);
+  font-size: var(--fs-label-lg);
+  letter-spacing: var(--tracking-label);
+}
+
+.gold {
+  background-color: var(--color-booking);
+  border-color: var(--color-booking);
+  color: var(--color-on-booking);
+  font-weight: var(--fw-semibold);
+}
+
+.ink {
+  background-color: var(--color-action);
+  border-color: var(--color-action);
+  color: var(--color-on-action);
+}
+
+.outlineInk {
+  background-color: transparent;
+  border-color: var(--color-action);
+  color: var(--color-text);
+}
+
+.outlineLight {
+  background-color: transparent;
+  border-color: var(--color-outline-on-dark);
+  color: var(--color-on-dark-heading);
+}
+
+.text {
+  padding-inline: var(--space-2);
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: var(--fs-sm);
+  letter-spacing: normal;
+  text-transform: none;
+  text-decoration-color: currentColor;
+}
+
+/* Hover and active: underline the label; colours never change, so contrast holds. */
+.button:hover,
+.button:active {
+  text-decoration-color: currentColor;
+}
+
+.text:hover,
+.text:active {
+  text-decoration-thickness: var(--border-strong);
+}
+
+.button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+  text-decoration-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

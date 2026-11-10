@@ -47,6 +47,7 @@ type ButtonProps = {
   variant: 'gold' | 'ink' | 'outline-ink' | 'outline-light' | 'text'
   size?: 'default' | 'primary' // default 'default'
   href?: string // present → <a> via next/link
+  trailingArrow?: boolean // appends the copy.ts arrow, aria-hidden (text variant)
   children: React.ReactNode
   disabled?: boolean // <button> only
   type?: 'button' | 'submit' | 'reset' // <button> only, default 'button'
