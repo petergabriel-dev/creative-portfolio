@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Design system gallery</title>
+  <!-- Add stylesheet links for tokenFiles declared in ../manifest.json. -->
+</head>
+<body>
+  <!-- Projects with a .dark-class base system (for example, shadcn) should toggle that class instead. -->
+  <button type="button" data-theme-toggle aria-pressed="false">Toggle theme</button>
+  <header><h1>Design system gallery</h1></header>
+  <main>
+    <!-- Single-column vertical layout: stack sections; do not use grid galleries. -->
+    <nav aria-label="Preview examples"><a href="example.html">Example screen</a></nav>
+  </main>
+  <script>
+    const themeToggle = document.querySelector("[data-theme-toggle]");
+    themeToggle?.addEventListener("click", () => {
+      const root = document.documentElement;
+      const dark = root.dataset.theme !== "dark";
+      root.dataset.theme = dark ? "dark" : "light";
+      themeToggle.setAttribute("aria-pressed", String(dark));
+    });
+  </script>
+</body>
+</html>
