@@ -64,12 +64,14 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 - **`headers()`/`cookies()` make a page dynamic for everyone.** Read them only inside `if ((await draftMode()).isEnabled)`. Calling `draftMode()` itself keeps pages prerendered (verified in the build route table).
 - **`permanentRedirect` returns a real 308** from a page server component when it runs before anything streams (verified with `curl`); inside a streamed response it falls back to a client-side meta redirect.
 - **Canonical links are path-relative** until `metadataBase` is set (P7, with the domain).
+- **A page's `openGraph: undefined` wipes the layout's Open Graph tags.** Next replaces a parent's `openGraph` with any key the page returns, even an undefined one, so a page without its own image lost the default image and every `og:` tag. Leave the key out instead (`pageMetadata` in `src/lib/seo.ts`; found in the P1 QA pass).
 - **React 19 `renderToStaticMarkup` adds `<link rel="preload" as="image">`** for early `<img>` elements, so a test regex like `/<li/g` also matches `<link`. Match exact tags.
 
 ## Studio (Payload admin)
 
 - **Payload's default admin has accessibility gaps.** Its own CSS lives in `@layer payload-default`, so `src/app/(payload)/custom.scss` overrides it without `!important`: a focus ring (the default focus was barely visible on inputs and invisible on links), stronger help-text colours and 24 px array controls.
-  - Remaining axe findings sit in Payload's markup (empty `aria-label` on row checkboxes, unnamed popup buttons, react-select labels, drag handle, document tabs) and are recorded in the P0 QA log as exceptions.
+  - P1 added readable inactive tab labels (Payload dims them to 50% opacity), upload dropzone text and the blocks field's "Add" label.
+  - Remaining axe findings sit in Payload's markup (empty `aria-label` on row checkboxes, unnamed popup buttons, react-select labels, drag handles, the Lexical editor, document tabs) and are recorded in the P0 and P1 QA logs as exceptions.
 - **Vercel runtime logs carry no HTTP status codes** (`vercel logs --json` lists only console output per request). Protected previews can't be `curl`ed without a bypass, so status codes are checked on a local production build.
 
 ## Local machine
