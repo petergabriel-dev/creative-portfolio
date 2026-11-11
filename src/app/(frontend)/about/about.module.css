@@ -1,0 +1,35 @@
+/* About (docs/design/README.md › About page layout). Mobile first: portrait, then the sections. */
+.section {
+  padding: var(--section-y) var(--gutter);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  min-width: 0;
+}
+
+.chapter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+@media (min-width: 1024px) {
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: start;
+    column-gap: var(--space-20);
+  }
+}

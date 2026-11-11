@@ -58,6 +58,18 @@ const converters: JSXConvertersFunction = ({ defaultConverters }) => ({
   autolink: safeLink as never,
 })
 
+/**
+ * Rich text (paragraphs, bold, italic, lists, links) with the safe link converters and the story
+ * Text styles. Used by the Text block and by About's sections (P4).
+ */
+export function SafeRichText({ data }: { data: Parameters<typeof RichText>[0]['data'] }) {
+  return (
+    <div className={styles.text}>
+      <RichText converters={converters} data={data} disableContainer />
+    </div>
+  )
+}
+
 const isMedia = (value: unknown): value is { caption?: string | null; credit?: string | null } =>
   typeof value === 'object' && value !== null
 
@@ -65,16 +77,7 @@ const isMedia = (value: unknown): value is { caption?: string | null; credit?: s
 function renderBlock(block: Block): { node: ReactNode; bleed: boolean } | null {
   switch (block.blockType) {
     case 'text':
-      return block.body
-        ? {
-            bleed: false,
-            node: (
-              <div className={styles.text}>
-                <RichText converters={converters} data={block.body} disableContainer />
-              </div>
-            ),
-          }
-        : null
+      return block.body ? { bleed: false, node: <SafeRichText data={block.body} /> } : null
     case 'image': {
       if (!isMedia(block.image)) return null
       const caption = [block.caption?.trim() || block.image.caption?.trim(), block.image.credit?.trim()]
