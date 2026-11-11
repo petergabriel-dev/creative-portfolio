@@ -5,10 +5,16 @@ vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }))
 import { revalidatePath } from 'next/cache'
 
 import {
+  blockCategoryDeleteInUse,
+  revalidateCategory,
+  revalidateDeletedCategory,
+} from '@/hooks/categoryHooks'
+import {
   recordDisciplineSlug,
   revalidateDeletedDiscipline,
   revalidateDiscipline,
 } from '@/hooks/revalidateDiscipline'
+import { recordPostSlug, revalidateDeletedPost, revalidatePost } from '@/hooks/revalidatePost'
 import {
   recordProjectSlug,
   revalidateDeletedProject,
@@ -18,6 +24,9 @@ import {
   appendPreviousSlug,
   collectionPath,
   fillPublishedAt,
+  journalPagePath,
+  postPath,
+  postPublicPaths,
   projectPath,
   projectPublicPaths,
 } from '@/lib/publishing'
@@ -152,7 +161,7 @@ describe('project publishing hooks', () => {
     s.state.row = { ...published, slug: 'new', previousSlugs: ['oldest', 'old'], updatedAt: '2026-11-10T11:00:00.000Z' }
     await run.after(s, { doc: { id: 7 }, operation: 'update' })
     expect(revalidated().sort()).toEqual(
-      ['/portfolio/photography', '/portfolio/photography/new', '/portfolio/photography/old'].sort(),
+      ['/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/new', '/portfolio/photography/old'].sort(),
     )
   })
 
@@ -165,7 +174,7 @@ describe('project publishing hooks', () => {
 
     s.state.row = { ...draftOnly, _status: 'published', slug: 'new', updatedAt: '2026-11-10T11:00:00.000Z' }
     await run.after(s, { doc: { id: 7 }, operation: 'update' })
-    expect(revalidated().sort()).toEqual(['/', '/portfolio/photography', '/portfolio/photography/new'])
+    expect(revalidated().sort()).toEqual(['/', '/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/new'])
   })
 
   it('refreshes the old pages, Home included, on unpublish', async () => {
@@ -174,7 +183,7 @@ describe('project publishing hooks', () => {
     await run.before(s, { data: { _status: 'draft' }, operation: 'update', originalDoc: onHome })
     s.state.row = { ...onHome, _status: 'draft', updatedAt: '2026-11-10T11:00:00.000Z' }
     await run.after(s, { doc: { id: 7 }, operation: 'update' })
-    expect(revalidated().sort()).toEqual(['/', '/portfolio/photography', '/portfolio/photography/old'])
+    expect(revalidated().sort()).toEqual(['/', '/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/old'])
   })
 
   it('refreshes both collections when a project moves', async () => {
@@ -183,14 +192,14 @@ describe('project publishing hooks', () => {
     s.state.row = { ...published, collection: 2, updatedAt: '2026-11-10T11:00:00.000Z' }
     await run.after(s, { doc: { id: 7 }, operation: 'update' })
     expect(revalidated().sort()).toEqual(
-      ['/portfolio/film', '/portfolio/film/old', '/portfolio/photography', '/portfolio/photography/old'].sort(),
+      ['/(frontend)/journal/[slug]', '/portfolio/film', '/portfolio/film/old', '/portfolio/photography', '/portfolio/photography/old'].sort(),
     )
   })
 
   it('refreshes the new pages when a project is created published, and nothing for a draft', async () => {
     const s = setup(published)
     await run.after(s, { doc: { id: 7 }, operation: 'create' })
-    expect(revalidated().sort()).toEqual(['/portfolio/photography', '/portfolio/photography/old'])
+    expect(revalidated().sort()).toEqual(['/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/old'])
 
     vi.mocked(revalidatePath).mockClear()
     const draft = setup({ ...published, _status: 'draft' })
@@ -213,7 +222,7 @@ describe('project publishing hooks', () => {
     const orphan = { ...published, collection: 99, showOnHome: true }
     const s = setup(orphan)
     await run.after(s, { doc: { id: 7 }, operation: 'create' })
-    expect(revalidated()).toEqual(['/'])
+    expect(revalidated()).toEqual(['/', '/(frontend)/journal/[slug]'])
     expect(s.logger.warn).toHaveBeenCalled()
   })
 
@@ -229,7 +238,7 @@ describe('project publishing hooks', () => {
   it('refreshes the pages of a deleted published project only', async () => {
     const s = setup(null)
     await revalidateDeletedProject({ context: s.req.context, doc: published, req: s.req } as AnyArgs)
-    expect(revalidated().sort()).toEqual(['/portfolio/photography', '/portfolio/photography/old'])
+    expect(revalidated().sort()).toEqual(['/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/old'])
 
     vi.mocked(revalidatePath).mockClear()
     const draftDoc = { ...published, _status: 'draft' }
@@ -268,5 +277,178 @@ describe('discipline publishing hooks', () => {
     const off = { context: { disableRevalidate: true }, doc: { slug: 'film' }, req: s.req }
     revalidateDiscipline(off as AnyArgs)
     expect(revalidatePath).not.toHaveBeenCalled()
+  })
+})
+
+describe('journal paths (P2)', () => {
+  it('puts page 1 at /journal, later pages under /journal/page/N and entries under /journal', () => {
+    expect(journalPagePath(1)).toBe('/journal')
+    expect(journalPagePath(2)).toBe('/journal/page/2')
+    expect(postPath('quiet-minutes')).toBe('/journal/quiet-minutes')
+  })
+
+  it('lists the pages that show a published post, and none for an unpublished one', () => {
+    expect(postPublicPaths({ published: true, slug: 'quiet' })).toEqual([
+      '/journal/quiet',
+      '/journal',
+      { path: '/(frontend)/journal/page/[n]', type: 'page' },
+      '/',
+    ])
+    expect(postPublicPaths({ published: false, slug: 'quiet' })).toEqual([])
+    expect(postPublicPaths(null)).toEqual([])
+  })
+})
+
+type PostRow = {
+  id: number
+  slug: string
+  _status: 'draft' | 'published'
+  updatedAt: string
+  previousSlugs?: string[]
+}
+
+/** Like setup(), for the `posts` main row. */
+function setupPost(row: PostRow | null) {
+  const state = { row }
+  const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() }
+  const req: { context: Record<string, unknown>; payload: object } = { context: {}, payload: {} }
+  const findByID = vi.fn(async ({ collection }: { collection: string }) => {
+    req.context = { ...req.context }
+    return collection === 'posts' ? state.row : null
+  })
+  req.payload = { findByID, logger }
+  return { state, req, logger }
+}
+
+type PostSetup = ReturnType<typeof setupPost>
+const runPost = {
+  before: (s: PostSetup, args: object) =>
+    recordPostSlug({ context: s.req.context, req: s.req, ...args } as AnyArgs),
+  after: (s: PostSetup, args: object) =>
+    revalidatePost({ context: s.req.context, req: s.req, ...args } as AnyArgs),
+}
+
+const publishedPost: PostRow = {
+  id: 3,
+  slug: 'quiet',
+  _status: 'published',
+  updatedAt: '2026-11-10T10:00:00.000Z',
+  previousSlugs: [],
+}
+const later = '2026-11-11T10:00:00.000Z'
+const calls = () => vi.mocked(revalidatePath).mock.calls
+const LIST_PAGES = ['/(frontend)/journal/page/[n]', 'page']
+
+describe('post publishing hooks (P2)', () => {
+  beforeEach(() => vi.mocked(revalidatePath).mockClear())
+
+  it('does nothing public on a draft or autosave save', async () => {
+    const s = setupPost(publishedPost)
+    const data = { _status: 'draft', slug: 'loud' } as Record<string, unknown>
+    await runPost.before(s, { data, operation: 'update', originalDoc: { id: 3, slug: 'loud' } })
+    expect(data.previousSlugs).toBeUndefined()
+    await runPost.after(s, { doc: { id: 3 }, operation: 'update' })
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('refreshes the entry, every list page and Home on first publish', async () => {
+    const s = setupPost({ ...publishedPost, _status: 'draft' })
+    const data = { _status: 'published' } as Record<string, unknown>
+    await runPost.before(s, { data, operation: 'update', originalDoc: { id: 3, slug: 'quiet' } })
+    expect(data.previousSlugs).toBeUndefined()
+    s.state.row = { ...publishedPost, updatedAt: later }
+    await runPost.after(s, { doc: { id: 3 }, operation: 'update' })
+    expect(calls()).toEqual([['/journal/quiet'], ['/journal'], LIST_PAGES, ['/']])
+  })
+
+  it('records the old slug and refreshes old and new entries when a rename is published', async () => {
+    const s = setupPost(publishedPost)
+    const data = { _status: 'published', slug: 'loud' } as Record<string, unknown>
+    // originalDoc is the autosaved draft, which already has the new slug.
+    await runPost.before(s, { data, operation: 'update', originalDoc: { id: 3, slug: 'loud' } })
+    expect(data.previousSlugs).toEqual(['quiet'])
+    s.state.row = { ...publishedPost, slug: 'loud', previousSlugs: ['quiet'], updatedAt: later }
+    await runPost.after(s, { doc: { id: 3 }, operation: 'update' })
+    // Shared pages are refreshed once.
+    expect(calls()).toEqual([['/journal/quiet'], ['/journal'], LIST_PAGES, ['/'], ['/journal/loud']])
+  })
+
+  it('refreshes the old pages on unpublish', async () => {
+    const s = setupPost(publishedPost)
+    await runPost.before(s, { data: { _status: 'draft' }, operation: 'update', originalDoc: publishedPost })
+    s.state.row = { ...publishedPost, _status: 'draft', updatedAt: later }
+    await runPost.after(s, { doc: { id: 3 }, operation: 'update' })
+    expect(calls()).toEqual([['/journal/quiet'], ['/journal'], LIST_PAGES, ['/']])
+  })
+
+  it('refreshes a deleted published post only, and skips everything under disableRevalidate', async () => {
+    const s = setupPost(null)
+    await revalidateDeletedPost({ context: {}, doc: publishedPost, req: s.req } as AnyArgs)
+    expect(calls()).toEqual([['/journal/quiet'], ['/journal'], LIST_PAGES, ['/']])
+
+    vi.mocked(revalidatePath).mockClear()
+    await revalidateDeletedPost({ context: {}, doc: { ...publishedPost, _status: 'draft' }, req: s.req } as AnyArgs)
+    await revalidateDeletedPost({ context: { disableRevalidate: true }, doc: publishedPost, req: s.req } as AnyArgs)
+    const seeded = setupPost(publishedPost)
+    seeded.req.context.disableRevalidate = true
+    await runPost.after(seeded, { doc: { id: 3 }, operation: 'create' })
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+})
+
+describe('project changes refresh journal entries (P2)', () => {
+  beforeEach(() => vi.mocked(revalidatePath).mockClear())
+
+  it('refreshes every journal entry by route pattern when a project is published, not on drafts', async () => {
+    const s = setup(published)
+    await run.after(s, { doc: { id: 7 }, operation: 'create' })
+    expect(calls()).toContainEqual(['/(frontend)/journal/[slug]', 'page'])
+
+    vi.mocked(revalidatePath).mockClear()
+    const draft = setup({ ...published, _status: 'draft' })
+    await run.after(draft, { doc: { id: 7 }, operation: 'create' })
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+})
+
+describe('category hooks (P2)', () => {
+  beforeEach(() => vi.mocked(revalidatePath).mockClear())
+
+  it('refreshes every page on save and delete, except under disableRevalidate', () => {
+    const s = setup(null)
+    revalidateCategory({ context: {}, doc: { slug: 'process' }, req: s.req } as AnyArgs)
+    revalidateDeletedCategory({ context: {}, doc: { slug: 'process' }, req: s.req } as AnyArgs)
+    expect(calls()).toEqual([
+      ['/', 'layout'],
+      ['/', 'layout'],
+    ])
+
+    vi.mocked(revalidatePath).mockClear()
+    revalidateCategory({ context: { disableRevalidate: true }, doc: { slug: 'process' }, req: s.req } as AnyArgs)
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  const deleteWith = (totalDocs: number) => {
+    const count = vi.fn(async () => ({ totalDocs }))
+    const req = { payload: { count } }
+    return { count, attempt: () => blockCategoryDeleteInUse({ id: 5, req } as AnyArgs) }
+  }
+
+  it('refuses to delete a category that posts use, with a clear message', async () => {
+    const { count, attempt } = deleteWith(2)
+    await expect(attempt()).rejects.toMatchObject({
+      status: 400,
+      message: 'Used by 2 posts. Move them to another category first.',
+    })
+    expect(count).toHaveBeenCalledWith(
+      expect.objectContaining({ collection: 'posts', where: { category: { equals: 5 } }, overrideAccess: true }),
+    )
+    await expect(deleteWith(1).attempt()).rejects.toMatchObject({
+      message: 'Used by 1 post. Move it to another category first.',
+    })
+  })
+
+  it('allows deleting an unused category', async () => {
+    await expect(deleteWith(0).attempt()).resolves.toBeUndefined()
   })
 })

@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { anyone } from '@/access/anyone'
 import { authenticated } from '@/access/authenticated'
 import { slugFields } from '@/fields/slug'
+import { blockCategoryDeleteInUse, revalidateCategory, revalidateDeletedCategory } from '@/hooks/categoryHooks'
 
 /**
  * Journal categories (Build Spec › Content model › categories): Process, Outdoors, Design, Film.
@@ -22,6 +23,11 @@ export const Categories: CollectionConfig = {
     create: authenticated,
     update: authenticated,
     delete: authenticated,
+  },
+  hooks: {
+    beforeDelete: [blockCategoryDeleteInUse],
+    afterChange: [revalidateCategory],
+    afterDelete: [revalidateDeletedCategory],
   },
   fields: [{ name: 'name', type: 'text', required: true }, ...slugFields('name', { previousSlugs: false })],
 }

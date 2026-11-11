@@ -4,6 +4,7 @@ import { authenticated } from '@/access/authenticated'
 import { publishedOnly } from '@/access/publishedOnly'
 import { storyField } from '@/blocks/story'
 import { slugFields } from '@/fields/slug'
+import { recordPostSlug, revalidateDeletedPost, revalidatePost } from '@/hooks/revalidatePost'
 import { fillPublishedAt } from '@/lib/publishing'
 
 /** Journal posts (Build Spec › Content model › posts). Same Story blocks as projects. */
@@ -25,6 +26,12 @@ export const Posts: CollectionConfig = {
     create: authenticated,
     update: authenticated,
     delete: authenticated,
+  },
+  // Refresh pages and record old slugs only when the published state changes (never on drafts).
+  hooks: {
+    beforeChange: [recordPostSlug],
+    afterChange: [revalidatePost],
+    afterDelete: [revalidateDeletedPost],
   },
   fields: [
     // First field is a tabs field so the SEO plugin adds its tab here and sidebar fields stay top-level.

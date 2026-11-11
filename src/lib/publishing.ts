@@ -1,5 +1,34 @@
 import type { FieldHook } from 'payload'
 
+/** A page to refresh: a literal path, or a route pattern with its type (patterns need the type). */
+export type Revalidation = string | { path: string; type: 'page' | 'layout' }
+
+/**
+ * Route patterns refresh every page of a dynamic route at once. They name the route *file*, route
+ * group included: Next tags each page by its file path ('/(frontend)/journal/[slug]/page') and
+ * revalidatePath does not strip groups, so '/journal/[slug]' would match nothing.
+ */
+export const JOURNAL_ENTRIES = { path: '/(frontend)/journal/[slug]', type: 'page' } as const
+export const JOURNAL_PAGES = { path: '/(frontend)/journal/page/[n]', type: 'page' } as const
+
+/** The journal list; page 1 lives at /journal and page N ≥ 2 at /journal/page/N (P2 owner decision 1). */
+export const JOURNAL_PATH = '/journal'
+export const journalPagePath = (page: number) => (page <= 1 ? JOURNAL_PATH : `${JOURNAL_PATH}/page/${page}`)
+
+/** URL of a journal entry. */
+export const postPath = (slug: string) => `${JOURNAL_PATH}/${slug}`
+
+/**
+ * Pages that show this post state (Build Spec › Publishing): its entry, every list page (posts
+ * shift between pages) and `/`. An unpublished state shows nowhere.
+ */
+export function postPublicPaths(
+  state: { published: boolean; slug?: string | null } | null | undefined,
+): Revalidation[] {
+  if (!state?.published) return []
+  return [...(state.slug ? [postPath(state.slug)] : []), JOURNAL_PATH, JOURNAL_PAGES, '/']
+}
+
 /** URL of a collection (discipline) page. */
 export const collectionPath = (disciplineSlug: string) => `/portfolio/${disciplineSlug}`
 
