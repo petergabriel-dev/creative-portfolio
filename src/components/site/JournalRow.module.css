@@ -83,3 +83,22 @@
     column-gap: var(--space-14);
   }
 }
+
+/* The card variant (Build Spec JournalCard, Home): stacked at every width, no hairline, tighter text. */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+  color: var(--color-text);
+}
+
+.card .title {
+  margin-top: var(--space-2);
+}
+
+.card .excerpt {
+  margin-top: var(--space-2);
+  font-size: var(--fs-body);
+}

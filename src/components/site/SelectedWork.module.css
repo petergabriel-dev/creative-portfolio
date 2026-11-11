@@ -1,0 +1,55 @@
+/*
+ * Three column groups in a wrapping row: side by side on wide screens, stacked in order on phones,
+ * so reading order is always 01…09 (docs/design/components/SelectedWork.md).
+ */
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.column {
+  display: flex;
+  flex: 1 1 var(--grid-min-tile);
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* The caption is the tile's only link; its ::after stretches the click area over the tile. */
+.caption {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--lh-label);
+  text-decoration: none;
+  text-transform: uppercase;
+  touch-action: manipulation;
+}
+
+.caption::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* Hover and active underline the caption; colours never change. */
+.tile:hover .caption,
+.tile:active .caption {
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-hairline);
+  text-underline-offset: var(--underline-offset);
+}

@@ -11,14 +11,25 @@ type ChapterHeadingProps = {
   /** For the parent section's aria-labelledby. */
   id?: string
   aside?: ReactNode
+  /** "Chapter 0N · {labelDetail}" (P4: "Behind the camera"); empty is ignored. */
+  labelDetail?: string
 }
 
 /** "Chapter 0N" label and Bebas heading opening a light chapter (docs/design/components/ChapterHeading.md). */
-export function ChapterHeading({ number, title, id, aside }: ChapterHeadingProps) {
+export function ChapterHeading({ number, title, id, aside, labelDetail }: ChapterHeadingProps) {
+  const detail = labelDetail?.trim()
   return (
     <div className={styles.heading}>
       <div className={styles.titles}>
-        <p className={styles.label}>{copy.chapter.label(number)}</p>
+        <p className={styles.label}>
+          {copy.chapter.label(number)}
+          {detail ? (
+            <>
+              <span aria-hidden="true">{` ${copy.separator} `}</span>
+              {detail}
+            </>
+          ) : null}
+        </p>
         <h2 className={styles.title} id={id}>
           {title}
         </h2>
