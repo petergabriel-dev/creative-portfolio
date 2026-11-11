@@ -33,3 +33,13 @@ svg {
   display: block;
   max-width: 100%;
 }
+
+/* Hidden on screen, still read by screen readers (P4: Home's h1, extra link text). */
+.visually-hidden {
+  position: absolute;
+  width: var(--border-hairline);
+  height: var(--border-hairline);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

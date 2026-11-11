@@ -1,6 +1,6 @@
 # Design Tokens
 
-<!-- token-hash: 9eaca6731a7d8641f5b769dd96a7854e7059fc84c6bc5f7b02d529775b27dc21 -->
+<!-- token-hash: 4695990d74ccc7f3cab1c9ba29feb782bf574b9957f55d8cc35bb6e2ba6f5d1a -->
 
 ## Primitive
 
@@ -37,12 +37,14 @@
 | --fs-display | clamp(80px, 11vw, 168px) | — |
 | --fs-display-sm | clamp(56px, 19vw, 80px) | — |
 | --fs-finale | clamp(64px, 9vw, 136px) | — |
+| --fs-hero | clamp(64px, 8.4vw, 128px) | — |
 | --fs-label | 12px | — |
 | --fs-label-lg | 13px | — |
 | --fs-lead | 18px | — |
 | --fs-quote | clamp(40px, 5vw, 68px) | — |
 | --fs-section | clamp(52px, 6vw, 84px) | — |
 | --fs-sm | 14px | — |
+| --fs-story-card | 30px | — |
 | --fw-medium | 500 | — |
 | --fw-regular | 400 | — |
 | --fw-semibold | 600 | — |
@@ -53,8 +55,10 @@
 | --grid-min-photo | 260px | — |
 | --grid-min-tile | 280px | — |
 | --gutter | clamp(20px, 5vw, 64px) | — |
+| --hero-min-h | 780px | — |
 | --ink | #1B1A17 | — |
 | --ink-50 | rgb(27 26 23 / 0.5) | — |
+| --ink-80 | rgb(27 26 23 / 0.8) | — |
 | --lh-body | 1.6 | — |
 | --lh-body-loose | 1.7 | — |
 | --lh-card | 0.95 | — |
@@ -86,6 +90,7 @@
 | --rule-short | 28px | — |
 | --rule-soft | #E4DFD6 | — |
 | --section-y | clamp(72px, 8vw, 104px) | — |
+| --shadow-story-card | 0 18px 40px rgb(0 0 0 / 0.28) | — |
 | --space-1 | 4px | — |
 | --space-10 | 40px | — |
 | --space-12 | 48px | — |
@@ -100,6 +105,7 @@
 | --space-8 | 32px | — |
 | --space-9 | 36px | — |
 | --stone | #EAE6DF | — |
+| --story-card-w | 204px | — |
 | --surface | #FBFAF7 | — |
 | --tap-min | 44px | — |
 | --tap-primary | 52px | — |
@@ -118,9 +124,11 @@
 | --color-action | var(--ink) | — |
 | --color-booking | var(--gold) | — |
 | --color-error | var(--error) | — |
+| --color-field-bg | var(--surface) | — |
 | --color-field-border | var(--field-border) | — |
 | --color-frame | var(--frame) | — |
 | --color-frame-alt | var(--frame-alt) | — |
+| --color-hero-scrim | var(--ink-80) | — |
 | --color-on-action | var(--bone) | — |
 | --color-on-booking | var(--ink) | — |
 | --color-on-dark | var(--on-dark) | — |

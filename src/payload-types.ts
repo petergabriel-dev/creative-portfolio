@@ -99,9 +99,13 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     'site-settings': SiteSetting;
+    home: Home;
+    about: About;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    home: HomeSelect<false> | HomeSelect<true>;
+    about: AboutSelect<false> | AboutSelect<true>;
   };
   locale: null;
   widgets: {
@@ -957,6 +961,114 @@ export interface SiteSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home".
+ */
+export interface Home {
+  id: number;
+  /**
+   * One to six slides. The order here is the slider order.
+   */
+  heroSlides: {
+    /**
+     * Leave blank to use the site headline from Site settings.
+     */
+    title?: string | null;
+    /**
+     * The line above the title, e.g. "Featured · Project title".
+     */
+    placeLine: string;
+    /**
+     * About 20 words.
+     */
+    body: string;
+    /**
+     * The collection or project the second button opens.
+     */
+    link:
+      | {
+          relationTo: 'disciplines';
+          value: number | Discipline;
+        }
+      | {
+          relationTo: 'projects';
+          value: number | Project;
+        };
+    /**
+     * The second button's words, e.g. "View photography".
+     */
+    linkLabel: string;
+    image: number | Media;
+    /**
+     * The small line on the story card, e.g. "Collection 01".
+     */
+    cardKicker: string;
+    /**
+     * Shows while the photo loads.
+     */
+    tint: 'warm' | 'plum' | 'forest' | 'clay' | 'default';
+    id?: string | null;
+  }[];
+  /**
+   * One line under "Selected work".
+   */
+  selectedWorkIntro: string;
+  meet: {
+    heading: string;
+    body: string;
+    portrait: number | Media;
+  };
+  /**
+   * How many of the latest journal posts "From the journal" shows.
+   */
+  journalCount: number;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about".
+ */
+export interface About {
+  id: number;
+  /**
+   * e.g. "About · the person behind the work".
+   */
+  contextLine: string;
+  title: string;
+  lead: string;
+  /**
+   * Shown at 4:5; set the focal point in the media library.
+   */
+  portrait: number | Media;
+  /**
+   * One to four sections, shown as Chapter 01, 02 and so on.
+   */
+  sections: {
+    heading: string;
+    body: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    id?: string | null;
+  }[];
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
@@ -984,6 +1096,59 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home_select".
+ */
+export interface HomeSelect<T extends boolean = true> {
+  heroSlides?:
+    | T
+    | {
+        title?: T;
+        placeLine?: T;
+        body?: T;
+        link?: T;
+        linkLabel?: T;
+        image?: T;
+        cardKicker?: T;
+        tint?: T;
+        id?: T;
+      };
+  selectedWorkIntro?: T;
+  meet?:
+    | T
+    | {
+        heading?: T;
+        body?: T;
+        portrait?: T;
+      };
+  journalCount?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about_select".
+ */
+export interface AboutSelect<T extends boolean = true> {
+  contextLine?: T;
+  title?: T;
+  lead?: T;
+  portrait?: T;
+  sections?:
+    | T
+    | {
+        heading?: T;
+        body?: T;
+        id?: T;
+      };
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

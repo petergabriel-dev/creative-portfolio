@@ -71,6 +71,31 @@ export const getPublishedProjects = cache(async (disciplineId: number): Promise<
   return docs as ProjectSummary[]
 })
 
+export type HomeProject = Pick<Project, 'id' | 'title' | 'slug' | 'cover' | 'collection'>
+
+/** Most projects in Home's Selected work (Build Spec › Globals › home). */
+export const SELECTED_WORK_LIMIT = 9
+
+/**
+ * Home's Selected work: published projects with "Show in Selected work" ticked, in `homeOrder`
+ * (projects without one last), then newest year and title; nine at most. Depth 1 populates the
+ * cover and the collection (its name and slug make the caption and the URL).
+ */
+export const getHomeProjects = cache(async (): Promise<HomeProject[]> => {
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'projects',
+    where: { showOnHome: { equals: true } },
+    sort: ['homeOrder', '-year', 'title'],
+    limit: SELECTED_WORK_LIMIT,
+    depth: 1,
+    draft: false,
+    overrideAccess: false,
+    select: { title: true, slug: true, cover: true, collection: true },
+  })
+  return docs as HomeProject[]
+})
+
 export type ProjectMatch = {
   project: Project
   /** The discipline the project belongs to now (populated). */

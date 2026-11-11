@@ -26,42 +26,40 @@ const chapter: Block = {
   fields: [{ name: 'heading', type: 'text', required: true }],
 }
 
+/**
+ * Rich text with paragraphs, bold, italic, links and lists only: the Text block's body, reused by
+ * About's sections (P4). Render it with the safe link converters in StoryBlocks.
+ */
+export const safeRichTextEditor = lexicalEditor({
+  features: () => [
+    ParagraphFeature(),
+    BoldFeature(),
+    ItalicFeature(),
+    UnorderedListFeature(),
+    OrderedListFeature(),
+    LinkFeature({
+      // Custom URLs only, no internal document links.
+      enabledCollections: [],
+      // Lexical's own check accepts javascript: links; only http(s), mailto: and "/" paths
+      // may be saved (invariant 13). Link validations also run on every document save.
+      fields: ({ defaultFields }) => {
+        for (const field of defaultFields) {
+          if (field.type === 'text' && field.name === 'url' && !field.hasMany) {
+            field.validate = validateSafeHref
+          }
+        }
+        return defaultFields
+      },
+    }),
+    InlineToolbarFeature(),
+  ],
+})
+
 const text: Block = {
   slug: 'text',
   interfaceName: 'TextBlock',
   labels: { singular: '02 · Text', plural: '02 · Text' },
-  fields: [
-    {
-      name: 'body',
-      type: 'richText',
-      required: true,
-      // Paragraphs, bold, italic, links and lists only.
-      editor: lexicalEditor({
-        features: () => [
-          ParagraphFeature(),
-          BoldFeature(),
-          ItalicFeature(),
-          UnorderedListFeature(),
-          OrderedListFeature(),
-          LinkFeature({
-            // Custom URLs only, no internal document links.
-            enabledCollections: [],
-            // Lexical's own check accepts javascript: links; only http(s), mailto: and "/" paths
-            // may be saved (invariant 13). Link validations also run on every document save.
-            fields: ({ defaultFields }) => {
-              for (const field of defaultFields) {
-                if (field.type === 'text' && field.name === 'url' && !field.hasMany) {
-                  field.validate = validateSafeHref
-                }
-              }
-              return defaultFields
-            },
-          }),
-          InlineToolbarFeature(),
-        ],
-      }),
-    },
-  ],
+  fields: [{ name: 'body', type: 'richText', required: true, editor: safeRichTextEditor }],
 }
 
 const image: Block = {

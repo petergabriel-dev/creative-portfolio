@@ -54,6 +54,15 @@ The surface's job is to **persuade**: show selected work and turn interest into 
   - Book Me's "Good to know" heading uses `--fs-section`, larger than in capture 11 (Build Spec section heading size, as in P1).
   - Book Me's form fields have `--color-text-muted` borders, darker than capture 11's `--field-border`: on the stone form panel `--field-border` reaches only 2.9:1, below the 3:1 WCAG 2.2 requires for a control's edge (P3).
   - Book Me's "Sending…" and failed-save states are not drawn in the captures; they are specified in [InquiryForm](components/InquiryForm.md) (P3).
+  - Home's hero keeps the site headline as the only `h1`, visually hidden; each slide title is a visible `h2` (Build Spec; the prototype's `h1` changed with each slide). A blank slide title shows the headline (owner decision 2026-11-11, P4).
+  - The hero's story card row shows **every** slide, the current one included and marked with `aria-current` and a gold rule; capture 01 leaves the current slide out, so a clicked card vanished and took keyboard focus with it (owner decision 2026-11-11, P4).
+  - Story cards are named by their visible text (kicker + title), not by capture 01's `aria-label="Show …"`, so each name contains its visible label (WCAG 2.5.3). All cards use the one Build Spec `--card` colour, not the capture's slightly different tints (P4).
+  - The hero shows each slide's photo full-bleed under a `--color-hero-scrim` (`--ink-80`) scrim wherever text or a control sits, header band included; capture 01 has no photo. Below 1024 px the scrim covers the whole hero (owner decisions 2026-11-11, P4).
+  - The hero has two progress lines as in capture 01 (top bar and the line beside the arrows), both `--border-strong` thick (capture: 3 px and 2 px); arrows are `--tap-primary` (capture: 56 px). Their colour and progress transitions use `--duration-fast`, not the prototype's 0.5 s (P4).
+  - Selected work captions add the project title, visually hidden, to the link's name: "01 Photography, [title]" (P4).
+  - Home's "Behind the camera" heading and About's section headings use `--fs-section` (Build Spec section heading size), larger or smaller than in captures 01 and 08 (as in P1).
+  - The "From the journal" cards (JournalRow `card` variant) use `--fs-card` for titles, as ProjectCard does; capture 01 draws them at 40 px (P4).
+  - On Home, an empty chapter (no Selected work, no `meet` heading, no disciplines, no posts) is left out and the later chapters renumber; with no hero slides the page shows the ChapterOpener with a visible `h1` instead of the slider (owner decision 2026-11-11, P4).
 
 ### One colour scheme
 
@@ -94,6 +103,10 @@ Ratios computed from the token values (WCAG relative luminance), 2026-11-10:
 | `--field-border` on `--stone` | 2.9:1 | Fails 3:1, so it is not used for site fields on the panel (P3) |
 | `--error` on `--stone` / on `--surface` | 6.1:1 / 7.3:1 | Field errors and failed-save message on the panel; error edge on fields (P3) |
 | `--surface` on `--stone` | 1.2:1 | Field fill against the panel; the border carries the edge (P3) |
+| `--on-dark` / `--on-dark-strong` / `--bone` on `--ink-80` scrim over a white photo | 5.5:1 / 7.0:1 / 8.1:1 | Hero body, place line, titles and header links: the worst case (P4). `--ink-50` would give bone only 3.0:1, so the header band uses `--ink-80` too |
+| `--accent-gold` / `--bone-70` on `--ink-80` scrim over white | 4.8:1 / 5.0:1 | Hero Book Me fill and progress fills; outlined button and arrow borders (non-text) (P4) |
+| `--bone` / `--on-dark-strong` on `--card` | 6.6:1 / 5.8:1 | Story card title and kicker (P4) |
+| `--accent-gold` on `--card` | 4.0:1 | Current story card's rule (non-text) (P4) |
 
 Accent fills on bone are weak: terracotta 2.6:1, sage 1.7:1, off-white 1.0:1. Gold booking buttons sit on dark sections in the captures; any accent button on a light section needs a visible boundary.
 
@@ -144,5 +157,22 @@ Accent fills on bone are weak: terracotta 2.6:1, sage 1.7:1, off-white 1.0:1. Go
 - One new semantic token: `--color-field-bg` (`--surface`, the site input fill). `--field-bg` (white) stays the Studio's.
 
 **Book Me page layout** (`/book`, screen 11): ChapterOpener with the dark header → one light section (Chapter 01), padded `--section-y` block and `--gutter` inline, max width `--max-width` → SiteFooter. No BookingFinale (the only page without one). Inside the section, GoodToKnow and InquiryForm stack below 1024 px (GoodToKnow first, `--space-12` apart). From 1024 px they sit side by side, top-aligned: GoodToKnow about one third of the width, InquiryForm the rest, column gap `--space-14`. 1024 px is the header's existing second breakpoint; at 768 px the form's own two-column grid would leave fields too narrow beside GoodToKnow.
+
+### Components (P4)
+
+- [HeroSlider](components/HeroSlider.md) (with StoryCard): the one new client component on public pages.
+- [SelectedWork](components/SelectedWork.md)
+- CollectionTile gains a `home` variant (4:5, no label, "View gallery", `h3`); JournalRow gains a `card` variant (the Build Spec's JournalCard); ChapterHeading gains a label detail ("Chapter 02 · Behind the camera"). Their default output is unchanged.
+- New tokens: primitive `--ink-80`; semantic `--color-hero-scrim`; `--fs-hero`, `--fs-story-card`, `--hero-min-h`, `--story-card-w`, `--shadow-story-card`.
+- Motion: the hero's surface colour and its progress fills' width transition with `--duration-fast`, off under `prefers-reduced-motion` (Build Spec: "the slider's colour and progress transitions"). Nothing else moves.
+
+**Home page layout** (`/`, screen 01): HeroSlider (outside `<main>`, like an opener) → `<main>` with up to four light chapters, each a `<section aria-labelledby>` padded `--section-y` block and `--gutter` inline, max width `--max-width`, ChapterHeading then content `--space-10` below → BookingFinale (`site-settings.finaleHeadline`, Home's own body from `copy.ts`) → SiteFooter.
+
+1. **Selected work:** aside `home.selectedWorkIntro`; [SelectedWork](components/SelectedWork.md).
+2. **Behind the camera:** on the stone band (`--color-surface-band`, as capture 01). Below 768 px the `meet` portrait (MediaImage 4:5) then the text, `--space-12` apart; from 768 px two equal columns (`minmax(0, 1fr)` each), gap `--space-20`, vertically centred. Text: ChapterHeading with the label detail and `meet.heading` as its title, `meet.body` (`--fs-lead`, `--lh-body`, `--color-text`), then an `outline-ink` `primary` Button "Get to know me" to `/about`, `--space-6` apart.
+3. **Explore the portfolio:** aside = `text` Button "All collections" with trailing arrow to `/portfolio`; CollectionTile `home` tiles in the Portfolio grid.
+4. **From the journal:** no top padding on the section; its content column starts with a `--border-hairline` `--color-rule` top border and `--section-y` above the heading, separating it from the light chapter before (capture 01). Aside = `outline-ink` `primary` Button "Read the journal" to `/journal`; JournalRow `card` items, at most two per row (`--grid-min-card` grid, as ProjectCard).
+
+**About page layout** (`/about`, screen 08): ChapterOpener `split` (context line, title, lead; Book Me `gold` and "View my work" `outline-light` to `/portfolio`) → `<main>` padded `--section-y` / `--gutter`, max width `--max-width`: below 1024 px the portrait (MediaImage 4:5) then the sections, `--space-12` apart; from 1024 px two columns `minmax(0, 5fr) minmax(0, 6fr)`, gap `--space-20`, top-aligned. Sections stack `--space-12` apart; each is a `<section aria-labelledby>` with ChapterHeading ("Chapter 0N", the section heading) and its rich-text body (`--fs-lead`, `--lh-story`, `--color-text`; links underlined, `--color-text`). → BookingFinale (`site-settings.finaleHeadline`, the same body as the journal pages, as in capture 08) → SiteFooter.
 
 Grid minimum widths (`--grid-min-*`) feed `repeat(auto-fit, minmax(min(<token>, 100%), 1fr))`, so every grid collapses to one column on phones.

@@ -1,0 +1,85 @@
+/* Home's light chapters (docs/design/README.md › Home page layout). */
+.section {
+  padding: var(--section-y) var(--gutter);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+/* Behind the camera sits on the stone band (capture 01). */
+.band {
+  background-color: var(--color-surface-band);
+}
+
+/* From the journal follows another light chapter: a hairline separates them (capture 01). */
+.ruled {
+  padding-top: 0;
+}
+
+.ruled > .inner {
+  padding-top: var(--section-y);
+  border-top: var(--border-hairline) solid var(--color-rule);
+}
+
+/* Behind the camera: portrait then text; side by side from 768 px. */
+.meet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+.meetText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.meetBody {
+  max-width: var(--measure-body);
+  color: var(--color-text);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+}
+
+/* Explore: the Portfolio tile grid. */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-tile), 100%), 1fr));
+  gap: var(--space-10) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* From the journal: at most two cards per row, as project cards. */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(max(min(var(--grid-min-card), 100%), calc((100% - var(--space-6)) / 2)), 1fr)
+  );
+  gap: var(--space-12) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .meet {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--space-20);
+  }
+}

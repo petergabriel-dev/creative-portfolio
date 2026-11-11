@@ -18,12 +18,14 @@ type JournalRowProps = {
   /** ISO timestamp; shown as "6 Nov 2026" in Singapore time. */
   publishedAt?: string | null
   headingLevel?: 'h2' | 'h3'
+  /** 'card' (P4) is the Build Spec's JournalCard on Home: stacked, no call to action. */
+  variant?: 'row' | 'card'
 }
 
 /**
- * One post as a row on the journal list (docs/design/components/JournalRow.md). The link wraps
- * the title only, so its name is its visible label (WCAG 2.5.3); a pseudo-element stretches its
- * click area over the whole row.
+ * One post as a row on the journal list, or as a card on Home (docs/design/components/JournalRow.md).
+ * The link wraps the title only, so its name is its visible label (WCAG 2.5.3); a pseudo-element
+ * stretches its click area over the whole row or card.
  */
 export function JournalRow({
   title,
@@ -33,7 +35,9 @@ export function JournalRow({
   categoryName,
   publishedAt,
   headingLevel: Heading = 'h2',
+  variant = 'row',
 }: JournalRowProps) {
+  const card = variant === 'card'
   const category = categoryName?.trim()
   const date = formatDate(publishedAt)
   const meta: ReactNode[] = [
@@ -48,9 +52,13 @@ export function JournalRow({
   ]
 
   return (
-    <div className={styles.row}>
+    <div className={card ? styles.card : styles.row}>
       {/* Every list cover lazy-loads behind its tint: never priority. */}
-      <MediaImage aspect="3:2" media={cover} sizes="(min-width: 768px) 45vw, 100vw" />
+      <MediaImage
+        aspect="3:2"
+        media={cover}
+        sizes={card ? '(min-width: 1312px) 644px, (min-width: 900px) 50vw, 100vw' : '(min-width: 768px) 45vw, 100vw'}
+      />
       <div className={styles.text}>
         {meta.length > 0 ? (
           <span className={styles.meta}>
@@ -68,11 +76,13 @@ export function JournalRow({
           </Link>
         </Heading>
         {excerpt.trim() ? <p className={styles.excerpt}>{excerpt}</p> : null}
-        {/* A visual cue only: the title link is the one way in, for every input. */}
-        <span aria-hidden="true" className={styles.cta}>
-          {copy.journal.readStory}
-          {` ${copy.arrow}`}
-        </span>
+        {/* A visual cue only: the title link is the one way in, for every input. Cards have none. */}
+        {card ? null : (
+          <span aria-hidden="true" className={styles.cta}>
+            {copy.journal.readStory}
+            {` ${copy.arrow}`}
+          </span>
+        )}
       </div>
     </div>
   )
