@@ -218,12 +218,12 @@ Grid minimum widths (`--grid-min-*`) feed `repeat(auto-fit, minmax(min(<token>, 
 | `--theme-elevation-100` | `--color-surface-band` | Hover and subtle backgrounds |
 | `--theme-elevation-150` (`--theme-border-color`) | `--color-studio-card-border` | Borders |
 | `--theme-elevation-200` | `--color-frame-alt` | Stronger backgrounds, icons |
-| `--theme-elevation-250` | `--color-studio-field-border` | Field and control borders (3.6:1 on white; Payload's grey was 1.8:1) |
+| `--theme-elevation-250` | `--color-studio-field-border` | Control borders on hover and some field edges (3.6:1 on white; Payload's grey was 1.8:1). Resting field borders use `--theme-elevation-150` (1.5:1 on white, as Payload's own grey); a 3:1 field edge in Payload's editors is left to P6 (screens 22–31) |
 | `--theme-elevation-300` … `-650` | `--color-text-muted` | Secondary text and icons (6.9:1 on white) |
 | `--theme-elevation-700` … `-1000` | `--color-text` | Text and dark fills |
 | `--style-radius-s`, `--style-radius-m` | `--radius-cms-field` | Fields, small controls |
 | `--style-radius-l` | `--radius-cms-card` | Cards, drawers |
-| `--nav-width` (from 1024 px) | `--studio-nav-width` | Sidebar width |
+| `--nav-width` (from 769 px) | `--studio-nav-width` | Sidebar width. Below 769 px Payload's drawer stays full width (its own small-break rule) |
 | `--accessibility-outline` | `--focus-ring-width` solid `--focus-ring-color` | Payload's own focus outline; a catch-all `:focus-visible` rule adds the `--focus-halo-*` ring |
 
 Payload's buttons (`.btn`) take `--radius-pill`, like the site's Button. The P0–P3 accessibility fixes in `custom.scss` move from `--theme-elevation-700` to `--color-text-muted`.

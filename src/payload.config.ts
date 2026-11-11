@@ -33,6 +33,8 @@ const blobPrefix =
 export default buildConfig({
   admin: {
     user: Users.slug,
+    // Light only at launch (P5): the Studio theme in custom.scss has no dark values.
+    theme: 'light',
     importMap: {
       baseDir: path.resolve(dirname),
     },
