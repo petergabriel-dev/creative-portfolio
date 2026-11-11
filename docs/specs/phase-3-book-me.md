@@ -146,7 +146,7 @@ Run on the final `dev` code (`d1a8291`, PR #31) plus the Studio stylesheet fix b
 | Criterion | Result | Evidence |
 |---|---|---|
 | `inquiries` with the Build Spec fields and admin positions, owner decisions 5, 7, 8 | Pass | Migration `20261111_083526_p3_inquiries` applies on a fresh database after P2's. Studio: Inbox group; list columns Name, Project Type, Status, Received, newest first; no "Create New", menu offers only Delete; visitor fields read-only (T3). Table columns: `id`, `name`, `email`, `project_type`, `timing`, `message`, `status`, `notes`, `created_at`, `updated_at` |
-| A valid inquiry creates a `new` doc; the alert reaches `contactEmail` with reply-to the visitor | Pass locally; preview inbox **deferred** | Valid submit → row with status `new`, no alert failure logged; Resend accepted a live send to `delivered@resend.dev` and returned an id (T4). Reply-to: the adapter maps `replyTo` to Resend's `reply_to` (read in its source, T4); the send-only API key can't read emails back. Arrival in the owner's own inbox on a Vercel preview, and replying from it, is an owner check not yet run |
+| A valid inquiry creates a `new` doc; the alert reaches `contactEmail` with reply-to the visitor | Pass | Valid submit → row with status `new`, no alert failure logged; Resend accepted a live send to `delivered@resend.dev` and returned an id (T4). Reply-to: the adapter maps `replyTo` to Resend's `reply_to` (read in its source, T4). On a Vercel preview the owner confirmed (2026-11-11) that the alert arrived in their inbox and that replying to it goes to the visitor's address |
 | Invalid input shows each Build Spec message under its field, moves focus to the first, and is announced | Pass | Empty submit → 4 messages, focus on Your name; partly invalid → focus on Email, every typed value kept (dropdown included). Each error is linked by `aria-describedby`, its control `aria-invalid="true"`; unit tests for the markup |
 | A filled honeypot, or a form sent within 3 seconds, shows the thank-you and saves nothing | Pass | Honeypot submit and a submit 0.1 s after the form appeared → thank-you, 0 rows. A fast **empty** submit shows the errors (no false thank-you; fixed in T6) |
 | JavaScript off: valid saves and thanks; invalid shows the errors | Pass | JS-disabled context: empty submit → 4 errors, `autofocus` on Your name; valid → thank-you with its heading focused, row saved (timing rule skipped) |
@@ -162,7 +162,7 @@ Run on the final `dev` code (`d1a8291`, PR #31) plus the Studio stylesheet fix b
 | DoD: keyboard | Pass | `/book`: header → Good to know email link → five fields → Send inquiry → footer; the honeypot is skipped; dual ring on each stop. Thank-you: Browse the portfolio → Back to home → Send another inquiry. Inquiry editor: Status and Notes reachable, read-only fields skipped; status changed and saved by keyboard |
 | DoD: axe WCAG 2.2 AA | Pass on site pages; Studio exceptions recorded | 0 violations on `/book` default, errors, failed and sent at 1440 and 390 px |
 | DoD: code health | Pass | typecheck, lint, 294 unit tests |
-| DoD: Vercel preview | Pass (builds only) | PR #31 `checks` and `Vercel` green (its preview migrated its own Neon branch); `dev`'s deployment of `d1a8291` succeeded. Protected previews were not browsed |
+| DoD: Vercel preview | Pass (builds only) | PR #31 `checks` and `Vercel` green (its preview migrated its own Neon branch); `dev`'s deployment of `d1a8291` succeeded. The owner used a preview for the inbox check above; the QA run itself did not browse protected previews |
 
 ### Studio accessibility (same policy as P0–P2)
 
@@ -177,8 +177,8 @@ These remain inside Payload's built-in components and go to the P6 theme (screen
 
 ### Follow-ups
 
-- **Owner check (deferred):** on a preview, create the admin user, set Contact email to the Resend signup address, send an inquiry, and confirm the alert arrives and a reply goes to the visitor's address.
-- Release P3 to `main` as `v0.4.0` (merge commit, annotated tag) at the start of P4, as P2 was released at the start of P3. Pass `--subject "Release P3 Book Me (v0.4.0) (#N)"` to `gh pr merge` so the merge title matches P1's.
+- ~~Owner check: alert arrival and reply-to on a preview~~ Done 2026-11-11 (owner confirmed).
+- Release P3 to `main` as `v0.4.0` (merge commit, annotated tag). Pass `--subject "Release P3 Book Me (v0.4.0) (#N)"` to `gh pr merge` so the merge title matches P1's.
 - Delete the PR #31 preview deployment and its Neon branch once merged work is no longer being reviewed.
 - P7: verify the sending domain, set `EMAIL_FROM_ADDRESS`, write the inquiry retention policy with the privacy copy, and final wording for "Working on" and the opener line.
 - From P1/P2, still open: favicon, `metadataBase` (P7); opener title width.
