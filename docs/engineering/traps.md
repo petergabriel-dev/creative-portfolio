@@ -55,6 +55,9 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 - **`payload.create({ draft: Boolean(x) })` fails typecheck when required fields are missing** ("Type 'boolean' is not assignable to type 'true'"). Use two calls: `draft: true` for the draft, all required fields for the published one (`src/seed/journal.ts`).
 - **Anonymous REST `?draft=true` does not leak drafts:** with `publishedOnly` read access it returns only docs whose latest version is published, hides a published doc that has a newer draft (also by id), and `/api/<collection>/versions` is 403 (verified for posts and projects, P2).
 
+- **A collection can define its own `createdAt`** (e.g. to label it "Received" and show it in the sidebar): Payload then skips its built-in timestamp field, and `@payloadcms/drizzle` still fills the value on create (P3).
+- **`@payloadcms/email-resend` has no timeout** (a bare `fetch`) and throws `APIError` with a `status` and a message that echoes Resend's error, which can include addresses. Bound the send yourself and log only `name`/`status` (P3, ADR-0006).
+
 ## Next.js
 
 - **Preview builds can fail transiently in `next/font/google`** (Turbopack): "Can't resolve '@vercel/turbopack-next/internal/font/google/font'" / "next/font/google queries have exactly one entry". The same commit built fine on redeploy (`vercel redeploy <deployment> --environment preview`).
@@ -74,6 +77,13 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 
 - **`revalidatePath` route patterns must include the route group.** Next tags each page with its file path (`/(frontend)/journal/[slug]/page`, `next/dist/server/lib/implicit-tags.js`) and `revalidatePath` does not strip groups, so `revalidatePath('/journal/[slug]', 'page')` matches nothing. Use `'/(frontend)/journal/[slug]'` (verified live: a publish regenerated `/journal/page/2`, and unpublishing a project dropped its link from entries; ADR-0005).
 - **A folder named `page`** (`src/app/(frontend)/journal/page/[n]/page.tsx`) is a normal segment; only `page.tsx` files are special (`next build` lists `/journal/page/[n]` as ●).
+
+- **React 19 resets a form after its action.** Uncontrolled inputs and textareas return to their `defaultValue`, so pass the returned values as `defaultValue` to keep what the visitor typed. A `<select>` returns to the option it was **first** rendered with, even when `defaultValue` changes; give it `key={value}` so it remounts with the returned choice (found in the P3 live check: "Film & Video" was lost after an invalid submit).
+- **`autoFocus` only works in server HTML here.** React's server render writes `autofocus=""` (also on a heading or paragraph with `tabIndex={-1}`), which moves focus for visitors without JavaScript. On the client React applies it only when a form control mounts, never on updates or other elements, so move focus in an effect after an action result.
+- **The form's `onSubmit` runs before React builds the action's `FormData`**, so a hidden input set there (`elapsedMs`) is sent (verified live, P3).
+- **A no-JavaScript post of a `useActionState` server action re-renders a static page with the result**; the page stays ○ in `next build` (P3).
+- **Spam timing before validation gives a false "thank you".** If the 3-second rule runs first, someone who clicks Send on an empty form straight away is told it was sent. Check the honeypot, then the fields, then the timing (P3).
+- **Rows inside a narrow column need a container query, not a viewport media query.** At 1024 px the Book Me "Good to know" column is about 290 px, and side-by-side rows split the email address mid-word; `container-type: inline-size` with `@container (min-width: 400px)` fixed it (P3).
 
 ## Studio (Payload admin)
 
@@ -96,4 +106,7 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 - **Never screenshot or snapshot the Studio with the live preview open:** its frame URL carries `PREVIEW_SECRET`. Read the frame's content (e.g. its `h1`) through the DOM instead.
 - macOS `sips -c H W --cropOffset 0 0` centres the crop; use `--cropOffset 1 1` for a top-left crop of long screenshots.
 - `Intl.DateTimeFormat('en-GB', { month: 'short' })` writes September as "Sept" on Node 22; `formatDate` takes month names from `copy.months` (`src/lib/date.ts`).
+- **Studio blank under `pnpm dev` at `127.0.0.1`.** Next 16 dev blocks its dev resources for a non-allowed origin, so the admin rendered nothing and the HMR socket failed. Browse `http://localhost:<port>` (curl to 127.0.0.1 is fine).
+- **`playwright-cli` writes `.playwright-cli/`** (snapshots, console logs) into the current folder, which is the repo; delete it before committing. Its `snapshot` can return a stale accessibility tree on Payload's edit view (fields marked disabled that are editable); trust screenshots and a real action read back through REST.
+- **Check scripts run with `pnpm payload run` from outside the repo** compile as CommonJS: no top-level await, bare imports resolve from the script's folder, and CommonJS undici 7.30 fails on Node 25 with "TypeError: Illegal constructor". Name the script `.mts`, import packages by absolute `node_modules` path, and `await` the work at top level (`payload run` exits without awaiting a floating promise).
 - In tests, the `next/link` mock renders `href` before the other attributes, and `Button` joins its label and trailing arrow with a non-breaking space (U+00A0); match attributes individually and the arrow with `\u00a0→`.
