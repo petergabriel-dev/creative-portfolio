@@ -213,15 +213,15 @@ describe('JournalRow (P2)', () => {
       />,
     )
 
-  it('is one link named by its h2 title, with category · date, excerpt and Read story', () => {
+  it('links only the h2 title (name = visible label), with category · date, excerpt and a hidden cue', () => {
     const out = row()
-    const id = out.match(/<h2[^>]*id="([^"]+)"[^>]*>The quiet minutes<\/h2>/)?.[1]
-    expect(id).toBeTruthy()
-    expect(openingTag(out, 'a', 'href="/journal/quiet"')).toContain(`aria-labelledby="${id}"`)
+    expect(out).toMatch(/<h2[^>]*><a href="\/journal\/quiet"[^>]*>The quiet minutes<\/a><\/h2>/)
     expect(out.match(/<a\b/g)).toHaveLength(1)
+    expect(out).not.toContain('aria-labelledby')
     expect(out).toContain('Process<span aria-hidden="true"> · </span><time dateTime="2026-11-06">6 Nov 2026</time>')
     expect(out).toMatch(/<p class="[^"]*">Before a shoot, there&#x27;s a pause\.<\/p>/)
-    expect(out).toContain('Read story<span aria-hidden="true"> →</span>')
+    // "Read story" is a visual cue only; the stretched title link covers it.
+    expect(out).toMatch(/<span aria-hidden="true" class="[^"]*">Read story →<\/span>/)
   })
 
   it('never marks the cover as priority', () => {
@@ -245,7 +245,7 @@ describe('JournalRow (P2)', () => {
   })
 
   it('can render an h3 title', () => {
-    expect(row({ headingLevel: 'h3' })).toMatch(/<h3[^>]*>The quiet minutes<\/h3>/)
+    expect(row({ headingLevel: 'h3' })).toMatch(/<h3[^>]*><a [^>]*>The quiet minutes<\/a><\/h3>/)
   })
 })
 

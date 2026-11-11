@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Fragment, type ReactNode, useId } from 'react'
+import { Fragment, type ReactNode } from 'react'
 
 import { MediaImage } from '@/components/ui/MediaImage'
 import { copy } from '@/copy'
@@ -20,7 +20,11 @@ type JournalRowProps = {
   headingLevel?: 'h2' | 'h3'
 }
 
-/** One post as a row on the journal list (docs/design/components/JournalRow.md). */
+/**
+ * One post as a row on the journal list (docs/design/components/JournalRow.md). The link wraps
+ * the title only, so its name is its visible label (WCAG 2.5.3); a pseudo-element stretches its
+ * click area over the whole row.
+ */
 export function JournalRow({
   title,
   href,
@@ -30,7 +34,6 @@ export function JournalRow({
   publishedAt,
   headingLevel: Heading = 'h2',
 }: JournalRowProps) {
-  const titleId = useId()
   const category = categoryName?.trim()
   const date = formatDate(publishedAt)
   const meta: ReactNode[] = [
@@ -45,7 +48,7 @@ export function JournalRow({
   ]
 
   return (
-    <Link aria-labelledby={titleId} className={styles.row} href={href}>
+    <div className={styles.row}>
       {/* Every list cover lazy-loads behind its tint: never priority. */}
       <MediaImage aspect="3:2" media={cover} sizes="(min-width: 768px) 45vw, 100vw" />
       <div className={styles.text}>
@@ -59,15 +62,18 @@ export function JournalRow({
             ))}
           </span>
         ) : null}
-        <Heading className={styles.title} id={titleId}>
-          {title}
+        <Heading className={styles.title}>
+          <Link className={styles.link} href={href}>
+            {title}
+          </Link>
         </Heading>
         {excerpt.trim() ? <p className={styles.excerpt}>{excerpt}</p> : null}
-        <span className={styles.cta}>
+        {/* A visual cue only: the title link is the one way in, for every input. */}
+        <span aria-hidden="true" className={styles.cta}>
           {copy.journal.readStory}
-          <span aria-hidden="true">{` ${copy.arrow}`}</span>
+          {` ${copy.arrow}`}
         </span>
       </div>
-    </Link>
+    </div>
   )
 }
