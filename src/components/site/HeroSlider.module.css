@@ -1,0 +1,282 @@
+/*
+ * Home hero (docs/design/components/HeroSlider.md). Mobile first: header, then the slide text,
+ * the card row and the arrows, stacked. The --color-hero-scrim sits under every piece of text and
+ * every control, so contrast holds over any photo.
+ */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: var(--hero-min-h);
+  overflow: hidden;
+  background-color: var(--color-surface-opener);
+  color: var(--color-on-dark-heading);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+/* Slide tints (same mapping as discipline openers); they show while the photo loads. */
+.photo {
+  background-color: var(--color-surface-opener-photo);
+}
+.film {
+  background-color: var(--color-surface-opener-film);
+}
+.design {
+  background-color: var(--color-surface-opener-design);
+}
+.writing {
+  background-color: var(--color-surface-opener-writing);
+}
+
+/* The full-bleed photo (next/image fill), under the scrim. */
+.image {
+  object-fit: cover;
+}
+
+/* Below 1024 px the stacked content fills the hero: the scrim covers all of it. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-hero-scrim);
+}
+
+.top,
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+.bar {
+  height: var(--border-strong);
+  background-color: var(--color-rule-on-dark);
+}
+
+.fill {
+  height: 100%;
+  background-color: var(--color-booking);
+  transition: width var(--duration-fast) var(--ease-standard);
+}
+
+/* Pushed to the bottom of the hero. */
+.content {
+  margin-top: auto;
+  padding: var(--space-12) var(--gutter);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.rule {
+  width: var(--rule-short);
+  height: var(--border-strong);
+  background-color: var(--color-on-dark-heading);
+}
+
+.placeLine {
+  color: var(--color-on-dark-strong);
+  font-size: var(--fs-lead);
+}
+
+.title {
+  max-width: 100%;
+  color: var(--color-on-dark-heading);
+  font-family: var(--font-display);
+  font-size: var(--fs-hero);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-display);
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.body {
+  max-width: var(--measure-body);
+  color: var(--color-on-dark);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body-loose);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-9);
+  min-width: 0;
+}
+
+/* Scrolls sideways inside itself; block padding keeps the focus ring and shadow unclipped. */
+.cards {
+  display: flex;
+  gap: var(--space-5);
+  overflow-x: auto;
+  padding: var(--space-2) var(--space-1);
+}
+
+.card {
+  display: flex;
+  flex: 0 0 var(--story-card-w);
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: var(--space-2);
+  aspect-ratio: 2 / 3;
+  padding: var(--space-5);
+  border: 0;
+  border-radius: var(--radius-story-card);
+  background-color: var(--color-surface-story-card);
+  box-shadow: var(--shadow-story-card);
+  color: var(--color-on-dark-heading);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.cardRule {
+  width: var(--space-4);
+  height: var(--border-strong);
+  background-color: var(--color-on-dark-heading);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.card[aria-current='true'] .cardRule {
+  width: var(--rule-short);
+  background-color: var(--color-booking);
+}
+
+.card:hover .cardRule,
+.card:active .cardRule {
+  background-color: var(--color-booking);
+}
+
+.kicker {
+  color: var(--color-on-dark-strong);
+  font-size: var(--fs-label);
+  line-height: var(--lh-label);
+}
+
+.cardTitle {
+  max-width: 100%;
+  font-family: var(--font-display);
+  font-size: var(--fs-story-card);
+  line-height: var(--lh-card);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.arrow {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-primary);
+  height: var(--tap-primary);
+  border: var(--border-hairline) solid var(--color-outline-on-dark);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-on-dark-heading);
+  font: inherit;
+  font-size: var(--fs-lead);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.arrow:hover,
+.arrow:active {
+  border-color: var(--color-on-dark-heading);
+}
+
+.track {
+  flex: 1 1 auto;
+  min-width: var(--space-14);
+  height: var(--border-strong);
+  margin-inline-start: var(--space-3);
+  background-color: var(--color-rule-on-dark);
+}
+
+.counter {
+  min-width: 2ch;
+  color: var(--color-on-dark-heading);
+  font-family: var(--font-display);
+  font-size: var(--fs-card);
+  line-height: var(--lh-card);
+  text-align: right;
+}
+
+@media (min-width: 1024px) {
+  /* The photo shows brighter only between the header band and the content. */
+  .scrim {
+    display: none;
+  }
+
+  .top,
+  .content {
+    background-color: var(--color-hero-scrim);
+  }
+
+  .top::after,
+  .content::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: var(--space-20);
+    pointer-events: none;
+  }
+
+  .top::after {
+    top: 100%;
+    background-image: linear-gradient(to bottom, var(--color-hero-scrim), transparent);
+  }
+
+  .content::before {
+    bottom: 100%;
+    background-image: linear-gradient(to top, var(--color-hero-scrim), transparent);
+  }
+
+  .content {
+    padding-block: var(--space-20);
+  }
+
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: end;
+    column-gap: var(--space-14);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero,
+  .fill,
+  .cardRule,
+  .arrow {
+    transition: none;
+  }
+}
