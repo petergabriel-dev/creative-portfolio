@@ -104,6 +104,17 @@ export const copy = {
     credits: 'Credits',
   },
   book: {
+    form: {
+      /** Last project-type option, after the discipline names. */
+      somethingElse: 'Something else',
+      /** Build Spec "Book Me & inquiries flow", word for word. Timing and the honeypot have none. */
+      errors: {
+        name: 'Please add your name.',
+        email: 'Please check your email address.',
+        projectType: 'Please choose the kind of project.',
+        message: 'Tell me a little more — at least a sentence or two.',
+      },
+    },
     /** The owner's inquiry alert email: plain text (P3 owner decision 10). */
     alert: {
       /** Sender name for every email the site sends (the alert and Payload's password reset). */

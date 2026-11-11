@@ -1,6 +1,80 @@
 import { copy } from '@/copy'
 import type { Inquiry } from '@/payload-types'
 
+/** The fields a visitor sends; nothing else from the form is ever stored. */
+export type InquiryValues = { name: string; email: string; projectType: string; timing: string; message: string }
+
+/** Fields with a Build Spec error message (timing and the honeypot have none). */
+export type InquiryErrorField = keyof typeof copy.book.form.errors
+export type InquiryErrors = Partial<Record<InquiryErrorField, string>>
+
+/** The `submitInquiry` result, shared by the server action and InquiryForm. */
+export type InquiryFormState =
+  | { status: 'idle' }
+  | { status: 'invalid'; errors: InquiryErrors; values: InquiryValues }
+  | { status: 'failed'; values: InquiryValues }
+  | { status: 'sent' }
+
+export type InquiryValidation =
+  | { kind: 'spam' }
+  | { kind: 'invalid'; errors: InquiryErrors; values: InquiryValues }
+  | { kind: 'valid'; data: InquiryValues }
+
+/** A form sent sooner than this after it appeared is treated as spam (P3 owner decision 6). */
+export const MIN_ELAPSED_MS = 3000
+export const NAME_MAX = 120
+export const TIMING_MAX = 120
+export const MESSAGE_MIN = 20
+export const MESSAGE_MAX = 5000
+const EMAIL_MAX = 254
+
+// ponytail: a copy of Payload 3.93's email field pattern (payload/dist/fields/validations.js, `email`),
+// so the action rejects exactly what Payload would. If Payload's pattern changes, its ValidationError
+// on create is still shown as the email message by submitInquiry; re-copy it on Payload upgrades.
+const EMAIL_PATTERN =
+  /^(?!.*\.\.)[\w!#$%&'*+/=?^`{|}~-](?:[\w!#$%&'*+/=?^`{|}~.-]*[\w!#$%&'*+/=?^`{|}~-])?@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)*\.[a-z]{2,}$/i
+
+const field = (formData: FormData, key: string) => {
+  const value = formData.get(key)
+  return typeof value === 'string' ? value.trim() : ''
+}
+
+/** The project-type options: discipline names in Portfolio order, then "Something else". */
+export function projectTypeOptions(disciplineNames: (string | null | undefined)[]): string[] {
+  const names = disciplineNames.map((name) => name?.trim() ?? '').filter(Boolean)
+  return [...names, copy.book.form.somethingElse]
+}
+
+/**
+ * Server-side checks for a Book Me submission (Build Spec "Book Me & inquiries flow").
+ * Spam (a filled honeypot, or `elapsedMs` under 3 seconds) is reported first so nothing is saved;
+ * a missing or malformed `elapsedMs` (no JavaScript) skips the timing rule.
+ */
+export function validateInquiry(formData: FormData, options: readonly string[]): InquiryValidation {
+  if (field(formData, 'website') !== '') return { kind: 'spam' }
+  const elapsed = field(formData, 'elapsedMs')
+  if (/^\d+$/.test(elapsed) && Number(elapsed) < MIN_ELAPSED_MS) return { kind: 'spam' }
+
+  const values: InquiryValues = {
+    name: field(formData, 'name'),
+    email: field(formData, 'email'),
+    projectType: field(formData, 'projectType'),
+    // ponytail: timing has no error message in the Build Spec and the input caps it at 120, so a
+    // longer value (only possible without the browser) is cut to 120 rather than rejected.
+    timing: field(formData, 'timing').slice(0, TIMING_MAX).replace(/[\uD800-\uDBFF]$/, ''),
+    message: field(formData, 'message'),
+  }
+
+  const messages = copy.book.form.errors
+  const errors: InquiryErrors = {}
+  if (values.name.length < 1 || values.name.length > NAME_MAX) errors.name = messages.name
+  if (values.email.length > EMAIL_MAX || !EMAIL_PATTERN.test(values.email)) errors.email = messages.email
+  if (!options.includes(values.projectType)) errors.projectType = messages.projectType
+  if (values.message.length < MESSAGE_MIN || values.message.length > MESSAGE_MAX) errors.message = messages.message
+
+  return Object.keys(errors).length > 0 ? { kind: 'invalid', errors, values } : { kind: 'valid', data: values }
+}
+
 /** What `payload.sendEmail` needs for the owner's inquiry alert (P3 owner decisions 9 and 10). */
 export type InquiryAlert = { to: string; replyTo: string; subject: string; text: string }
 
