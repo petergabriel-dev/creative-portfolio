@@ -57,7 +57,15 @@
 
 .icon {
   display: inline-flex;
+  width: 100%;
+  height: 100%;
   color: inherit;
+}
+
+/* The icon fills whatever box Payload gives it (the app header's 18 px home link), uncropped. */
+.icon .mark {
+  width: 100%;
+  height: 100%;
 }
 
 .visuallyHidden {

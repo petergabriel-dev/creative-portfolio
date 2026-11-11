@@ -5,7 +5,7 @@
 // (`admin.theme: 'light'`), so there are no dark values.
 //
 // Payload classes targeted below (check them on every Payload upgrade): .nav, .nav__scroll,
-// .template-minimal.login, .template-minimal__wrap,
+// .template-minimal.login, .template-minimal__wrap, .rs__control,
 // .btn--style-primary, .btn--style-secondary, .btn--style-pill, .field-description, .array-field__add-row,
 // .upload-relationship-details__meta, .array-actions__button, .collapsible__drag,
 // .tabs-field__tab-button, .upload__dropzoneContent__orText, .upload__dragAndDropText,
@@ -88,6 +88,15 @@
 
 .template-minimal.login .template-minimal__wrap {
   max-width: none;
+}
+
+// WCAG 2.4.7 (P5): Payload's react-select fields (relationship, select) keep the focus on an inner
+// input, and react-select forces `outline: 0 !important` on the control. So the control draws the
+// dual ring as two shadows instead: the ink ring at its edge, the bone halo outside it.
+.rs__control:has(input:focus-visible) {
+  box-shadow:
+    0 0 0 var(--focus-ring-width) var(--focus-ring-color),
+    0 0 0 calc(var(--focus-ring-width) + var(--focus-halo-width)) var(--focus-halo-color);
 }
 
 // Pill buttons, like the site's Button (Build Spec › Admin: "pill buttons").

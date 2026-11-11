@@ -132,3 +132,55 @@ None specific to this phase.
 - **Badge cost.** The badge runs a count query on every admin page. Keep it to a single `count` on `status`; no index (owner decision 8), revisited only if the table grows.
 - **Login override.** Our login view must keep Payload's own auth behaviour: lockout, reset and HTTP-only cookies. It calls Payload's `login()` rather than reimplementing it, and redirects only through `getSafeRedirect`.
 - **Stale main records.** Autosave writes drafts to the versions table only, so the Overview shows each doc's latest version rather than its main record.
+
+## QA log (2026-11-11)
+
+Run on `docs/p5-qa` (plan `p5-studio-shell`, T1–T6 committed on stacked local branches, not yet pushed). The checks used a local production build (`pnpm build`, `pnpm start`) on a fresh database: all 8 migrations (P5 needs none: `payload migrate:create --skip-empty` wrote no file), seeded twice with the local `./media` folder moved aside (traps.md), an empty `BLOB_READ_WRITE_TOKEN` and an empty `RESEND_API_KEY`, so emails were logged rather than sent. Rows marked "Tn" cite that task's verification on `pnpm dev` with the same code. axe is axe-core 4.14 from the project's own dependencies (WCAG 2.2 AA tags).
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Theme, logo, nav groups, inquiry badge and Overview dashboard in place (Build Spec box 7.1) | Pass | Every Studio view is on the tokens (bone page, Inter, pill buttons, dual focus ring, light only), with our sidebar (Overview, Portfolio, Journal, Inbox, Library, Settings, Admin), the gold badge and the Overview at `/admin` (T2, T4, T5, final build) |
+| The badge equals the number of `new` inquiries and updates on the next page load; hidden at 0 | Pass | T4: "Inquiries, 2 new" → "1 new" → no badge as inquiries were set to replied, back again on restore. Final build: "2 new", then "1 new" after the keyboard pass replied to one |
+| Each Overview panel shows correct seeded data; each link opens the right view | Pass | Final build: "2 new", "3 unpublished" (2 projects, 1 post), five hero slides in order, "Selected work shows the first 9 of 10 pieces…", four recent rows with chips. T5: an autosaved edit to a live project topped Recently edited as "Unpublished changes"; New project, Edit Home page, an inquiry, All posts and a recent project each opened the right view |
+| Overview empty states (owner decision 4) | Pass | Fresh database before seeding: "Nothing waiting.", "No drafts.", "No hero slides published yet.", "Nothing is marked “On home” yet.", "Nothing edited yet."; no count pills, no badge, at 1440 and 390 px |
+| Log-in, its errors and the failed-attempt lockout | Pass | Final build: logging in through the form sets `payload-token` HttpOnly, `SameSite=Lax`, `Secure`. T6: blank fields mark only the blank ones; wrong details show "That email and password don't match." with focus on the alert, the email kept and the password cleared; a throwaway user locked after 5 wrong tries (`lock_until` set) and the right password then showed the lock message |
+| Redirects stay in the Studio | Pass | T6: `?redirect=/admin/collections/posts` landed there; `?redirect=https://example.com` landed on `/admin`; a logged-in visit to `/admin/login` went to `/admin` (or to a safe `?redirect=`). Unit tests cover `//`, `/\`, `/%2F`, `javascript:` and non-Studio paths |
+| Log-in without JavaScript | Not possible (recorded) | Payload's admin layout renders every view on the client: the server HTML body of `/admin/*` is empty and the content is only in the RSC payload, Payload's own log-in included (T6). The form still posts to a server action; no client fetch code |
+| Create-first-user while `users` is empty (invariant 10) | Pass | Final build and T6: `/admin/login` went to `/admin/create-first-user` on an empty `users` table |
+| "Forgot password?" sends a reset email | Pass locally; preview pending | The link opens Payload's view; submitting logged "Email attempted without being configured. To: 'qa@example.com', Subject: 'Reset Your Password'". The Resend send on a preview is still to do |
+| Screens 20, 20--error, 21 and 42 match their captures at 1440 px | Pass, with recorded deviations | Screenshots against the captures (T4, T5, T6, final build). The sidebar was opened first: Payload starts it closed on each full load up to 1440 px (owner decision 10). Deviations are recorded in `docs/design/README.md` |
+| Screens 20 and 21 match at 390 px; all four work at 390 px with no horizontal scroll | Pass | 21 at 390 px without its stacked sidebar (owner decision 9). No horizontal scroll at 320, 390, 768, 1024 and 1440 px on the log-in (both states), the Overview and forgot. With the phone drawer open, Payload's own layout lets the page scroll sideways behind it; identical with Payload's default nav (T4) |
+| Keyboard pass of the admin's main flows | Pass after one fix | Final build, keyboard only: logged in (Email is the first stop after Back to the site), Overview → a draft project (Tab, Enter), title edited and published (Publish changes reached by Tab; REST `_status: published`), an inquiry opened from the list, status set to Replied in the select and saved, sidebar opened with the menu button, Log out → `/admin/login` with the cookie cleared. Every stop showed the ring except Payload's select fields, now fixed (below) |
+| axe: no WCAG 2.2 AA violations on the themed views | Pass on P5 views; Payload exceptions recorded | 0 violations on the log-in (default and error), forgot, the Overview and the sidebar at 1440 and 390 px. The project editor and inquiries list report only findings inside Payload's components, identical to the pre-P5 baseline taken in T2 (list below) |
+| No admin stylesheet rule hard-codes a colour value | Pass | No hex or `rgb()` in `custom.scss` or `src/components/studio/*.css` |
+| `next build`: public routes keep their rendering (invariant 22) | Pass | `/`, `/about`, `/portfolio`, `/journal` and `/book` ○; collection, project, `/journal/page/[n]` and `/journal/[slug]` ● |
+| The full seed (P0–P4) fills a fresh database; a second run creates nothing | Pass | Run 1 created 54 docs, run 2 created 0: 23 projects, 12 posts, 4 disciplines, 4 categories, 4 inquiries, 7 media, 1 version each of `home` and `about`; `users` held only the QA editor (the seed creates none) |
+| DoD: code health | Pass | typecheck, lint, 403 unit tests (43 new in P5) |
+| DoD: Vercel preview | Pending | The branch is not pushed yet (owner to approve the push and PR) |
+
+### Fixes made during QA
+
+- **The app header's lens icon was cropped to a "C".** Payload's breadcrumb home slot is 18 px and StudioBrand's icon was `--mark-size` (26 px); the icon now fills the slot (`StudioBrand.module.css`).
+- **Payload's select fields showed no keyboard focus ring.** react-select keeps focus on an inner input and forces `outline: 0 !important` on the control; `custom.scss` now draws the dual ring on `.rs__control` as two shadows while its input is `:focus-visible` (mouse clicks show no ring).
+
+### Studio accessibility (same policy as P0–P4)
+
+These sit inside Payload's built-in components and go to P6 (screens 22–31) and upstream Payload. They match the pre-P5 baseline:
+
+- Project editor: array and block row headers without a name (`aria-command-name` ×15), react-select indicators inside `aria-hidden` (`aria-hidden-focus` ×14), the Lexical editor (`aria-input-field-name` ×2), unnamed popup, upload and row buttons (`button-name` ×26), the Versions tab (`label-content-name-mismatch` ×1), react-select inputs without a label (`label` ×7), document tabs (`list` ×1); at 390 px also the document controls strip (`scrollable-region-focusable` ×1) and the upload card's edit/remove buttons (`target-size` ×10).
+- Inquiries list: row checkboxes without a name (`label` ×4).
+- Payload's resting field border is `--color-studio-card-border` (1.5:1 on white, as Payload's own grey); a 3:1 field edge in Payload's editors is left to P6.
+
+### Deferred owner checks
+
+These are recorded as deferred, not passed:
+
+- the Vercel preview: `checks` and `Vercel` green, the Studio browsed on the preview, and a real reset email through Resend (to the Resend account's address while the test sender is in use);
+- a screen-reader pass of the sidebar badge, the Overview panels and the log-in alert;
+- the sidebar drawer on a real phone.
+
+### Follow-ups
+
+- Push the P5 branches and open the PR into `dev` (owner approval); when the preview rows pass, set Status to `Done` here and in `docs/specs/README.md`.
+- P6: Payload's field edges (3:1), the exceptions above, and screens 22–31.
+- `next.config.ts` now sets `logging.serverFunctions: false`, so the dev server no longer prints Server Function arguments (the typed email on the log-in and Book Me forms).
