@@ -42,6 +42,10 @@ export default buildConfig({
         Logo: '/components/studio/StudioBrand#StudioLogo',
         Icon: '/components/studio/StudioBrand#StudioIcon',
       },
+      views: {
+        // The Overview replaces Payload's dashboard at /admin (docs/design/components/StudioOverview.md).
+        dashboard: { Component: '/components/studio/StudioOverview#StudioOverview' },
+      },
     },
     importMap: {
       baseDir: path.resolve(dirname),
