@@ -24,6 +24,8 @@ The app has **two root layouts**:
 | `users` | auth collection | `name`; lockout after 5 failures for 15 min; every operation requires a logged-in editor | Admin |
 | `media` | upload collection | JPEG/PNG/WebP up to 25 MB, `alt` required, `caption`, `credit`, focal point, 4 WebP sizes; public read | Library |
 | `site-settings` | global | identity, socials, accent, labels, default SEO; versions on, drafts off; public read | Settings |
+| `home` | global | `heroSlides` (1–6: optional `title` — blank shows `site-settings.headline` — place line, body, `link` to a discipline or project, link label, image, card kicker, tint), `selectedWorkIntro`, `meet` (heading, body, portrait), `journalCount` (1–6, default 2); drafts + versions (no autosave), live preview at `/`; **published-only** read, update by the editor | Settings |
+| `about` | global | context line, title, lead, portrait (shown 4:5), `sections` (1–4: heading + rich text with the Text block's editor); drafts + versions, live preview at `/about`; **published-only** read, update by the editor | Settings |
 | `disciplines` (Studio: "Collections") | collection | name, slug, `order`, intro, `openerTint`, `layout` (`projects`/`list`), highlights, aspects, finale copy, SEO `meta`, hidden `previousSlugs`; no drafts; public read | Portfolio |
 | `projects` | collection | Build Spec fields, `story` blocks, credits, sidebar fields, SEO `meta`, hidden `previousSlugs`; drafts + autosave + versions; **published-only** read for anonymous users | Portfolio |
 | `posts` | collection | title, excerpt, cover, `story` (required), SEO `meta`; sidebar `category` (required), `publishedAt` (filled on first publish when empty), `relatedProjects`, slug, hidden `previousSlugs`; drafts + autosave + versions; **published-only** read for anonymous users | Journal |
@@ -39,16 +41,20 @@ The app has **two root layouts**:
 
 **Public reads**
 - Public pages are **server components** that read through Payload's Local API, in-process, with access applied (`overrideAccess: false`, `draft: false`).
-- `src/lib/getSiteSettings.ts`, `src/lib/portfolio.ts` and `src/lib/journal.ts` wrap the reads in React `cache`. Journal lists read 10 posts per page, sorted `-publishedAt` then `-id`.
+- `src/lib/getSiteSettings.ts`, `src/lib/portfolio.ts`, `src/lib/journal.ts` and `src/lib/pages.ts` (`home`, `about`) wrap the reads in React `cache`. Journal lists read 10 posts per page, sorted `-publishedAt` then `-id`.
+- A global that was never published (or was unpublished) reads as `{}`, so Home and About render their empty states instead of failing.
+- **Home** (`/`) combines `home`, `getHomeProjects()` (published, `showOnHome`, by `homeOrder`, nine at most), the disciplines and the first journal page (sliced to `journalCount`). Hero slides are resolved on the server by `src/lib/heroSlides.ts` into plain data for the `HeroSlider` client component: a blank title becomes the headline, and a link survives only to a discipline or a published project. An empty chapter is left out and the later ones renumber; with no slides the page shows the plain opener.
 
 **Refresh on publish** (`src/hooks/`)
 - Pages are **statically rendered** and refreshed on demand with `revalidatePath`, never by a redeploy.
-- Hooks act only when what the public sees changes. Project and post hooks snapshot the **main row** (the last published state; draft and autosave saves only write versions) before a save and compare it afterwards ([ADR-0004](decisions/ADR-0004-slug-redirects-and-publish-hooks.md)). Both are built by one factory, `src/hooks/publishHooks.ts`.
+- Hooks act only when what the public sees changes. Project and post hooks snapshot the **main row** (the last published state; draft and autosave saves only write versions) before a save and compare it afterwards ([ADR-0004](decisions/ADR-0004-slug-redirects-and-publish-hooks.md)). Both are built by one factory, `src/hooks/publishHooks.ts`; the `home` and `about` globals use its `globalPublishHooks`, which compares the global's main-row `updatedAt` the same way.
 
   | When this changes | Refresh |
   |---|---|
   | `site-settings` | every page (`revalidatePath('/', 'layout')`) |
-  | a project's published state (publish, unpublish, rename, move, delete) | its old and new project URLs, both collection pages, and `/` when `showOnHome` is on now or was before |
+  | `home` (publish or unpublish; never a draft save) | `/` |
+  | `about` (publish or unpublish; never a draft save) | `/about` |
+  | a project's published state (publish, unpublish, rename, move, delete) | its old and new project URLs, both collection pages, and `/` always (a hero slide can link any project; P4 owner decision 4) |
   | a discipline (any save or delete) | every page, because project pages show its name and use its slug |
   | a project's published state (as above) | also every journal entry, by route pattern, so "See the work" links stay right |
   | a post's published state (publish, unpublish, rename, delete) | its old and new entry URLs, `/journal`, every `/journal/page/N` (by route pattern) and `/` |
@@ -67,8 +73,8 @@ The app has **two root layouts**:
 
 **Draft mode and live preview**
 - `/next/preview` enables Next.js draft mode only with `PREVIEW_SECRET`, an editor session and a site-relative path; otherwise 403.
-- The project and journal entry pages read drafts only when draft mode is on **and** the editor session checks out at render time (`src/lib/draftEditor.ts`); they then mount `LivePreviewListener` (`RefreshRouteOnSave`). List pages always show published posts only.
-- The Studio's live preview pane and "Preview" button use a relative `/next/preview?…` URL, so Payload's `serverURL` stays unset. Projects and posts share the breakpoints (`LIVE_PREVIEW_BREAKPOINTS` in `src/lib/preview.ts`).
+- The project, journal entry, Home and About pages read drafts only when draft mode is on **and** the editor session checks out at render time (`src/lib/draftEditor.ts`); they then mount `LivePreviewListener` (`RefreshRouteOnSave`). List pages always show published posts only, and Home's Selected work and journal cards always show published content (only the `home` global itself is previewed).
+- The Studio's live preview pane and "Preview" button use a relative `/next/preview?…` URL, so Payload's `serverURL` stays unset. Projects, posts and the `home` and `about` globals share the breakpoints (`LIVE_PREVIEW_BREAKPOINTS` in `src/lib/preview.ts`).
 
 **Book Me inquiries** ([ADR-0006](decisions/ADR-0006-inquiry-submission.md))
 1. `/book` is static. `InquiryForm` (a client island) posts with `useActionState` to the `submitInquiry` server action (`src/app/(frontend)/book/actions.ts`); without JavaScript the same form posts and the page re-renders with the result.
@@ -99,18 +105,19 @@ The app has **two root layouts**:
 | Path | Contents |
 |---|---|
 | `src/styles/tokens.css` | Canonical design tokens (`@primitive` / `@semantic`) and the focus ring. Specs in `docs/design/` |
-| `src/styles/globals.css` | Minimal reset and base type |
+| `src/styles/globals.css` | Minimal reset, base type and the `.visually-hidden` utility |
 | `src/components/ui/` | `Button` (pill buttons and text links), `MediaImage` |
-| `src/components/site/` | `SiteHeader`, `SiteFooter`, `Wordmark`, `LensMark`, `ChapterOpener`, `ChapterHeading`, `BookingFinale`, `DetailsStrip`, `Filmstrip`, `CollectionTile`, `ProjectCard`, `PieceRow`, `RevealMore`, `JournalRow`, `Pagination`, `JournalEntryFooter`, `GoodToKnow`, `InquiryForm`, `navItems` |
-| `src/components/story/` | `StoryBlocks` (one renderer per block), `VideoEmbed`, `LivePreviewListener` |
-| `src/lib/` | `portfolio.ts` and `journal.ts` (public reads), `inquiry.ts` (form validation, alert message, email link base), `seo.ts` (metadata), `publishing.ts` (paths, route patterns, previous slugs, `publishedAt` fill), `date.ts` (Singapore dates), `draftEditor.ts`, `preview.ts`, `video.ts`, `safeHref.ts`, `slug.ts`, `openerTint.ts` |
+| `src/components/site/` | `SiteHeader`, `SiteFooter`, `Wordmark`, `LensMark`, `ChapterOpener`, `ChapterHeading`, `BookingFinale`, `DetailsStrip`, `Filmstrip`, `CollectionTile` (Portfolio and `home` variants), `ProjectCard`, `PieceRow`, `RevealMore`, `JournalRow` (`row` and `card` = JournalCard), `Pagination`, `JournalEntryFooter`, `GoodToKnow`, `InquiryForm`, `HeroSlider` (with `StoryCard`), `SelectedWork`, `navItems` |
+| `src/components/story/` | `StoryBlocks` (one renderer per block; `SafeRichText` for rich text with safe links), `VideoEmbed`, `LivePreviewListener` |
+| `src/lib/` | `portfolio.ts`, `journal.ts` and `pages.ts` (public reads), `heroSlides.ts` (Home's slide views, wrapping index, Selected work columns), `inquiry.ts` (form validation, alert message, email link base), `seo.ts` (metadata), `publishing.ts` (paths, route patterns, previous slugs, `publishedAt` fill), `date.ts` (Singapore dates), `draftEditor.ts`, `preview.ts`, `video.ts`, `safeHref.ts`, `slug.ts`, `openerTint.ts` |
 | `src/copy.ts` | All non-CMS text |
 
-Components are server components except four client islands:
+Components are server components except five client islands:
 - `RevealMore` ("More projects": reveals pre-rendered cards, no fetch);
 - `VideoEmbed` (loads the provider iframe on click);
 - `LivePreviewListener` (draft mode only);
-- `InquiryForm` (Book Me: pending state, focus management and the elapsed-time spam check; works without JavaScript).
+- `InquiryForm` (Book Me: pending state, focus management and the elapsed-time spam check; works without JavaScript);
+- `HeroSlider` (Home: the current slide; slide 1 is complete in the server HTML and the controls start working on hydration).
 
 ## Environments
 
