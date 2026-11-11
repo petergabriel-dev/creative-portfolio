@@ -1,6 +1,6 @@
 # Phase 3 — Book Me
 
-Status: Ready
+Status: Done
 Depends on: P0 (`site-settings`, shell), P1 (`disciplines` supply the project-type options)
 Build Spec refs: Content model: collections › inquiries · Book Me & inquiries flow · Access control & auth · Front-end pages (Book Me) · Decisions & stack (Resend, optional Upstash) · Environments, deployment & migrations (variables)
 
@@ -138,3 +138,47 @@ None. The three earlier questions (auto-reply, retention, email failure) are own
 - **Payload's email check.** The server's email rule copies Payload's own pattern; if they ever differ, a Payload validation error on create is shown as the email field's message, never as success.
 - **Sender address.** Until a domain is verified, Resend's test sender is expected to deliver only to the account owner's address, so preview alerts go to that address (owner decision 9).
 - **Spam volume.** Resend's free plan sends 100 emails a day. Past that, alerts stop but inquiries still save; Upstash rate limiting needs owner approval if paid.
+
+## QA log (2026-11-11)
+
+Run on the final `dev` code (`d1a8291`, PR #31) plus the Studio stylesheet fix below, as a local production build on a fresh database (all 7 migrations, seeded twice, `contactEmail` set to Resend's `delivered@resend.dev` test inbox). Plan `p3-book-me`, tasks 1–8; T1 was the P2 release (PR #30, `v0.3.0`), and the per-task commits T2–T7 were on `feat/p3-book-me`, squash-merged as #31 (ADR-0003). Rows marked "Tn" cite that task's verification on the same kind of build of the same code; the rest were re-run on the final build. axe is axe-core 4.14 from the project's own dependencies (WCAG 2.2 AA tags).
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| `inquiries` with the Build Spec fields and admin positions, owner decisions 5, 7, 8 | Pass | Migration `20261111_083526_p3_inquiries` applies on a fresh database after P2's. Studio: Inbox group; list columns Name, Project Type, Status, Received, newest first; no "Create New", menu offers only Delete; visitor fields read-only (T3). Table columns: `id`, `name`, `email`, `project_type`, `timing`, `message`, `status`, `notes`, `created_at`, `updated_at` |
+| A valid inquiry creates a `new` doc; the alert reaches `contactEmail` with reply-to the visitor | Pass locally; preview inbox **deferred** | Valid submit → row with status `new`, no alert failure logged; Resend accepted a live send to `delivered@resend.dev` and returned an id (T4). Reply-to: the adapter maps `replyTo` to Resend's `reply_to` (read in its source, T4); the send-only API key can't read emails back. Arrival in the owner's own inbox on a Vercel preview, and replying from it, is an owner check not yet run |
+| Invalid input shows each Build Spec message under its field, moves focus to the first, and is announced | Pass | Empty submit → 4 messages, focus on Your name; partly invalid → focus on Email, every typed value kept (dropdown included). Each error is linked by `aria-describedby`, its control `aria-invalid="true"`; unit tests for the markup |
+| A filled honeypot, or a form sent within 3 seconds, shows the thank-you and saves nothing | Pass | Honeypot submit and a submit 0.1 s after the form appeared → thank-you, 0 rows. A fast **empty** submit shows the errors (no false thank-you; fixed in T6) |
+| JavaScript off: valid saves and thanks; invalid shows the errors | Pass | JS-disabled context: empty submit → 4 errors, `autofocus` on Your name; valid → thank-you with its heading focused, row saved (timing rule skipped) |
+| JavaScript on: "Sending…", disabled, no reload | Pass | Button read "Sending…" and was disabled mid-request, with the status text "Sending…" (T6); a `window` marker survived submit and "Send another inquiry" |
+| A logged-out REST request can neither read nor create inquiries | Pass | `GET /api/inquiries` and `/api/inquiries/1` → 403; anonymous `POST` → 403; logged-in editor `POST` → 403; anonymous update and delete → 403 (T3); `/api/graphql` → 404 |
+| A forced alert failure still saves the inquiry | Pass | Server run with an invalid `RESEND_API_KEY`: thank-you shown, row saved, log `Inquiry 7: alert email failed (APIError/401)`; 0 log lines contain the visitor's details |
+| A failed save never shows the thank-you and keeps the text | Pass | A temporary `CHECK (false)` constraint made inserts fail: the failed-save message appeared with focus, all values kept, 0 rows; log `Inquiry not saved (Error)` only |
+| Only the form fields and system fields are stored | Pass | Column list above; the create writes the five fields and `status: 'new'` only (unit test with extra `ip`, `status`, `notes` keys) |
+| Statuses change in the admin, including back to `new` | Pass | REST as the editor: archived → new → archived; Studio by keyboard: new → replied, saved |
+| `next build`: `/book` ○ | Pass | Route table on the final build; `/book` served with `x-nextjs-cache: HIT` |
+| Screen 11 and its error and thank-you states match at 1440 px and work at 390 px | Pass, with recorded deviations | Screenshots at 1440 and 390 against captures 11, 11 errors and 11 sent (T6); no horizontal scroll at 320, 375, 390, 768, 1024, 1280 and 1440 px. Deviations: opener title wraps wider (shared ChapterOpener, as in P2); field borders darker for contrast; "Good to know" heading at `--fs-section`; the form column is two thirds of the content width, wider than the capture's panel; Good to know rows stack between 1024 and about 1279 px |
+| Seed runs twice without duplicates | Pass | 4 inquiries, 12 posts and 23 projects after both runs; 0 users |
+| DoD: keyboard | Pass | `/book`: header → Good to know email link → five fields → Send inquiry → footer; the honeypot is skipped; dual ring on each stop. Thank-you: Browse the portfolio → Back to home → Send another inquiry. Inquiry editor: Status and Notes reachable, read-only fields skipped; status changed and saved by keyboard |
+| DoD: axe WCAG 2.2 AA | Pass on site pages; Studio exceptions recorded | 0 violations on `/book` default, errors, failed and sent at 1440 and 390 px |
+| DoD: code health | Pass | typecheck, lint, 294 unit tests |
+| DoD: Vercel preview | Pass (builds only) | PR #31 `checks` and `Vercel` green (its preview migrated its own Neon branch); `dev`'s deployment of `d1a8291` succeeded. Protected previews were not browsed |
+
+### Studio accessibility (same policy as P0–P2)
+
+This task added to `src/app/(payload)/custom.scss`:
+
+- On a read-only date field (the inquiry's "Received"), Payload renders an enabled, unnamed clear button that does nothing. It is now hidden: `button-name` 2 → 1 on the inquiry editor, and one dead tab stop fewer.
+
+These remain inside Payload's built-in components and go to the P6 theme (screen 27) and upstream Payload:
+
+- Inquiries list: row-select checkboxes with an empty `aria-label` (`label` ×9).
+- Inquiry editor: the status select's react-select indicators inside `aria-hidden` (`aria-hidden-focus` ×2); the document menu button (`button-name` ×1); the react-select input and the read-only date input without a linked label (`label` ×2); document tabs (`list` ×1).
+
+### Follow-ups
+
+- **Owner check (deferred):** on a preview, create the admin user, set Contact email to the Resend signup address, send an inquiry, and confirm the alert arrives and a reply goes to the visitor's address.
+- Release P3 to `main` as `v0.4.0` (merge commit, annotated tag) at the start of P4, as P2 was released at the start of P3. Pass `--subject "Release P3 Book Me (v0.4.0) (#N)"` to `gh pr merge` so the merge title matches P1's.
+- Delete the PR #31 preview deployment and its Neon branch once merged work is no longer being reviewed.
+- P7: verify the sending domain, set `EMAIL_FROM_ADDRESS`, write the inquiry retention policy with the privacy copy, and final wording for "Working on" and the opener line.
+- From P1/P2, still open: favicon, `metadataBase` (P7); opener title width.
