@@ -1,14 +1,32 @@
 # Phase 4 — Home + About
 
-Status: Draft
+Status: In progress
 Depends on: P1 (projects, disciplines, publishing machinery), P2 (posts for "From the journal")
 Build Spec refs: Globals › home, about · Publishing: drafts, preview & revalidation · Front-end pages (Home, About) · Accessibility, SEO & performance (hero slider, one `h1`, motion) · Media handling (loading) · Admin (Studio) customisation ("Changed from the prototype")
 
-Sources: [`build-spec.md`](../design/reference/creative-portfolio/build-spec.md) · [handoff](../design/reference/creative-portfolio/handoff/README.md) · [roadmap and shared rules](README.md)
+Sources: [`build-spec.md`](../design/reference/creative-portfolio/build-spec.md) · [handoff](../design/reference/creative-portfolio/handoff/README.md) · [roadmap and shared rules](README.md) · design specs [HeroSlider](../design/components/HeroSlider.md), [SelectedWork](../design/components/SelectedWork.md) and the Home and About page layouts in [`docs/design/README.md`](../design/README.md)
 
 ## Goal
 
 The `home` and `about` globals drive the Home and About pages. Home brings the earlier phases together: the hero slider, Selected work from projects, the discipline tiles and the latest journal posts. When P4 is done, every public route exists and every Build Spec content-model, routes, pages and publishing box is closed (see the README coverage table).
+
+## Owner decisions (2026-11-11)
+
+These rank above the Build Spec (see the precedence rules in `README.md`).
+
+1. **Story cards show every slide.** One card per slide, in slide order, always in the same place; the current one has `aria-current="true"` and a visible mark. Capture 01 leaves the current slide out of the row, which made a clicked card disappear and drop keyboard focus.
+2. **One hidden `h1`.** The hero's `h1` is `site-settings.headline`, visually hidden; every visible slide title is an `h2` in the live region. Screen readers hear the headline twice on slide 1; accepted.
+3. **A slide's `title` is optional.** A blank title shows `site-settings.headline` at render time, so slide 1 follows the headline when it is edited. This replaces the Build Spec's "required, slide 1 defaults to `headline`"; the other slide fields stay required.
+4. **Every public project change refreshes `/`** (publish, unpublish, slug or collection change, delete), not only projects with `showOnHome`, because hero slides can link any project. Same reasoning as P2 owner decision 6 for journal entries.
+5. **A slide whose link target isn't public** (unpublished, deleted or unreadable project) still shows, without its secondary button; Book Me stays.
+6. **Empty states never 404.** On Home an empty chapter (no Selected work, no `meet` heading, no disciplines, no posts) is left out and the later chapters renumber, as on collection pages. With no published hero slides, Home shows the ChapterOpener with the headline as a visible `h1`, and no slider. An unpublished `about` shows its opener with fallback copy and the finale, without portrait or sections.
+7. **Selected work tiles** link through their caption (the number "01" on the left, the collection "Photography" on the right) with the project title added visually hidden, so the link says which project it opens; the image is `alt=""`. Numbers run down each of the three columns, as in capture 01.
+8. **Slider interaction is buttons only.** Tap or click the cards and arrows, or use them by keyboard as normal tab stops (no roving tabindex); no swipe gesture, no autoplay. The arrows wrap from last to first and back and are never disabled, so a focused arrow never loses focus.
+9. **Images:** only the current slide's photo is in the page; slide 1 loads with `priority` and the others when shown, behind their tint. Slide 1 is complete and usable without JavaScript; the controls do nothing until the page hydrates.
+10. **`journalCount`** is a whole number from 1 to 6, default 2 (taken as recommended).
+11. **Hero photo and scrim.** Each slide's photo is full-bleed under a `--color-hero-scrim` (`--ink-80`) scrim wherever text or a control sits, the header band included, so text keeps 4.5:1 over any photo; below 1024 px the scrim covers the whole hero. A lighter header band (`--ink-50`) would give the nav links only 3.0:1 over a white photo.
+
+Design deviations from the captures are recorded in `docs/design/README.md`.
 
 ## In scope
 
