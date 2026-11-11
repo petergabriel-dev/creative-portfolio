@@ -36,18 +36,22 @@ export const collectionPath = (disciplineSlug: string) => `/portfolio/${discipli
 export const projectPath = (disciplineSlug: string, projectSlug: string) =>
   `/portfolio/${disciplineSlug}/${projectSlug}`
 
+/** Home and About, refreshed by their globals (Build Spec › Publishing). */
+export const HOME_PATH = '/'
+export const ABOUT_PATH = '/about'
+
 /** What the public sees of one project: the last published state (the main row). */
 export type PublicProjectState = {
   published: boolean
   slug?: string | null
   disciplineSlug?: string | null
-  showOnHome?: boolean | null
 }
 
 /**
- * Pages that show this project state (Build Spec › Publishing): its page, its collection page,
- * and `/` when it is on Home. An unpublished state shows nowhere. A missing discipline skips
- * the portfolio paths but still refreshes Home.
+ * Pages that show this project state (Build Spec › Publishing): its page, its collection page
+ * and Home. Home is refreshed for every project, not only those in Selected work, because a hero
+ * slide can link any project (P4 owner decision 4, like P2 decision 6 for journal entries). An
+ * unpublished state shows nowhere. A missing discipline skips the portfolio paths.
  */
 export function projectPublicPaths(state: PublicProjectState | null | undefined): string[] {
   if (!state?.published) return []
@@ -56,7 +60,7 @@ export function projectPublicPaths(state: PublicProjectState | null | undefined)
     if (state.slug) paths.push(projectPath(state.disciplineSlug, state.slug))
     paths.push(collectionPath(state.disciplineSlug))
   }
-  if (state.showOnHome) paths.push('/')
+  paths.push(HOME_PATH)
   return paths
 }
 

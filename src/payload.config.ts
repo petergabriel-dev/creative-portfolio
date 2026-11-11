@@ -16,6 +16,8 @@ import { Posts } from './collections/Posts'
 import { Projects } from './collections/Projects'
 import { Users } from './collections/Users'
 import { copy } from './copy'
+import { About } from './globals/About'
+import { Home } from './globals/Home'
 import { SiteSettings } from './globals/SiteSettings'
 import { isLocalDatabaseUrl } from './lib/isLocalDatabaseUrl'
 import { MAX_UPLOAD_BYTES } from './lib/media/uploadLimit'
@@ -38,7 +40,8 @@ export default buildConfig({
   // Sidebar order follows this list (Portfolio: Projects, Collections; Journal: Posts, Categories;
   // Inbox: Inquiries).
   collections: [Projects, Disciplines, Posts, Categories, Inquiries, Media, Users],
-  globals: [SiteSettings],
+  // Settings group: Site settings, Home, About (Build Spec › Admin).
+  globals: [SiteSettings, Home, About],
   editor: lexicalEditor(),
   // Resend sends the inquiry alert and Payload's own emails (password reset). Without a key (CI,
   // tests, a local setup without one) Payload logs emails to the console instead.
