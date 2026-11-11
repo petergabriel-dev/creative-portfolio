@@ -48,11 +48,11 @@ type ButtonProps = {
   size?: 'default' | 'primary' // default 'default'
   href?: string // present → <a> via next/link
   'aria-current'?: 'page' // <a> only, e.g. the header Book Me pill on /book (P3)
+  onClick?: MouseEventHandler // <a> or <button>; from client components only (RevealMore; "Send another inquiry" in InquiryForm, P3)
   trailingArrow?: boolean // appends the copy.ts arrow, aria-hidden (text variant)
   children: React.ReactNode
   disabled?: boolean // <button> only
   type?: 'button' | 'submit' | 'reset' // <button> only, default 'button'
-  onClick?: MouseEventHandler<HTMLButtonElement> // <button> only, from client components (RevealMore)
   'aria-controls'?: string // <button> only, e.g. the list RevealMore expands
 }
 ```

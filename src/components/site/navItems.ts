@@ -8,6 +8,7 @@ export const NAV_ITEMS = [
   { key: 'journal', href: '/journal', label: copy.nav.journal },
 ] as const
 
-export type NavKey = (typeof NAV_ITEMS)[number]['key']
+/** A nav section, or 'book' for the Book Me pill (P3). */
+export type NavKey = (typeof NAV_ITEMS)[number]['key'] | 'book'
 
 export const BOOK_HREF = '/book'

@@ -104,7 +104,51 @@ export const copy = {
     credits: 'Credits',
   },
   book: {
+    /** Page title when site-settings has no booking label. */
+    metaTitle: 'Book Me',
+    metaDescription:
+      'Share a little about what you have in mind — the kind of project, any dates, and what matters most to you.',
+    /** Fixed copy, worded as capture 11 (P3 owner decision 12; final wording in P7). */
+    contextLine: 'Book me · photography, film, design & writing',
+    title: "Let's talk about your project",
+    lead: (replyTime: string) =>
+      `Share a little about what you have in mind — the kind of project, any dates, and what matters most to you. I read every message myself${replyTime ? ` and reply within ${replyTime}` : ''}.`,
+    goodToKnow: {
+      title: 'Good to know',
+      email: 'Prefer email?',
+      location: 'Based in',
+      workingOn: 'Working on',
+      /** Fixed copy (P3 owner decision 12). */
+      workingOnValue: 'Photography, film, design & writing',
+      note: "This starts a conversation — nothing is booked until we've talked it through.",
+    },
+    sent: {
+      label: 'Inquiry sent',
+      title: "Thank you — I'll be in touch soon",
+      body: (replyTime: string) =>
+        `I'll read your note and reply ${replyTime ? `within ${replyTime}` : 'soon'} so we can talk through your plans.`,
+      portfolio: 'Browse the portfolio',
+      home: 'Back to home',
+      another: 'Send another inquiry',
+    },
     form: {
+      /** Accessible name of the <form>. */
+      label: 'Booking inquiry',
+      name: 'Your name',
+      email: 'Email',
+      projectType: 'What kind of project?',
+      choose: 'Choose one',
+      timing: 'Timing (if you know it)',
+      timingPlaceholder: 'A date, a month, or not sure yet',
+      message: 'Tell me about it',
+      messagePlaceholder: "What it's for, who it's for, and what you'd love it to feel like.",
+      /** Honeypot label; hidden from people and screen readers. */
+      website: 'Website',
+      submit: 'Send inquiry',
+      sending: 'Sending…',
+      /** Failed save (P3 owner decision 13): the email part is left out without a contact email. */
+      failed: "Sorry — your message didn't send. Please try again",
+      failedEmail: ', or email me at ',
       /** Last project-type option, after the discipline names. */
       somethingElse: 'Something else',
       /** Build Spec "Book Me & inquiries flow", word for word. Timing and the honeypot have none. */

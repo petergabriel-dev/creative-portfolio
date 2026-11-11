@@ -120,6 +120,11 @@ describe('validateInquiry', () => {
     }
     expect(check().kind).toBe('valid')
   })
+
+  it('shows field errors for a fast but invalid form instead of a false thank-you', () => {
+    const result = validateInquiry(form({ elapsedMs: '400' }), OPTIONS)
+    expect(result.kind).toBe('invalid')
+  })
 })
 
 const inquiry = {

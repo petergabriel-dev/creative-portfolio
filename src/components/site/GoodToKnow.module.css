@@ -1,0 +1,80 @@
+/* docs/design/components/GoodToKnow.md */
+.goodToKnow {
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.details {
+  margin: var(--space-6) 0 0;
+  border-top: var(--border-hairline) solid var(--color-rule);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-block: var(--space-5);
+  border-bottom: var(--border-hairline) solid var(--color-rule);
+}
+
+.term {
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+.value {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  overflow-wrap: anywhere;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: var(--underline-offset);
+  transition: text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+
+.link:hover {
+  text-decoration-color: currentColor;
+}
+
+.note {
+  max-width: var(--measure-body);
+  margin-top: var(--space-6);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+}
+
+/* Side by side only when the block itself is wide enough: full width from 768 px, but in the
+   narrow first column from 1024 to about 1279 px the rows stay stacked (container queries, like
+   media queries, can't read custom properties). */
+@container (min-width: 400px) {
+  .row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+
+  .value {
+    text-align: right;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

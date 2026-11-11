@@ -50,8 +50,8 @@ Server component.
 
 ## Responsive
 
-- **Below 768 px:** each row stacks the term above the value, `--space-1` apart.
-- **768 px and up:** term on the left, value right-aligned on the same line (`justify-content: space-between`, gap `--space-6`).
+- **Narrower than 400 px:** each row stacks the term above the value, `--space-1` apart.
+- **At least 400 px wide** (a container query on the block): term on the left, value right-aligned on the same line (`justify-content: space-between`, gap `--space-6`). That is full width from 768 px and the first column at 1440 px; in the narrower first column from 1024 to about 1279 px the rows stay stacked, so the email address never breaks mid-word.
 - Long values wrap; no horizontal scroll at 320 px.
 
 ## Usage

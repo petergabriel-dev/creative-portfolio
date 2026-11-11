@@ -47,13 +47,13 @@ export function projectTypeOptions(disciplineNames: (string | null | undefined)[
 
 /**
  * Server-side checks for a Book Me submission (Build Spec "Book Me & inquiries flow").
- * Spam (a filled honeypot, or `elapsedMs` under 3 seconds) is reported first so nothing is saved;
- * a missing or malformed `elapsedMs` (no JavaScript) skips the timing rule.
+ * A filled honeypot is spam whatever else was sent. Field errors come next, so a person who sends
+ * an empty form straight away sees what's missing rather than a false "thank you". Only input that
+ * would be saved meets the timing rule: `elapsedMs` under 3 seconds is spam, and a missing or
+ * malformed value (no JavaScript) skips the rule.
  */
 export function validateInquiry(formData: FormData, options: readonly string[]): InquiryValidation {
   if (field(formData, 'website') !== '') return { kind: 'spam' }
-  const elapsed = field(formData, 'elapsedMs')
-  if (/^\d+$/.test(elapsed) && Number(elapsed) < MIN_ELAPSED_MS) return { kind: 'spam' }
 
   const values: InquiryValues = {
     name: field(formData, 'name'),
@@ -72,7 +72,11 @@ export function validateInquiry(formData: FormData, options: readonly string[]):
   if (!options.includes(values.projectType)) errors.projectType = messages.projectType
   if (values.message.length < MESSAGE_MIN || values.message.length > MESSAGE_MAX) errors.message = messages.message
 
-  return Object.keys(errors).length > 0 ? { kind: 'invalid', errors, values } : { kind: 'valid', data: values }
+  if (Object.keys(errors).length > 0) return { kind: 'invalid', errors, values }
+
+  const elapsed = field(formData, 'elapsedMs')
+  if (/^\d+$/.test(elapsed) && Number(elapsed) < MIN_ELAPSED_MS) return { kind: 'spam' }
+  return { kind: 'valid', data: values }
 }
 
 /** What `payload.sendEmail` needs for the owner's inquiry alert (P3 owner decisions 9 and 10). */
