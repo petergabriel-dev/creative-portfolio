@@ -3,6 +3,8 @@ import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
   CollectionBeforeChangeHook,
+  GlobalAfterChangeHook,
+  GlobalBeforeChangeHook,
   PayloadRequest,
 } from 'payload'
 
@@ -110,4 +112,40 @@ export function publishHooks<Row extends MainRow>({
   }
 
   return { beforeChange, afterChange, afterDelete }
+}
+
+/**
+ * Publishing hooks for drafts-enabled globals with one public page (home → `/`, about → `/about`;
+ * P4). Same rule as `publishHooks`: a draft save only writes a version, while publish and
+ * unpublish rewrite the global's main row (payload/dist/globals/operations/update.js), so
+ * beforeChange snapshots the main row's `updatedAt` and afterChange refreshes `path` only when
+ * it changed. A global that was never published has no main row (`findGlobal` returns `{}`).
+ */
+export function globalPublishHooks({ slug, path }: { slug: 'home' | 'about'; path: Revalidation }) {
+  const snapshotKey = `${slug}:mainRowUpdatedAt`
+
+  /** The published main row's `updatedAt`, or null while there is none. */
+  const mainRowStamp = async (req: PayloadRequest): Promise<string | null> => {
+    const row = await req.payload.findGlobal({ slug, draft: false, depth: 0, overrideAccess: true, req })
+    return typeof row?.updatedAt === 'string' ? row.updatedAt : null
+  }
+
+  const beforeChange: GlobalBeforeChangeHook = async ({ data, req }) => {
+    const stamp = await mainRowStamp(req)
+    // After the nested read, which replaced req.context with a copy (see publishHooks).
+    req.context[snapshotKey] = stamp
+    return data
+  }
+
+  const afterChange: GlobalAfterChangeHook = async ({ context, doc, req }) => {
+    if (context.disableRevalidate) return doc
+    const before = req.context[snapshotKey] as string | null | undefined
+    const after = await mainRowStamp(req)
+    // Draft saves leave the main row untouched: nothing public changed.
+    if (before !== undefined && before === after) return doc
+    revalidatePaths(req, [path], `${slug} global changed`)
+    return doc
+  }
+
+  return { beforeChange, afterChange }
 }

@@ -88,6 +88,35 @@ export const copy = {
     backToJournal: 'Back to journal',
     seeTheWork: 'See the work',
   },
+  /** Home (capture 01, P4). */
+  home: {
+    selectedWork: 'Selected work',
+    behindTheCamera: 'Behind the camera',
+    getToKnowMe: 'Get to know me',
+    explore: 'Explore the portfolio',
+    allCollections: 'All collections',
+    /** Call to action on Home's collection tiles. */
+    viewGallery: 'View gallery',
+    journal: 'From the journal',
+    readTheJournal: 'Read the journal',
+    finaleBody:
+      "Tell me about what you're making — a day to photograph, a film, a brand or a story — and we'll start from there.",
+    /** Hero slider controls (screen-reader names of the arrow buttons and the card group). */
+    previousStory: 'Previous story',
+    nextStory: 'Next story',
+    moreStories: 'More stories',
+    /** Visually hidden, first in the hero's live region, so a change is announced with its place. */
+    storyPosition: (n: number, total: number) => `Story ${n} of ${total}`,
+  },
+  /** About (capture 08, P4). */
+  about: {
+    /** Used only while the about global is unpublished (P4 owner decision 6). */
+    contextLine: 'About · the person behind the work',
+    title: 'About',
+    viewMyWork: 'View my work',
+    /** Finale body, as on the journal pages (capture 08). */
+    finaleBody: "Tell me about what you're making, and we'll start from there.",
+  },
   video: {
     /** Play button label; the caption is appended when there is one. */
     play: 'Play video',

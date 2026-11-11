@@ -2,7 +2,7 @@
 
 ## Purpose
 
-One journal post as a row on `/journal` and `/journal/page/N`, linking to the post's entry page. Source: capture 09 (desktop and mobile).
+One journal post as a row on `/journal` and `/journal/page/N`, linking to the post's entry page. Source: capture 09 (desktop and mobile). The `card` variant is the Build Spec's JournalCard on Home (capture 01, P4).
 
 ## Anatomy
 
@@ -17,7 +17,13 @@ An `<li>` holding one row block (`position: relative`). The only link is the tit
 
 ## Variants
 
-One. `headingLevel` changes only the heading element, not its look.
+- **`row`** (default): as above, on the journal list pages.
+- **`card`** (P4): the Build Spec's **JournalCard**, used for "From the journal" on Home (capture 01). One component with two layouts keeps the meta, link and empty-part rules in one place. Differences from `row`:
+  - always stacked (image on top, then the text group, `--space-5` apart), at every width; no hairlines or block padding;
+  - meta, title (`--fs-card`, as `ProjectCard`; capture 01's 40 px is smaller, recorded in `../README.md`) and excerpt (`--fs-body`, `--color-text-muted`, max-width `--measure-body`) as in `row`, `--space-2` apart;
+  - **no call to action**: the capture shows none, and the stretched title link already covers the card.
+
+`headingLevel` changes only the heading element, not its look. Home passes `h3` (the cards sit under the "From the journal" chapter `h2`).
 
 ## Sizes
 
@@ -26,7 +32,7 @@ One. The title scales with `--fs-card`.
 ## States
 
 - **Default:** as above.
-- **Hover:** anywhere on the row; the call-to-action underline thickens to `--border-strong`.
+- **Hover:** anywhere on the row; the call-to-action underline thickens to `--border-strong`. On a `card` (no call to action), the title gets a `--border-strong` underline at `--underline-offset` instead (P4).
 - **Focus-visible:** the global dual focus ring around the title link.
 - **Active:** same as hover.
 - **Empty parts:** a missing category or date drops that part and its separator. With both missing, the meta line is omitted. A missing cover shows the tinted frame.
@@ -43,6 +49,7 @@ type JournalRowProps = {
   categoryName?: string | null
   publishedAt?: string | null // ISO; formatted with formatDate
   headingLevel?: 'h2' | 'h3' // default 'h2'
+  variant?: 'row' | 'card' // default 'row'; 'row' output is unchanged by P4
 }
 ```
 
@@ -62,12 +69,14 @@ Server component. The parent list is `<ul role="list">`.
 - **Below 768 px:** image on top, then the text group, `--space-8` apart.
 - **768 px and up:** two grid columns, `minmax(0, 5fr) minmax(0, 6fr)`, with a column gap of `--space-14`; the text group is vertically centred against the image. At 1,440 px this gives a 571 px image and a text column starting about 690 px from the content edge, as in capture 09.
 - Nothing overflows at 320 px; long titles wrap.
+- **`card`:** stacked at every width. The Home grid is `repeat(auto-fit, minmax(min(var(--grid-min-card), 100%), 1fr))` with gaps `--space-12` (rows) and `--space-6` (columns): one card per row below about 900 px, two side by side above (capture 01).
 
-Verify at 390 and 1,440 px against capture 09 (and 375, 768 and 1,280 px).
+Verify at 390 and 1,440 px against capture 09 (and 375, 768 and 1,280 px); the `card` variant against capture 01 at the same widths.
 
 ## Usage
 
-Journal list pages only (`/journal`, `/journal/page/N`). The "From the journal" cards on Home are a different component (JournalCard, P4).
+- `row`: journal list pages (`/journal`, `/journal/page/N`).
+- `card`: "From the journal" on Home (P4), the latest `home.journalCount` posts. The cover is never `priority`.
 
 ## Preview
 

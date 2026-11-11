@@ -20,10 +20,12 @@ vi.mock('next/image', () => ({
 import { BookingFinale } from '@/components/site/BookingFinale'
 import { ChapterHeading } from '@/components/site/ChapterHeading'
 import { ChapterOpener } from '@/components/site/ChapterOpener'
+import { CollectionTile } from '@/components/site/CollectionTile'
 import { DetailsStrip } from '@/components/site/DetailsStrip'
 import { Filmstrip } from '@/components/site/Filmstrip'
 import { JournalRow } from '@/components/site/JournalRow'
 import { Pagination } from '@/components/site/Pagination'
+import { SelectedWork } from '@/components/site/SelectedWork'
 import { MediaImage } from '@/components/ui/MediaImage'
 import { openerTint } from '@/lib/openerTint'
 import type { Media } from '@/payload-types'
@@ -281,5 +283,86 @@ describe('Pagination (P2)', () => {
     expect(openingTag(out, 'a', 'href="/journal/page/3"')).toContain('aria-current="page"')
     expect(openingTag(out, 'a', 'href="/journal"')).not.toContain('aria-current')
     expect(out).not.toContain('Older stories')
+  })
+})
+
+describe('ChapterHeading label detail (P4)', () => {
+  it('adds the detail after a hidden separator, and ignores an empty one', () => {
+    const out = html(<ChapterHeading labelDetail="Behind the camera" number={2} title="Hi, I'm Your Name" />)
+    expect(out).toMatch(/<p class="_label_\w+">Chapter 02<span aria-hidden="true"> · <\/span>Behind the camera<\/p>/)
+    expect(html(<ChapterHeading labelDetail="  " number={2} title="T" />)).toMatch(/<p class="_label_\w+">Chapter 02<\/p>/)
+  })
+})
+
+describe('CollectionTile home variant (P4)', () => {
+  const tile = (variant?: 'home') =>
+    html(<CollectionTile href="/portfolio/photography" image={media(1)} index={1} intro="People." name="Photography" variant={variant} />)
+
+  it('drops the label, uses 4:5, an h3 and "View gallery"', () => {
+    const out = tile('home')
+    expect(out).not.toContain('Collection 01')
+    expect(out).toContain('r4x5')
+    expect(out).toMatch(/<h3 class="_title_\w+"><a href="\/portfolio\/photography" class="_link_\w+">Photography<\/a><\/h3>/)
+    expect(out).toContain('View gallery')
+  })
+
+  it('keeps the Portfolio tile as before by default', () => {
+    const out = tile()
+    expect(out).toContain('Collection 01')
+    expect(out).toContain('r3x4')
+    expect(out).toMatch(/<h2 class="_title_\w+">/)
+    expect(out).toContain('View collection')
+  })
+})
+
+describe('JournalRow card variant (P4)', () => {
+  const props = { title: 'The quiet minutes', href: '/journal/quiet', excerpt: 'A pause.', categoryName: 'Process' }
+
+  it('is a stacked card with an h3 title link and no call to action', () => {
+    const out = html(<JournalRow {...props} headingLevel="h3" variant="card" />)
+    expect(out).toMatch(/^<div class="_card_\w+">/)
+    expect(out).toMatch(/<h3 class="_title_\w+"><a href="\/journal\/quiet" class="_link_\w+">The quiet minutes<\/a><\/h3>/)
+    expect(out).not.toContain('Read story')
+    expect(out).not.toContain('data-priority')
+  })
+
+  it('keeps the row as before by default', () => {
+    const out = html(<JournalRow {...props} />)
+    expect(out).toMatch(/^<div class="_row_\w+">/)
+    expect(out).toContain('Read story')
+  })
+})
+
+describe('SelectedWork (P4)', () => {
+  const item = (n: number) => ({
+    number: n,
+    collectionName: 'Photography',
+    title: `Project ${n}`,
+    href: `/portfolio/photography/project-${n}`,
+    cover: media(n),
+  })
+
+  it('names each caption link by its visible caption plus the hidden project title', () => {
+    const out = html(<SelectedWork items={[item(1)]} />)
+    expect(out).toMatch(
+      /<a href="\/portfolio\/photography\/project-1" class="_caption_\w+"><span>01<\/span> <span>Photography<\/span><span class="visually-hidden">, Project 1<\/span><\/a>/,
+    )
+    // The image is decorative inside the tile: the link names it.
+    expect(out).toContain('alt=""')
+    expect(out).not.toContain('alt="Frame 1"')
+  })
+
+  it('renders three lists in order, numbering down each column', () => {
+    const out = html(<SelectedWork items={Array.from({ length: 9 }, (_, i) => item(i + 1))} />)
+    expect(out.match(/<ul class="_column_\w+" role="list">/g)).toHaveLength(3)
+    const numbers = [...out.matchAll(/<span>(\d\d)<\/span>/g)].map(([, n]) => n)
+    expect(numbers).toEqual(['01', '02', '03', '04', '05', '06', '07', '08', '09'])
+    expect(out.split('<ul')[1]).toContain('project-3"')
+    expect(out.split('<ul')[1]).not.toContain('project-4"')
+  })
+
+  it('renders nothing without items, and a tinted frame for a missing cover', () => {
+    expect(html(<SelectedWork items={[]} />)).toBe('')
+    expect(html(<SelectedWork items={[{ ...item(1), cover: null }]} />)).toContain('aria-hidden="true"')
   })
 })

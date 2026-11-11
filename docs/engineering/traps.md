@@ -57,6 +57,9 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 
 - **A collection can define its own `createdAt`** (e.g. to label it "Received" and show it in the sidebar): Payload then skips its built-in timestamp field, and `@payloadcms/drizzle` still fills the value on create (P3).
 - **`@payloadcms/email-resend` has no timeout** (a bare `fetch`) and throws `APIError` with a `status` and a message that echoes Resend's error, which can include addresses. Bound the send yourself and log only `name`/`status` (P3, ADR-0006).
+- **A draft save of a global never touches its main row** (`payload/dist/globals/operations/update.js`: `isSavingDraft` skips `db.updateGlobal`/`createGlobal`); only publish and unpublish rewrite it. So the main-row `updatedAt` compare works for globals too (`globalPublishHooks`), and a global that was only ever saved as a draft has no main row at all (verified live, P4).
+- **An unpublished global reads as `{}`**, not an error: with a `Where` access result and no matching row, `findGlobal` returns an empty object (`globals/operations/findOne.js`, Postgres). Type such reads `Partial<…>` and render an empty state (P4).
+- **Upload filenames clash with files on disk, even with Blob storage.** `getSafeFileName` (`payload/dist/uploads/getSafeFilename.js`) renames an upload (`seed-frame-55.webp`) whenever `<staticDir>/<name>` exists locally, and the gitignored `./media` folder fills up with seed files from QA runs with an empty `BLOB_READ_WRITE_TOKEN`. The seed finds media by filename, so it then re-creates its media on every run. For a clean idempotency check, move `./media` aside, seed a fresh database twice, and put the folder back (P4).
 
 ## Next.js
 
@@ -84,6 +87,8 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 - **A no-JavaScript post of a `useActionState` server action re-renders a static page with the result**; the page stays ○ in `next build` (P3).
 - **Spam timing before validation gives a false "thank you".** If the 3-second rule runs first, someone who clicks Send on an empty form straight away is told it was sent. Check the honeypot, then the fields, then the timing (P3).
 - **Rows inside a narrow column need a container query, not a viewport media query.** At 1024 px the Book Me "Good to know" column is about 290 px, and side-by-side rows split the email address mid-word; `container-type: inline-size` with `@container (min-width: 400px)` fixed it (P3).
+- **A `<header>` inside a named `<section>` is no longer the banner landmark.** The Home hero holds the SiteHeader, so its wrapper is a `div` (like ChapterOpener), not a `section aria-labelledby` (P4).
+- **A partly visible button in an `overflow-x: auto` row stays clipped when it gets keyboard focus.** Chrome scrolls a focused element into view only when it is fully hidden; story cards ended up about 5% visible. `onFocus={(e) => e.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' })}` fixes it (HeroSlider, P4).
 
 ## Studio (Payload admin)
 
@@ -110,3 +115,7 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 - **`playwright-cli` writes `.playwright-cli/`** (snapshots, console logs) into the current folder, which is the repo; delete it before committing. Its `snapshot` can return a stale accessibility tree on Payload's edit view (fields marked disabled that are editable); trust screenshots and a real action read back through REST.
 - **Check scripts run with `pnpm payload run` from outside the repo** compile as CommonJS: no top-level await, bare imports resolve from the script's folder, and CommonJS undici 7.30 fails on Node 25 with "TypeError: Illegal constructor". Name the script `.mts`, import packages by absolute `node_modules` path, and `await` the work at top level (`payload run` exits without awaiting a floating promise).
 - In tests, the `next/link` mock renders `href` before the other attributes, and `Button` joins its label and trailing arrow with a non-breaking space (U+00A0); match attributes individually and the arrow with `\u00a0→`.
+- **Headless `playwright-cli` Chrome reports `prefers-reduced-motion: reduce` by default**, so transitions read `0s`. Run `playwright-cli set-reduced-motion no-preference` before checking motion, and `reduce` to check that it switches off (P4).
+- **Production builds minify CSS Module class names**, so browser checks with `[class*=_hero_]` find nothing. Use structural selectors (`h1.visually-hidden`, `[role=group]`, `[aria-live]`) (P4).
+- **`playwright-cli goto file://…` is blocked.** Serve the repo with `python3 -I -m http.server <port> --bind 127.0.0.1` in the background (and stop it afterwards) to look at `docs/design/preview/` (P4).
+- **Seeding a migrated throwaway database without push:** `NODE_ENV=production BLOB_READ_WRITE_TOKEN= POSTGRES_URL=…/<db> pnpm seed` (production turns push off, an empty token keeps uploads out of the shared Blob store), then `pnpm build` and `pnpm start -p <port>` against the same database (P4).

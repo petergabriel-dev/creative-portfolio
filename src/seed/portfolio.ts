@@ -127,28 +127,30 @@ type ProjectSeed = {
 
 const SUMMARY = '[One or two sentences that introduce the project — what it was, who it was for, and why it mattered.]'
 
+// Ten published projects are in Selected work (homeOrder 1–10), one more than Home shows, so the
+// nine-item limit can be checked (P4). Only fresh databases get them: existing projects are never changed.
 const PROJECTS: ProjectSeed[] = [
   // Photography: ten published (so "More projects" has cards to reveal) and one draft.
   { discipline: 'Photography', title: '[Couple names] wedding', projectType: 'Wedding', year: 2026, summary: SUMMARY, client: '[Couple names]', role: 'Photographer', showOnHome: true, homeOrder: 1, fullStory: true },
-  { discipline: 'Photography', title: '[Client] portraits', projectType: 'Portrait series', year: 2026, summary: SUMMARY, client: '[Client]', role: 'Photographer' },
+  { discipline: 'Photography', title: '[Client] portraits', projectType: 'Portrait series', year: 2026, summary: SUMMARY, client: '[Client]', role: 'Photographer', showOnHome: true, homeOrder: 5 },
   { discipline: 'Photography', title: '[Event name]', projectType: 'Event', year: 2025, summary: SUMMARY, role: 'Photographer' },
   { discipline: 'Photography', title: '[Place] at first light', projectType: 'Outdoors', year: 2025, summary: SUMMARY, role: 'Photographer', showOnHome: true, homeOrder: 3 },
   { discipline: 'Photography', title: '[Second couple] wedding', projectType: 'Wedding', year: 2025, summary: SUMMARY, role: 'Photographer' },
   { discipline: 'Photography', title: '[Band] on tour', projectType: 'Event', year: 2024, summary: SUMMARY, client: '[Band]', role: 'Photographer' },
   { discipline: 'Photography', title: '[Family name] family session', projectType: 'Portrait series', year: 2024, summary: SUMMARY, role: 'Photographer' },
   { discipline: 'Photography', title: '[Festival] weekend', projectType: 'Event', year: 2024, summary: SUMMARY, client: '[Festival]', role: 'Photographer' },
-  { discipline: 'Photography', title: '[Coastline] in winter', projectType: 'Outdoors', year: 2023, summary: SUMMARY, role: 'Photographer' },
+  { discipline: 'Photography', title: '[Coastline] in winter', projectType: 'Outdoors', year: 2023, summary: SUMMARY, role: 'Photographer', showOnHome: true, homeOrder: 8 },
   { discipline: 'Photography', title: '[Studio] headshots', projectType: 'Portrait series', year: 2023, summary: SUMMARY, client: '[Studio]', role: 'Photographer' },
   { discipline: 'Photography', title: '[Venue] open day', projectType: 'Event', year: 2026, summary: SUMMARY, draft: true },
   // Film & Video
   { discipline: 'Film & Video', title: '[Band] — [Song]', projectType: 'Music video', year: 2026, summary: SUMMARY, client: '[Band]', role: 'Director, editor', showOnHome: true, homeOrder: 2 },
-  { discipline: 'Film & Video', title: '[Film title]', projectType: 'Short film', year: 2025, summary: SUMMARY, role: 'Director' },
+  { discipline: 'Film & Video', title: '[Film title]', projectType: 'Short film', year: 2025, summary: SUMMARY, role: 'Director', showOnHome: true, homeOrder: 6 },
   { discipline: 'Film & Video', title: '[Event name] highlight film', projectType: 'Event film', year: 2025, summary: SUMMARY, role: 'Filmmaker', draft: true },
-  { discipline: 'Film & Video', title: '[Client] story', projectType: 'Brand film', year: 2024, summary: SUMMARY, client: '[Client]', role: 'Director, editor' },
+  { discipline: 'Film & Video', title: '[Client] story', projectType: 'Brand film', year: 2024, summary: SUMMARY, client: '[Client]', role: 'Director, editor', showOnHome: true, homeOrder: 9 },
   // Design & Illustration
   { discipline: 'Design & Illustration', title: '[Client] identity', projectType: 'Brand identity', year: 2026, summary: SUMMARY, client: '[Client]', role: 'Designer', showOnHome: true, homeOrder: 4 },
-  { discipline: 'Design & Illustration', title: '[Festival] posters', projectType: 'Poster series', year: 2025, summary: SUMMARY, client: '[Festival]', role: 'Designer' },
-  { discipline: 'Design & Illustration', title: '[Illustration title]', projectType: 'Illustration', year: 2025, summary: SUMMARY, role: 'Illustrator' },
+  { discipline: 'Design & Illustration', title: '[Festival] posters', projectType: 'Poster series', year: 2025, summary: SUMMARY, client: '[Festival]', role: 'Designer', showOnHome: true, homeOrder: 7 },
+  { discipline: 'Design & Illustration', title: '[Illustration title]', projectType: 'Illustration', year: 2025, summary: SUMMARY, role: 'Illustrator', showOnHome: true, homeOrder: 10 },
   { discipline: 'Design & Illustration', title: '[Publication] issue [No.]', projectType: 'Editorial layout', year: 2024, summary: SUMMARY, client: '[Publication]', role: 'Designer' },
   // Writing & More (list layout)
   { discipline: 'Writing & More', title: '[Essay title]', projectType: 'Essay', year: 2026, client: '[Publication]', summary: '[The opening line of the essay — the one that makes people keep reading.]' },
@@ -217,7 +219,7 @@ function fullStory(frames: number[]): NonNullable<Project['story']> {
   ]
 }
 
-async function findBySlug(payload: Payload, collection: 'disciplines' | 'projects', slug: string) {
+export async function findBySlug(payload: Payload, collection: 'disciplines' | 'projects', slug: string) {
   const result = await payload.find({
     collection,
     where: { slug: { equals: slug } },

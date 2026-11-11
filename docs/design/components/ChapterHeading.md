@@ -6,7 +6,7 @@ The "Chapter 0N" label and Bebas heading that open each light chapter, with an o
 
 ## Anatomy
 
-1. **Label:** `<p>` reading "Chapter 0N" (two digits, from `copy.ts`). `--fs-label`, `--fw-semibold`, `--tracking-label`, `--lh-label`, uppercase, `--color-text-muted`.
+1. **Label:** `<p>` reading "Chapter 0N" (two digits, from `copy.ts`). `--fs-label`, `--fw-semibold`, `--tracking-label`, `--lh-label`, uppercase, `--color-text-muted`. With a label detail (P4) it reads "Chapter 0N · {detail}", e.g. "Chapter 02 · Behind the camera" (capture 01); the separator from `copy.ts` is `aria-hidden`.
 2. **Heading:** `<h2 id>` in `--font-display`, `--fw-regular`, `--fs-section`, `--lh-section`, uppercase, `--color-text`, `text-wrap: balance`, `overflow-wrap: break-word`. It sits `--space-2` below the label.
 3. **Aside** (optional): `<p>` in `--fs-body`, `--lh-body`, `--color-text-muted`, max-width `--measure-body`.
 
@@ -14,8 +14,9 @@ Capture 07 sets story chapter headings smaller than `--fs-section`; the Build Sp
 
 ## Variants
 
-- With aside (Highlights: "A best-of selection…").
+- With aside (Highlights: "A best-of selection…"). On Home the aside can also be a link: "All collections →" (text button) or "Read the journal" (outline-ink pill), as in capture 01.
 - Without aside.
+- With label detail (P4): Home's "Behind the camera" chapter, whose heading is the CMS `meet.heading`.
 
 ## Sizes
 
@@ -33,6 +34,7 @@ type ChapterHeadingProps = {
   title: string
   id?: string // for the parent section's aria-labelledby
   aside?: React.ReactNode
+  labelDetail?: string // P4: "Chapter 0N · {labelDetail}"; empty is ignored
 }
 ```
 
@@ -51,7 +53,7 @@ Server component.
 
 ## Usage
 
-Collection chapters (Highlights, Projects, Selected pieces) and story `chapter` blocks. Chapter numbers are counted at render time, never stored.
+Collection chapters (Highlights, Projects, Selected pieces), story `chapter` blocks, Home's chapters (Selected work, Behind the camera, Explore the portfolio, From the journal) and About's sections (P4). Chapter numbers are counted at render time, never stored; on Home an empty chapter is left out and the later ones renumber (owner decision 2026-11-11).
 
 ## Preview
 

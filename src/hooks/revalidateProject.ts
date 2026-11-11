@@ -6,7 +6,7 @@ import type { Project } from '@/payload-types'
 
 /** Publishing hooks for projects (Build Spec › Publishing), built on the shared main-row hooks. */
 
-type ProjectRow = MainRow & Pick<Project, 'collection' | 'showOnHome'>
+type ProjectRow = MainRow & Pick<Project, 'collection'>
 
 async function projectPaths(req: PayloadRequest, row: ProjectRow | null | undefined): Promise<Revalidation[]> {
   if (row?._status !== 'published') return []
@@ -27,12 +27,7 @@ async function projectPaths(req: PayloadRequest, row: ProjectRow | null | undefi
     req.payload.logger.warn(`project ${row.id}: its collection was not found; refreshing Home only`)
   }
   return [
-    ...projectPublicPaths({
-      published: true,
-      slug: row.slug,
-      disciplineSlug: discipline?.slug,
-      showOnHome: row.showOnHome,
-    }),
+    ...projectPublicPaths({ published: true, slug: row.slug, disciplineSlug: discipline?.slug }),
     // Journal entries link to projects ("See the work"), so every public change refreshes them all
     // (P2 owner decision 6).
     JOURNAL_ENTRIES,

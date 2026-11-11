@@ -4,11 +4,14 @@ vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }))
 
 import { revalidatePath } from 'next/cache'
 
+import { About } from '@/globals/About'
+import { Home } from '@/globals/Home'
 import {
   blockCategoryDeleteInUse,
   revalidateCategory,
   revalidateDeletedCategory,
 } from '@/hooks/categoryHooks'
+import { globalPublishHooks } from '@/hooks/publishHooks'
 import {
   recordDisciplineSlug,
   revalidateDeletedDiscipline,
@@ -37,13 +40,12 @@ describe('paths', () => {
     expect(projectPath('photography', 'couple-wedding')).toBe('/portfolio/photography/couple-wedding')
   })
 
-  it('lists the pages that show a published project', () => {
-    const state = { published: true, slug: 'p', disciplineSlug: 'photo', showOnHome: false }
-    expect(projectPublicPaths(state)).toEqual(['/portfolio/photo/p', '/portfolio/photo'])
-    expect(projectPublicPaths({ ...state, showOnHome: true })).toContain('/')
+  it('lists the pages that show a published project, Home always included (P4)', () => {
+    const state = { published: true, slug: 'p', disciplineSlug: 'photo' }
+    expect(projectPublicPaths(state)).toEqual(['/portfolio/photo/p', '/portfolio/photo', '/'])
     expect(projectPublicPaths({ ...state, published: false })).toEqual([])
     expect(projectPublicPaths(null)).toEqual([])
-    expect(projectPublicPaths({ ...state, disciplineSlug: null, showOnHome: true })).toEqual(['/'])
+    expect(projectPublicPaths({ ...state, disciplineSlug: null })).toEqual(['/'])
   })
 })
 
@@ -94,7 +96,6 @@ type Row = {
   id: number
   slug: string
   collection: number
-  showOnHome?: boolean
   _status: 'draft' | 'published'
   updatedAt: string
   previousSlugs?: string[]
@@ -130,7 +131,6 @@ const published: Row = {
   id: 7,
   slug: 'old',
   collection: 1,
-  showOnHome: false,
   _status: 'published',
   updatedAt: '2026-11-10T10:00:00.000Z',
   previousSlugs: ['oldest'],
@@ -161,12 +161,12 @@ describe('project publishing hooks', () => {
     s.state.row = { ...published, slug: 'new', previousSlugs: ['oldest', 'old'], updatedAt: '2026-11-10T11:00:00.000Z' }
     await run.after(s, { doc: { id: 7 }, operation: 'update' })
     expect(revalidated().sort()).toEqual(
-      ['/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/new', '/portfolio/photography/old'].sort(),
+      ['/', '/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/new', '/portfolio/photography/old'].sort(),
     )
   })
 
   it('records no old slug on a first publish', async () => {
-    const draftOnly: Row = { ...published, _status: 'draft', showOnHome: true }
+    const draftOnly: Row = { ...published, _status: 'draft' }
     const s = setup(draftOnly)
     const data = { _status: 'published', slug: 'new' } as Record<string, unknown>
     await run.before(s, { data, operation: 'update', originalDoc: { id: 7, slug: 'new' } })
@@ -178,10 +178,9 @@ describe('project publishing hooks', () => {
   })
 
   it('refreshes the old pages, Home included, on unpublish', async () => {
-    const onHome = { ...published, showOnHome: true }
-    const s = setup(onHome)
-    await run.before(s, { data: { _status: 'draft' }, operation: 'update', originalDoc: onHome })
-    s.state.row = { ...onHome, _status: 'draft', updatedAt: '2026-11-10T11:00:00.000Z' }
+    const s = setup(published)
+    await run.before(s, { data: { _status: 'draft' }, operation: 'update', originalDoc: published })
+    s.state.row = { ...published, _status: 'draft', updatedAt: '2026-11-10T11:00:00.000Z' }
     await run.after(s, { doc: { id: 7 }, operation: 'update' })
     expect(revalidated().sort()).toEqual(['/', '/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/old'])
   })
@@ -192,14 +191,14 @@ describe('project publishing hooks', () => {
     s.state.row = { ...published, collection: 2, updatedAt: '2026-11-10T11:00:00.000Z' }
     await run.after(s, { doc: { id: 7 }, operation: 'update' })
     expect(revalidated().sort()).toEqual(
-      ['/(frontend)/journal/[slug]', '/portfolio/film', '/portfolio/film/old', '/portfolio/photography', '/portfolio/photography/old'].sort(),
+      ['/', '/(frontend)/journal/[slug]', '/portfolio/film', '/portfolio/film/old', '/portfolio/photography', '/portfolio/photography/old'].sort(),
     )
   })
 
   it('refreshes the new pages when a project is created published, and nothing for a draft', async () => {
     const s = setup(published)
     await run.after(s, { doc: { id: 7 }, operation: 'create' })
-    expect(revalidated().sort()).toEqual(['/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/old'])
+    expect(revalidated().sort()).toEqual(['/', '/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/old'])
 
     vi.mocked(revalidatePath).mockClear()
     const draft = setup({ ...published, _status: 'draft' })
@@ -219,7 +218,7 @@ describe('project publishing hooks', () => {
   })
 
   it('refreshes Home only, with a warning, when the collection is missing', async () => {
-    const orphan = { ...published, collection: 99, showOnHome: true }
+    const orphan = { ...published, collection: 99 }
     const s = setup(orphan)
     await run.after(s, { doc: { id: 7 }, operation: 'create' })
     expect(revalidated()).toEqual(['/', '/(frontend)/journal/[slug]'])
@@ -238,7 +237,7 @@ describe('project publishing hooks', () => {
   it('refreshes the pages of a deleted published project only', async () => {
     const s = setup(null)
     await revalidateDeletedProject({ context: s.req.context, doc: published, req: s.req } as AnyArgs)
-    expect(revalidated().sort()).toEqual(['/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/old'])
+    expect(revalidated().sort()).toEqual(['/', '/(frontend)/journal/[slug]', '/portfolio/photography', '/portfolio/photography/old'])
 
     vi.mocked(revalidatePath).mockClear()
     const draftDoc = { ...published, _status: 'draft' }
@@ -408,6 +407,96 @@ describe('project changes refresh journal entries (P2)', () => {
     const draft = setup({ ...published, _status: 'draft' })
     await run.after(draft, { doc: { id: 7 }, operation: 'create' })
     expect(revalidatePath).not.toHaveBeenCalled()
+  })
+})
+
+describe('global publishing hooks (P4)', () => {
+  beforeEach(() => vi.mocked(revalidatePath).mockClear())
+
+  /**
+   * A fake request whose global main row the test can change between hooks; `{}` is what
+   * findGlobal returns before the first publish. Like createLocalReq, every nested call replaces
+   * req.context with a copy, so a snapshot written to a stale context would be lost.
+   */
+  function globalSetup(row: { updatedAt?: string }) {
+    const state = { row }
+    const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() }
+    const req: { context: Record<string, unknown>; payload: object } = { context: {}, payload: {} }
+    const findGlobal = vi.fn(async () => {
+      req.context = { ...req.context }
+      return state.row
+    })
+    req.payload = { findGlobal, logger }
+    return { state, req, findGlobal }
+  }
+
+  type GlobalSetup = ReturnType<typeof globalSetup>
+  const hooks = globalPublishHooks({ slug: 'home', path: '/' })
+  const before = (s: GlobalSetup, h = hooks) =>
+    h.beforeChange({ context: s.req.context, data: {}, req: s.req } as AnyArgs)
+  const after = (s: GlobalSetup, h = hooks) =>
+    h.afterChange({ context: s.req.context, doc: {}, req: s.req } as AnyArgs)
+
+  const live = { updatedAt: '2026-11-11T10:00:00.000Z' }
+
+  it('refreshes nothing on a draft save, which leaves the main row untouched', async () => {
+    const s = globalSetup(live)
+    await before(s)
+    await after(s)
+    expect(revalidatePath).not.toHaveBeenCalled()
+
+    // A draft save of a global that was never published: still no main row.
+    const fresh = globalSetup({})
+    await before(fresh)
+    await after(fresh)
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('refreshes its page on the first publish, a publish and an unpublish', async () => {
+    const first = globalSetup({})
+    await before(first)
+    first.state.row = live
+    await after(first)
+    expect(revalidated()).toEqual(['/'])
+
+    vi.mocked(revalidatePath).mockClear()
+    const s = globalSetup(live)
+    await before(s)
+    s.state.row = { updatedAt: '2026-11-11T11:00:00.000Z' } // publish or unpublish rewrites the row
+    await after(s)
+    expect(revalidated()).toEqual(['/'])
+  })
+
+  it('reads the main row, never a draft, with access overridden', async () => {
+    const s = globalSetup(live)
+    await before(s)
+    expect(s.findGlobal).toHaveBeenCalledWith(
+      expect.objectContaining({ slug: 'home', draft: false, overrideAccess: true, depth: 0 }),
+    )
+  })
+
+  it('skips refreshing under disableRevalidate', async () => {
+    const s = globalSetup({})
+    s.req.context.disableRevalidate = true // as the seed passes it
+    await before(s)
+    s.state.row = live
+    await after(s)
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('wires Home to / and About to /about', async () => {
+    for (const [config, path] of [
+      [Home, '/'],
+      [About, '/about'],
+    ] as const) {
+      vi.mocked(revalidatePath).mockClear()
+      const wired = { beforeChange: config.hooks!.beforeChange![0], afterChange: config.hooks!.afterChange![0] }
+      const s = globalSetup({})
+      await before(s, wired as typeof hooks)
+      s.state.row = live
+      await after(s, wired as typeof hooks)
+      expect(revalidated()).toEqual([path])
+    }
   })
 })
 

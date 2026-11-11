@@ -5,6 +5,7 @@ import * as migration_20261110_050907_site_settings from './20261110_050907_site
 import * as migration_20261110_093748_p1_portfolio from './20261110_093748_p1_portfolio';
 import * as migration_20261111_040428_p2_journal from './20261111_040428_p2_journal';
 import * as migration_20261111_083526_p3_inquiries from './20261111_083526_p3_inquiries';
+import * as migration_20261111_104705_p4_home_about from './20261111_104705_p4_home_about';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20261111_083526_p3_inquiries.up,
     down: migration_20261111_083526_p3_inquiries.down,
-    name: '20261111_083526_p3_inquiries'
+    name: '20261111_083526_p3_inquiries',
+  },
+  {
+    up: migration_20261111_104705_p4_home_about.up,
+    down: migration_20261111_104705_p4_home_about.down,
+    name: '20261111_104705_p4_home_about'
   },
 ];

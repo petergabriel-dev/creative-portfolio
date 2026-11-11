@@ -3,8 +3,8 @@
  *
  * Fills a fresh database with placeholder content. Safe to run twice: the
  * placeholder images, disciplines, projects, categories, posts and inquiries are created
- * once (found by filename, slug or email), and site-settings is only filled while it is still empty,
- * so it never overwrites real edits. Never creates users.
+ * once (found by filename, slug or email), and site-settings, home and about are only filled
+ * while they are still empty, so it never overwrites real edits. Never creates users.
  */
 import { getPayload } from 'payload'
 import sharp from 'sharp'
@@ -13,6 +13,7 @@ import config from '../payload.config'
 import { assertSeedAllowed } from './guard'
 import { seedInquiries } from './inquiries'
 import { seedJournal } from './journal'
+import { seedPages } from './pages'
 import { seedPortfolio } from './portfolio'
 
 const PLACEHOLDER_FILENAME = 'seed-placeholder.webp'
@@ -90,6 +91,8 @@ async function seed() {
   await seedPortfolio(payload)
   // After the portfolio: posts link to seeded projects.
   await seedJournal(payload)
+  // After the portfolio: hero slides link to seeded disciplines and a project.
+  await seedPages(payload)
   await seedInquiries(payload)
 }
 
