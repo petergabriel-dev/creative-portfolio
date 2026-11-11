@@ -1,0 +1,75 @@
+/*
+ * Mobile first: back link, then the related work. The block sits in the story column (the same
+ * box as StoryBlocks' .column) and is as wide as its text, so it lines up with the paragraphs.
+ */
+.footer {
+  width: 100%;
+  max-width: calc(var(--max-width-story) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding: 0 var(--gutter) var(--section-y);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+  max-width: var(--measure-story);
+  padding-top: var(--space-7);
+  border-top: var(--border-hairline) solid var(--color-rule);
+}
+
+.related {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.label {
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: 0;
+  list-style: none;
+}
+
+/* Long project titles wrap rather than overflow. */
+.list a {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/*
+ * Text links carry the Button's inline padding (part of their 44 px target); pull them out by it so
+ * their text lines up with the hairline's edges. The pill (first child) is not affected.
+ */
+.inner > a:not(:first-child),
+.list a {
+  margin-inline: calc(-1 * var(--space-2));
+}
+
+@media (min-width: 768px) {
+  .inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .related,
+  .list {
+    align-items: flex-end;
+    text-align: right;
+  }
+}

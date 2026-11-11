@@ -3,14 +3,14 @@ id: ADR-0004
 title: Slug redirects from previous slugs on the doc, and publish hooks driven by the main row
 status: Active
 date: 2026-11-10
-readWhen: changing a slug field, a collection URL or its redirects; adding a drafts-enabled collection with public pages (posts in P2); touching publish or revalidation hooks
+readWhen: changing a slug field, a collection URL or its redirects; adding a drafts-enabled collection with public pages; touching publish or revalidation hooks
 ---
 
 # ADR-0004: Slug redirects from previous slugs on the doc, and publish hooks driven by the main row
 
 ## Decision
 
-- **Old slugs live on the doc.** Projects and disciplines (and posts in P2) carry a hidden `previousSlugs` text list.
+- **Old slugs live on the doc.** Projects, disciplines and posts carry a hidden `previousSlugs` text list. Categories have no pages of their own and keep none (`slugFields(..., { previousSlugs: false })`).
   - There is no `redirects` collection and no redirects plugin (owner decision, 2026-11-10; resolves the Build Spec open question).
 - **Old URLs 308 to the canonical URL in one hop.**
   - A collection URL looks the slug up among current slugs first, then among `previousSlugs`; the most recently updated doc wins.
@@ -21,6 +21,7 @@ readWhen: changing a slug field, a collection URL or its redirects; adding a dra
   - For drafts-enabled collections, Payload's `previousDoc` is the latest version, often an autosaved draft that already holds the new slug.
   - The main row is the last published state: draft and autosave saves only write versions.
   - `beforeChange` snapshots it on `req.context`; `afterChange` re-reads it and refreshes the old and new public paths only when it changed (publish, unpublish, rename, move); `afterDelete` refreshes a deleted published doc's pages.
+  - Since P2 this logic lives once in the `publishHooks` factory (`src/hooks/publishHooks.ts`); projects and posts pass only their collection and their public paths. Refresh scopes for posts, categories and journal entries are in ADR-0005.
 - **A discipline change refreshes the whole site** (`revalidatePath('/', 'layout')`), because project pages show its name and use its slug (owner decision 4).
 
 ## Why
@@ -37,17 +38,22 @@ Docs:
 - `docs/engineering/invariants.md`
 - `docs/engineering/traps.md`
 - `docs/specs/phase-1-portfolio.md`
+- `docs/specs/phase-2-journal.md`
 - `docs/specs/README.md`
 
 Code:
 
 - `src/fields/slug.ts`
+- `src/hooks/publishHooks.ts`
 - `src/hooks/revalidateProject.ts`
+- `src/hooks/revalidatePost.ts`
 - `src/hooks/revalidateDiscipline.ts`
 - `src/lib/publishing.ts`
 - `src/lib/portfolio.ts`
 - `src/app/(frontend)/portfolio/[collection]/page.tsx`
 - `src/app/(frontend)/portfolio/[collection]/[project]/page.tsx`
+- `src/lib/journal.ts`
+- `src/app/(frontend)/journal/[slug]/page.tsx`
 
 ## Consequences
 
@@ -61,7 +67,7 @@ Code:
 ## Read when
 
 - Changing a slug field, a collection URL or its redirects.
-- Adding a drafts-enabled collection with public pages (posts in P2).
+- Adding a drafts-enabled collection with public pages (build its hooks with `publishHooks`).
 - Touching publish or revalidation hooks.
 
 ## Supersedes

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Fragment, useId } from 'react'
+import { Fragment } from 'react'
 
 import { copy } from '@/copy'
 
@@ -14,13 +14,15 @@ type PieceRowProps = {
   summary: string
 }
 
-/** One project as a text row on a `list` collection page (docs/design/components/PieceRow.md). */
+/**
+ * One project as a text row on a `list` collection page (docs/design/components/PieceRow.md). The
+ * title is the link; a stretched pseudo-element makes the whole row clickable.
+ */
 export function PieceRow({ title, href, projectType, client, year, summary }: PieceRowProps) {
-  const titleId = useId()
   const meta = [projectType, client?.trim(), String(year)].filter(Boolean)
 
   return (
-    <Link aria-labelledby={titleId} className={styles.row} href={href}>
+    <div className={styles.row}>
       <span className={styles.meta}>
         {meta.map((part, index) => (
           <Fragment key={index}>
@@ -30,15 +32,18 @@ export function PieceRow({ title, href, projectType, client, year, summary }: Pi
         ))}
       </span>
       <div className={styles.text}>
-        <h3 className={styles.title} id={titleId}>
-          {title}
+        <h3 className={styles.title}>
+          <Link className={styles.link} href={href}>
+            {title}
+          </Link>
         </h3>
         <span className={styles.summary}>{summary}</span>
       </div>
-      <span className={styles.cta}>
+      {/* A visual cue only: the title link covers the row. */}
+      <span aria-hidden="true" className={styles.cta}>
         {copy.collection.read}
-        <span aria-hidden="true">{` ${copy.arrow}`}</span>
+        {` ${copy.arrow}`}
       </span>
-    </Link>
+    </div>
   )
 }

@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest'
 import { anyone } from '@/access/anyone'
 import { authenticated } from '@/access/authenticated'
 import { publishedOnly } from '@/access/publishedOnly'
+import { Categories } from '@/collections/Categories'
+import { Posts } from '@/collections/Posts'
 
 const args = (user: unknown) => ({ req: { user } }) as unknown as AccessArgs
 
@@ -34,5 +36,26 @@ describe('publishedOnly', () => {
     expect(publishedOnly(args({ id: 1, email: 'editor@example.com', collection: 'users' }))).toBe(
       true,
     )
+  })
+})
+
+describe('journal collection access (P2)', () => {
+  it('posts are published-only for anonymous readers; writes need an editor', () => {
+    expect(Posts.access).toEqual({
+      read: publishedOnly,
+      create: authenticated,
+      update: authenticated,
+      delete: authenticated,
+    })
+    expect(Posts.versions).toEqual({ drafts: { autosave: true } })
+  })
+
+  it('categories are public to read; writes need an editor', () => {
+    expect(Categories.access).toEqual({
+      read: anyone,
+      create: authenticated,
+      update: authenticated,
+      delete: authenticated,
+    })
   })
 })

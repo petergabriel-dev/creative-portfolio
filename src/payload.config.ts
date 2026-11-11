@@ -7,8 +7,10 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
+import { Categories } from './collections/Categories'
 import { Disciplines } from './collections/Disciplines'
 import { Media } from './collections/Media'
+import { Posts } from './collections/Posts'
 import { Projects } from './collections/Projects'
 import { Users } from './collections/Users'
 import { SiteSettings } from './globals/SiteSettings'
@@ -30,8 +32,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  // Sidebar order within a group follows this list (Portfolio: Projects, Collections).
-  collections: [Projects, Disciplines, Media, Users],
+  // Sidebar order follows this list (Portfolio: Projects, Collections; Journal: Posts, Categories).
+  collections: [Projects, Disciplines, Posts, Categories, Media, Users],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   // GraphQL is off; the admin uses REST at /api and the site uses the Local API.
@@ -59,7 +61,7 @@ export default buildConfig({
   plugins: [
     // Meta title, description and image in an SEO tab (Build Spec › Decisions & stack).
     seoPlugin({
-      collections: ['disciplines', 'projects'],
+      collections: ['disciplines', 'projects', 'posts'],
       uploadsCollection: 'media',
       tabbedUI: true,
     }),

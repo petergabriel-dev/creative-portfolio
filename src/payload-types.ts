@@ -69,6 +69,8 @@ export interface Config {
   collections: {
     projects: Project;
     disciplines: Discipline;
+    posts: Post;
+    categories: Category;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -80,6 +82,8 @@ export interface Config {
   collectionsSelect: {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     disciplines: DisciplinesSelect<false> | DisciplinesSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -383,6 +387,64 @@ export interface Discipline {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  /**
+   * Shown on Home and the Journal list.
+   */
+  excerpt: string;
+  /**
+   * 3:2 on cards, 21:9 on the entry.
+   */
+  cover: number | Media;
+  story: (ChapterBlock | TextBlock | ImageBlock | GalleryBlock | VideoBlock | QuoteBlock)[];
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  category: number | Category;
+  /**
+   * Filled on first publish if left empty. Sorts the journal, newest first.
+   */
+  publishedAt: string;
+  /**
+   * Optional "See the work" links.
+   */
+  relatedProjects?: (number | Project)[] | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  previousSlugs?: string[] | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -439,6 +501,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'disciplines';
         value: number | Discipline;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
       } | null)
     | ({
         relationTo: 'media';
@@ -623,6 +693,52 @@ export interface DisciplinesSelect<T extends boolean = true> {
   generateSlug?: T;
   slug?: T;
   previousSlugs?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  excerpt?: T;
+  cover?: T;
+  story?:
+    | T
+    | {
+        chapter?: T | ChapterBlockSelect<T>;
+        text?: T | TextBlockSelect<T>;
+        image?: T | ImageBlockSelect<T>;
+        gallery?: T | GalleryBlockSelect<T>;
+        video?: T | VideoBlockSelect<T>;
+        quote?: T | QuoteBlockSelect<T>;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  category?: T;
+  publishedAt?: T;
+  relatedProjects?: T;
+  generateSlug?: T;
+  slug?: T;
+  previousSlugs?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }

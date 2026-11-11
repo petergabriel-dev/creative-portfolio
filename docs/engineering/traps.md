@@ -50,6 +50,11 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 - **REST `where[...]` queries with curl need `-g`.** curl treats `[ ]` as URL globs and fails silently with `-s`.
 - **Never print snapshots of editor pages.** The Studio's "Preview" link contains `PREVIEW_SECRET` in its URL; redact `previewSecret=…` in any QA output, and rotate the secret if it is ever shown.
 
+- **A required relationship in a drafts-enabled collection is a nullable column with `ON DELETE set null`** (drafts may be incomplete). Deleting a category would silently clear it from every post (`posts.category_id`, migration `20261111_040428_p2_journal`); `src/hooks/categoryHooks.ts` blocks the delete instead (P2).
+- **Defaulting a required field on publish** (`posts.publishedAt`) must happen in a field `beforeValidate` hook, like the slug fix above. The hook sees `data._status === 'published'` on a publish from the Studio, REST and the Local API, and nothing on draft or autosave saves (verified live, P2).
+- **`payload.create({ draft: Boolean(x) })` fails typecheck when required fields are missing** ("Type 'boolean' is not assignable to type 'true'"). Use two calls: `draft: true` for the draft, all required fields for the published one (`src/seed/journal.ts`).
+- **Anonymous REST `?draft=true` does not leak drafts:** with `publishedOnly` read access it returns only docs whose latest version is published, hides a published doc that has a newer draft (also by id), and `/api/<collection>/versions` is 403 (verified for posts and projects, P2).
+
 ## Next.js
 
 - **Preview builds can fail transiently in `next/font/google`** (Turbopack): "Can't resolve '@vercel/turbopack-next/internal/font/google/font'" / "next/font/google queries have exactly one entry". The same commit built fine on redeploy (`vercel redeploy <deployment> --environment preview`).
@@ -67,6 +72,9 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 - **A page's `openGraph: undefined` wipes the layout's Open Graph tags.** Next replaces a parent's `openGraph` with any key the page returns, even an undefined one, so a page without its own image lost the default image and every `og:` tag. Leave the key out instead (`pageMetadata` in `src/lib/seo.ts`; found in the P1 QA pass).
 - **React 19 `renderToStaticMarkup` adds `<link rel="preload" as="image">`** for early `<img>` elements, so a test regex like `/<li/g` also matches `<link`. Match exact tags.
 
+- **`revalidatePath` route patterns must include the route group.** Next tags each page with its file path (`/(frontend)/journal/[slug]/page`, `next/dist/server/lib/implicit-tags.js`) and `revalidatePath` does not strip groups, so `revalidatePath('/journal/[slug]', 'page')` matches nothing. Use `'/(frontend)/journal/[slug]'` (verified live: a publish regenerated `/journal/page/2`, and unpublishing a project dropped its link from entries; ADR-0005).
+- **A folder named `page`** (`src/app/(frontend)/journal/page/[n]/page.tsx`) is a normal segment; only `page.tsx` files are special (`next build` lists `/journal/page/[n]` as ●).
+
 ## Studio (Payload admin)
 
 - **Payload's default admin has accessibility gaps.** Its own CSS lives in `@layer payload-default`, so `src/app/(payload)/custom.scss` overrides it without `!important`: a focus ring (the default focus was barely visible on inputs and invisible on links), stronger help-text colours and 24 px array controls.
@@ -81,3 +89,11 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 - Claude Code's auto mode refuses force-pushes and bulk `vercel rm` from a computed ID list. Merge `origin/dev` into a stacked branch instead of rebasing a pushed one, and run deployment cleanup commands yourself (`! npx vercel@latest rm <ids…> --yes -Q ~/.vercel-portfolio`).
 - `playwright-cli` blocks `file:` URLs: serve the folder with `python3 -I -m http.server <port> --bind 127.0.0.1`. It has no touch or device emulation; dispatch synthetic touch events, then `click()`, and say so in the report.
 - zsh treats `=word` as a command path: `echo ====` fails with "=== not found". Quote separators.
+
+- **axe versions disagree.** P1's QA injected axe-core 4.10.2 from cdnjs and logged 0 violations; axe-core 4.14 (already in `node_modules/.pnpm`) flags whole-card links named by `aria-labelledby` as `label-content-name-mismatch` (serious, WCAG 2.5.3). Claude Code's auto mode also refuses injecting the CDN script into a page. Inject the local copy instead: `playwright-cli run-code --filename <script>` with `page.addScriptTag({ path: '<repo>/node_modules/.pnpm/axe-core@<version>/node_modules/axe-core/axe.min.js' })`, then `axe.run`.
+- **Playwright clicks and `elementFromPoint` outside the viewport hit nothing**, which looks like a broken stretched link. Call `scrollIntoViewIfNeeded()` on the target before reading its box and clicking.
+- **Studio live preview size menu:** Payload's breakpoint control is a popup (`.live-preview-toolbar-controls__breakpoint`), not a `<select>`; scripted option clicks timed out in P2. Check Mobile/Tablet/Desktop switching by hand.
+- **Never screenshot or snapshot the Studio with the live preview open:** its frame URL carries `PREVIEW_SECRET`. Read the frame's content (e.g. its `h1`) through the DOM instead.
+- macOS `sips -c H W --cropOffset 0 0` centres the crop; use `--cropOffset 1 1` for a top-left crop of long screenshots.
+- `Intl.DateTimeFormat('en-GB', { month: 'short' })` writes September as "Sept" on Node 22; `formatDate` takes month names from `copy.months` (`src/lib/date.ts`).
+- In tests, the `next/link` mock renders `href` before the other attributes, and `Button` joins its label and trailing arrow with a non-breaking space (U+00A0); match attributes individually and the arrow with `\u00a0→`.

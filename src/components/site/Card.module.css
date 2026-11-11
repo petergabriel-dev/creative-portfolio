@@ -1,12 +1,26 @@
-/* Shared by CollectionTile and ProjectCard: one block link, image then text. */
+/*
+ * Shared by CollectionTile and ProjectCard: image then text. The title is the only link (its name is
+ * its visible label, WCAG 2.5.3); its ::after stretches the click area over the whole card.
+ */
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
   min-width: 0;
   color: var(--color-text);
+}
+
+.link {
+  color: inherit;
   text-decoration: none;
   touch-action: manipulation;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
 }
 
 .text {

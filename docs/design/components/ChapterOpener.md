@@ -93,7 +93,9 @@ Server component.
 - 404 (P0).
 - Portfolio and collection openers: `split` layout and a breadcrumb.
 - Project opener: breadcrumb and details slot.
-- Journal and About openers in later phases.
+- Journal list opener (P2): `stacked`, default tint, context line "Journal", title and lead from `copy.ts`, no actions (capture 09).
+- Journal entry opener (P2): `stacked`, default tint, breadcrumb "Journal", context line "{category} · {date}" (missing parts dropped), the post's title, its excerpt as the lead, no actions (capture 10).
+- About opener in a later phase.
 - No motion.
 
 ## Preview

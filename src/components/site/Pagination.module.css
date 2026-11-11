@@ -1,0 +1,75 @@
+/* Mobile first: status line, then the links. */
+.pagination {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding-top: var(--space-10);
+}
+
+.status {
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+/* 44 px circles. border-box keeps the size fixed when the hover border thickens. */
+.page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: var(--border-hairline) solid var(--color-text-muted);
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.page:hover,
+.page:active {
+  border-color: var(--color-action);
+  border-width: var(--border-strong);
+}
+
+.current,
+.current:hover,
+.current:active {
+  border-width: var(--border-hairline);
+  border-color: var(--color-action);
+  background-color: var(--color-action);
+  color: var(--color-on-action);
+}
+
+@media (min-width: 768px) {
+  .pagination {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    transition: none;
+  }
+}

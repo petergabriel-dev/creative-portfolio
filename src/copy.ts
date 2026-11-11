@@ -9,6 +9,8 @@ export const copy = {
   },
   /** Trailing arrow on text-link buttons; hidden from screen readers. */
   arrow: '→',
+  /** Short month names for dates ("6 Nov 2026"). Fixed, because en-GB writes September as "Sept". */
+  months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   nav: {
     /** aria-label of the header navigation. */
     label: 'Main',
@@ -64,6 +66,27 @@ export const copy = {
     moreProjects: 'More projects',
     viewProject: 'View project',
     read: 'Read',
+  },
+  journal: {
+    contextLine: 'Journal',
+    title: 'Stories behind the pictures',
+    lead: 'Notes from shoots, edits and drafts — the stories behind the work, and things I notice along the way.',
+    /** Shown instead of rows while nothing is published (the Build Spec's empty-state line). */
+    empty: 'New work is on its way',
+    readStory: 'Read story',
+    olderStories: 'Older stories',
+    /** aria-label of the pagination navigation. */
+    navLabel: 'Journal pages',
+    pageOf: (page: number, total: number) => `Page ${page} of ${total}`,
+    perPage: (count: number) => `${count} stories per page`,
+    /** Accessible name of a page-number link. */
+    pageLabel: (page: number) => `Page ${page}`,
+    /** Document title of /journal/page/N. */
+    pageTitle: (page: number) => `Journal · Page ${page}`,
+    /** Finale body on journal pages (captures 09 and 10). */
+    finaleBody: "Tell me about what you're making, and we'll start from there.",
+    backToJournal: 'Back to journal',
+    seeTheWork: 'See the work',
   },
   video: {
     /** Play button label; the caption is appended when there is one. */

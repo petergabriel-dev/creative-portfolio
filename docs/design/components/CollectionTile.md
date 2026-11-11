@@ -6,14 +6,14 @@ One tile per discipline on the Portfolio page, linking to its collection page. S
 
 ## Anatomy
 
-A single `<a>` block (flex column, gap `--space-5`):
+One tile block (flex column, gap `--space-5`). The title is the only link; its `::after` (`position: absolute; inset: 0`) stretches the click and tap area over the whole tile, which is `position: relative` (owner decision 2026-11-11, WCAG 2.5.3 Label in Name):
 
 1. **Image:** MediaImage `3:4`, showing the discipline's first highlight, or the tinted frame when there are no highlights.
 2. **Text group** (flex column, gap `--space-2`):
    - **Label:** "Collection 0N" from `copy.ts`, where N is the discipline's position in `order`. `--fs-label`, `--fw-semibold`, `--tracking-label`, uppercase, `--color-text-muted`.
    - **Name:** `<h2 id>` in `--font-display`, `--fw-regular`, `--fs-card`, `--lh-card`, uppercase, `--color-text`, `text-wrap: balance`, `overflow-wrap: break-word`.
    - **Intro:** `<p>` with the discipline's `intro`, in `--fs-body`, `--lh-body`, `--color-text-muted`.
-   - **Call to action:** "View collection" from `copy.ts` plus a trailing arrow (`aria-hidden`). `--fs-sm`, `--fw-medium`, `--color-text`, underlined at `--underline-offset`.
+   - **Call to action:** "View collection" from `copy.ts` plus a trailing arrow, as a visual cue only (`aria-hidden`, not a link). `--fs-sm`, `--fw-medium`, `--color-text`, underlined at `--underline-offset`.
 
 The capture's tile text is shorter than the discipline intro; the Build Spec has only `intro`, so the tile uses it.
 
@@ -30,7 +30,7 @@ One. Grid columns use `--grid-min-tile`.
 
 - **Default:** as above.
 - **Hover:** the call-to-action underline thickens to `--border-strong`. Colours never change.
-- **Focus-visible:** the global dual focus ring around the whole tile.
+- **Focus-visible:** the global dual focus ring around the name link.
 - **Active:** same as hover.
 - Disabled, loading and error do not apply. An empty intro is omitted.
 
@@ -51,7 +51,7 @@ Server component.
 
 ## Accessibility
 
-- One link per tile, named by the discipline name (`aria-labelledby` points at the `h2`), so screen readers do not read the intro and the call to action as the link name.
+- One link per tile: the discipline name inside the `h2`, so the link's name is exactly its visible label and screen readers do not read the intro and the call to action as part of it. A whole-tile link named by `aria-labelledby` fails axe 4.14's `label-content-name-mismatch` (serious, WCAG 2.5.3).
 - Tile names are `h2`s under the page's `h1`.
 - `touch-action: manipulation`.
 

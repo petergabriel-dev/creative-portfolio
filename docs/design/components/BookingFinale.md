@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The dark closing section before the footer on every page except Book Me: a gold label, a Bebas headline, one sentence and the booking button. Source: captures 02, 03, 06 and 07, and the Build Spec section "Front-end pages › Booking finale".
+The dark closing section before the footer on every page except Book Me: a gold label, a Bebas headline, one sentence and the booking button. Source: captures 02, 03, 06, 07, 09 and 10, and the Build Spec section "Front-end pages › Booking finale".
 
 ## Anatomy
 
@@ -18,7 +18,7 @@ The dark closing section before the footer on every page except Book Me: a gold 
 ## Variants
 
 - **With secondary action:** the project page ("← Back to portfolio").
-- **Booking only:** Portfolio and collection pages.
+- **Booking only:** Portfolio, collection, journal list and journal entry pages.
 
 ## Sizes
 
@@ -65,6 +65,8 @@ Server component.
 | Portfolio | `site-settings.finaleHeadline` | default sentence in `copy.ts` |
 | Collection | the discipline's `finaleHeadline` | the discipline's `finaleBody` |
 | Project | its discipline's `finaleHeadline` (owner decision 2026-11-10) | its discipline's `finaleBody`; plus "Back to portfolio" |
+| Journal (`/journal`, `/journal/page/N`) | `site-settings.finaleHeadline` | journal sentence in `copy.ts`: "Tell me about what you're making, and we'll start from there." (captures 09, 10) |
+| Journal entry | `site-settings.finaleHeadline` | the same journal sentence; no secondary action ("Back to journal" sits above, in JournalEntryFooter) |
 
 ## Preview
 

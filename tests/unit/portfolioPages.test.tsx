@@ -55,14 +55,14 @@ describe('findDiscipline', () => {
 })
 
 describe('CollectionTile', () => {
-  it('is one link named by the discipline, with its label, intro and call to action', () => {
+  it('links only the discipline name (name = visible label), with its label, intro and a hidden cue', () => {
     const out = html(<CollectionTile href="/portfolio/photography" index={1} intro="People and places." name="Photography" />)
-    const labelledBy = out.match(/aria-labelledby="([^"]+)"/)?.[1]
-    expect(out).toMatch(new RegExp(`<h2[^>]*id="${labelledBy}"[^>]*>Photography</h2>`))
+    expect(out).toMatch(/<h2[^>]*><a href="\/portfolio\/photography"[^>]*>Photography<\/a><\/h2>/)
     expect(out.match(/<a /g)).toHaveLength(1)
+    expect(out).not.toContain('aria-labelledby')
     expect(out).toContain('Collection 01')
     expect(out).toContain('People and places.')
-    expect(out).toMatch(/View collection<span aria-hidden="true"> →<\/span>/)
+    expect(out).toMatch(/<span aria-hidden="true" class="[^"]*">View collection →<\/span>/)
   })
 
   it('shows a tint frame and no intro when they are missing', () => {
@@ -77,8 +77,17 @@ describe('ProjectCard and PieceRow', () => {
     const out = html(
       <ProjectCard aspect="3:2" href="/portfolio/photography/p" projectType="Wedding" sizes="50vw" title="[Couple] wedding" year={2026} />,
     )
-    expect(out).toMatch(/<h3[^>]*>\[Couple\] wedding<\/h3>/)
+    expect(out).toMatch(/<h3[^>]*><a href="\/portfolio\/photography\/p"[^>]*>\[Couple\] wedding<\/a><\/h3>/)
+    expect(out.match(/<a /g)).toHaveLength(1)
     expect(out).toMatch(/Wedding<span aria-hidden="true"> · <\/span>2026/)
+    expect(out).toMatch(/<span aria-hidden="true" class="[^"]*">View project →<\/span>/)
+  })
+
+  it('links only the title of a piece row', () => {
+    const out = html(<PieceRow href="/p" projectType="Essay" summary="S" title="T" year={2026} />)
+    expect(out).toMatch(/<h3[^>]*><a href="\/p"[^>]*>T<\/a><\/h3>/)
+    expect(out.match(/<a /g)).toHaveLength(1)
+    expect(out).toMatch(/<span aria-hidden="true" class="[^"]*">Read →<\/span>/)
   })
 
   it('drops an empty client from a row', () => {
