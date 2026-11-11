@@ -102,3 +102,11 @@
   margin-top: var(--space-2);
   font-size: var(--fs-body);
 }
+
+/* A card has no call to action: hover and active underline the title instead; colours never change. */
+.card:hover .link,
+.card:active .link {
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-strong);
+  text-underline-offset: var(--underline-offset);
+}

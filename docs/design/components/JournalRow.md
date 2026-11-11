@@ -32,7 +32,7 @@ One. The title scales with `--fs-card`.
 ## States
 
 - **Default:** as above.
-- **Hover:** anywhere on the row; the call-to-action underline thickens to `--border-strong`.
+- **Hover:** anywhere on the row; the call-to-action underline thickens to `--border-strong`. On a `card` (no call to action), the title gets a `--border-strong` underline at `--underline-offset` instead (P4).
 - **Focus-visible:** the global dual focus ring around the title link.
 - **Active:** same as hover.
 - **Empty parts:** a missing category or date drops that part and its separator. With both missing, the meta line is omitted. A missing cover shows the tinted frame.
