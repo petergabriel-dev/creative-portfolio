@@ -9,6 +9,7 @@ import sharp from 'sharp'
 
 import { Categories } from './collections/Categories'
 import { Disciplines } from './collections/Disciplines'
+import { Inquiries } from './collections/Inquiries'
 import { Media } from './collections/Media'
 import { Posts } from './collections/Posts'
 import { Projects } from './collections/Projects'
@@ -32,8 +33,9 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  // Sidebar order follows this list (Portfolio: Projects, Collections; Journal: Posts, Categories).
-  collections: [Projects, Disciplines, Posts, Categories, Media, Users],
+  // Sidebar order follows this list (Portfolio: Projects, Collections; Journal: Posts, Categories;
+  // Inbox: Inquiries).
+  collections: [Projects, Disciplines, Posts, Categories, Inquiries, Media, Users],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   // GraphQL is off; the admin uses REST at /api and the site uses the Local API.
