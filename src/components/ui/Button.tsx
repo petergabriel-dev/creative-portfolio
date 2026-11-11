@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import type { ReactNode } from 'react'
+import type { MouseEventHandler, ReactNode } from 'react'
 
 import { copy } from '@/copy'
 
@@ -29,6 +29,9 @@ type ActionButtonProps = CommonProps & {
   href?: undefined
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
+  /** Client components only (e.g. RevealMore). */
+  onClick?: MouseEventHandler<HTMLButtonElement>
+  'aria-controls'?: string
 }
 
 /** Pill buttons and text links (docs/design/components/Button.md). */
@@ -54,7 +57,13 @@ export function Button(props: LinkButtonProps | ActionButtonProps) {
   }
 
   return (
-    <button className={className} disabled={props.disabled} type={props.type ?? 'button'}>
+    <button
+      aria-controls={props['aria-controls']}
+      className={className}
+      disabled={props.disabled}
+      onClick={props.onClick}
+      type={props.type ?? 'button'}
+    >
       {content}
     </button>
   )

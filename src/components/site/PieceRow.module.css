@@ -1,0 +1,66 @@
+/* Mobile first: meta, text and call to action stack. */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-block: var(--space-9);
+  border-top: var(--border-hairline) solid var(--color-rule);
+  color: var(--color-text);
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+.meta {
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-card);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-card);
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.summary {
+  max-width: var(--measure-body);
+  color: var(--color-text-muted);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+}
+
+.cta {
+  align-self: flex-start;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  text-decoration-line: underline;
+  text-underline-offset: var(--underline-offset);
+}
+
+.row:hover .cta,
+.row:active .cta {
+  text-decoration-thickness: var(--border-strong);
+}
+
+@media (min-width: 768px) {
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr) auto;
+    align-items: start;
+    column-gap: var(--space-12);
+  }
+}

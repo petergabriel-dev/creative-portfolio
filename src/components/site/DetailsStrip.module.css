@@ -1,0 +1,62 @@
+.strip {
+  display: grid;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+.value {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  overflow-wrap: break-word;
+}
+
+/* Opener details on a dark surface. */
+.dark {
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-detail), 100%), 1fr));
+  gap: var(--space-4) var(--space-8);
+  padding-top: var(--space-6);
+  border-top: var(--border-hairline) solid var(--color-rule-on-dark);
+}
+
+.dark .label {
+  color: var(--color-on-dark-subtle);
+}
+
+.dark .value {
+  color: var(--color-on-dark-heading);
+}
+
+/* Credits on a light section: ruled rows. */
+.light {
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-credit), 100%), 1fr));
+  column-gap: var(--space-8);
+  border-top: var(--border-hairline) solid var(--color-rule);
+}
+
+.light .item {
+  padding-block: var(--space-5);
+  border-bottom: var(--border-hairline) solid var(--color-rule);
+}
+
+.light .label {
+  color: var(--color-text-muted);
+}
+
+.light .value {
+  color: var(--color-text);
+}

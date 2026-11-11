@@ -31,4 +31,53 @@ export const copy = {
     /** Joins role line and location, and social links. */
     separator: '·',
   },
+  /** Joins breadcrumb links and meta parts ("Portfolio · Collection 01"); hidden from screen readers. */
+  separator: '·',
+  chapter: {
+    /** "Chapter 01": the number is counted at render time, never stored. */
+    label: (n: number) => `Chapter ${String(n).padStart(2, '0')}`,
+  },
+  finale: {
+    label: 'Book me',
+    /** Body under site-settings.finaleHeadline where no discipline finale applies (Portfolio). */
+    defaultBody: "Seen something close to what you have in mind? Tell me about it and we'll start from there.",
+    backToPortfolio: 'Back to portfolio',
+    /** Leading arrow on "Back to portfolio"; hidden from screen readers. */
+    backArrow: '←',
+  },
+  portfolio: {
+    contextLine: 'Four collections · photography, film, design and words',
+    title: 'Portfolio',
+    lead: 'Each collection gathers my strongest work, with individual projects inside — so you can see how each one came together, start to finish.',
+    tileLabel: (n: number) => `Collection ${String(n).padStart(2, '0')}`,
+    viewCollection: 'View collection',
+  },
+  collection: {
+    contextLine: (n: number) => `Collection ${String(n).padStart(2, '0')}`,
+    seeProjects: 'See the projects',
+    highlights: 'Highlights',
+    highlightsAside: 'A best-of selection across every project in this collection.',
+    projects: 'Projects',
+    selectedPieces: 'Selected pieces',
+    /** Shown instead of a grid when a collection has no published projects. */
+    empty: 'New work is on its way',
+    moreProjects: 'More projects',
+    viewProject: 'View project',
+    read: 'Read',
+  },
+  video: {
+    /** Play button label; the caption is appended when there is one. */
+    play: 'Play video',
+    /** iframe title when the video has no caption. */
+    title: 'Video',
+  },
+  details: {
+    collection: 'Collection',
+    type: 'Type',
+    year: 'Year',
+    client: 'Client',
+    role: 'My role',
+    /** Accessible name of the project credits section. */
+    credits: 'Credits',
+  },
 } as const

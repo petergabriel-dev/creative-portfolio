@@ -5,11 +5,16 @@ How code in this repo is written. Established in Phase 0.
 ## Code
 
 - TypeScript, `strict`. Import from `src/` with the `@/` alias.
-- **Server components by default.** A component becomes a client component only when it needs browser interaction; none do in P0.
+- **Server components by default.** A component becomes a client component only when it needs browser interaction. The public site has three: `RevealMore` ("More projects"), `VideoEmbed` (click-to-load) and `LivePreviewListener` (draft mode only). Add another only with the same justification.
 - Payload config lives in TypeScript:
   - collections in `src/collections/`, globals in `src/globals/`, hooks in `src/hooks/`, access helpers in `src/access/`;
   - shared logic in `src/lib/`;
-  - the seed in `src/seed/`.
+  - the seed in `src/seed/`;
+  - shared field configs in `src/fields/` (`slugFields`), Story blocks in `src/blocks/story.ts` (reused unchanged by `posts` in P2);
+  - story renderers in `src/components/story/`.
+- **Public reads** live in `src/lib/` (`getSiteSettings.ts`, `portfolio.ts`): React `cache`, Local API, `overrideAccess: false`, `draft: false`. Pages never build their own queries with other options.
+- **Publish hooks** compare the main row before and after a save (snapshot on `req.context`, written after any nested Local API call) and act only on public-state changes; pure path logic lives in `src/lib/publishing.ts`.
+- **Slugs** use `slugFields(useAsSlug)` from `src/fields/slug.ts`: ASCII `toSlug`, a format validator and the hidden `previousSlugs` list.
 - Each collection and global sets its `admin.group` and `useAsTitle` from the Build Spec when it is created.
 - Mark intentional shortcuts with a `// ponytail:` comment that names the limitation and the upgrade path.
 
@@ -31,7 +36,7 @@ How code in this repo is written. Established in Phase 0.
 ## Tests
 
 - Unit tests in `tests/unit/*.test.ts(x)` run with Vitest in a node environment, with no database and no secrets, so CI can run them.
-- Components are tested with `renderToStaticMarkup`; `next/link` is mocked as a plain `<a>`.
+- Components are tested with `renderToStaticMarkup`; `next/link` is mocked as a plain `<a>` and `next/image` as a plain `<img>`. Code that calls the Local API is tested with `payload` and `@payload-config` mocked (`vi.mock`); hook tests pass the request's *current* `req.context` and replace it on every nested call, like Payload does.
 - Live behaviour (auth, uploads, migrations, layouts) is verified locally against a throwaway database and recorded in the PR.
 
 ## Dependencies and generated files

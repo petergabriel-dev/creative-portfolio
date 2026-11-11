@@ -40,6 +40,11 @@ The surface's job is to **persuade**: show selected work and turn interest into 
 - When sources disagree: owner decisions (2026-11-10) → Build Spec → captures. Examples:
   - The 404 title uses the Build Spec display size `--fs-display`, not the slightly larger size in capture 12.
   - The mobile header (two rows, no menu button) is an owner decision that replaces the 390 px capture of screen 40.
+  - Story blocks always stack top to bottom. Capture 07 sets Chapter 01's text beside an image, but the Build Spec blocks have no layout field (P1).
+  - Project cards are at most two per row (Build Spec "cards, 2 up"), not the three in capture 03 (P1).
+  - Story chapter headings use `--fs-section`, not the smaller size in capture 07 (P1).
+  - Below 768 px, opener titles use `--fs-display-sm` (`clamp(56px, 19vw, 80px)`), smaller than the Build Spec's 80 px minimum on 320–420 px screens. Long words like "PHOTOGRAPHY" then fit on one line instead of breaking mid-word (owner decision 2026-11-10).
+  - A video block without a poster shows a tinted frame, never the provider's thumbnail (owner decision 2026-11-10; replaces the Build Spec wording).
 
 ### One colour scheme
 
@@ -49,7 +54,7 @@ The Build Spec defines no dark mode, so the token file has a single `:root` sche
 
 `site-settings.accent` picks one of `--accent-gold`, `--accent-terracotta`, `--accent-sage` or `--accent-offwhite`. The root layout sets `--gold` inline on `<html>` to `var(<that token>)`, and components read it through `--color-booking`. The header's Book Me pill is **not** gold: it is ink on light sections and outlined on dark ones (captures 40 and 12).
 
-Known risk: the off-white accent on bone sections has almost no contrast. It cannot appear in P0 (no gold button ships), and must be handled before gold buttons land on light sections (P1/P6).
+Known risk: the off-white accent on bone sections has almost no contrast. It cannot appear in P0 (no gold button ships). In P1, gold buttons and the finale label sit only on dark surfaces (openers and BookingFinale), where every accent passes. It must be handled before gold buttons land on light sections (P6).
 
 ### Contrast (WCAG 2.2 AA)
 
@@ -68,6 +73,12 @@ Ratios computed from the token values (WCAG relative luminance), 2026-11-10:
 | `--bone-70` outline on `--chapter` | 7.1:1 | Outlined buttons on dark (non-text) |
 | `--ink` on `--accent-gold` | 9.2:1 | Text on gold booking buttons |
 | Focus ring on `--chapter` | ink 1.2:1, bone halo 12.9:1 | On dark sections the bone halo carries the ring; on light the ink outline does |
+| `--on-ink-muted` on `--chapter` | 6.8:1 | Detail labels in the project opener (P1) |
+| `--bone` on `--ink` | 15.4:1 | Finale headline (P1) |
+| Accents on `--ink` | gold 9.2:1, terracotta 5.9:1, sage 9.0:1, off-white 15.4:1 | Finale label and gold buttons on the finale (P1); every accent passes |
+| `--bone` icon on `--ink-50` scrim | 3.0:1 over a white poster, 3.2:1 over bone, 14.1:1 over the tinted frame | Video play icon (non-text, 3:1 required) (P1) |
+| `--ink-50` scrim against a white poster / `--bone-70` border against the scrim on `--chapter` | 3.4:1 / 7.6:1 | Video play button boundary (non-text) (P1) |
+| `--bone-20` rule on `--chapter` | 1.8:1 | Decorative hairline above opener details; carries no meaning (P1) |
 
 Accent fills on bone are weak: terracotta 2.6:1, sage 1.7:1, off-white 1.0:1. Gold booking buttons sit on dark sections in the captures; any accent button on a light section needs a visible boundary.
 
@@ -87,3 +98,20 @@ Accent fills on bone are weak: terracotta 2.6:1, sage 1.7:1, off-white 1.0:1. Go
 - [SiteFooter](components/SiteFooter.md)
 - [ChapterOpener](components/ChapterOpener.md)
 - [NotFoundPage](components/NotFoundPage.md)
+
+### Components (P1)
+
+- [MediaImage](components/MediaImage.md)
+- [ChapterHeading](components/ChapterHeading.md)
+- [BookingFinale](components/BookingFinale.md)
+- [DetailsStrip](components/DetailsStrip.md)
+- [Filmstrip](components/Filmstrip.md)
+- [CollectionTile](components/CollectionTile.md)
+- [ProjectCard](components/ProjectCard.md)
+- [PieceRow](components/PieceRow.md)
+- [RevealMore](components/RevealMore.md)
+- [StoryBlocks](components/StoryBlocks.md)
+- [VideoEmbed](components/VideoEmbed.md)
+- ChapterOpener gains a breadcrumb, a details slot, a `split` layout and the discipline tint mapping.
+
+Grid minimum widths (`--grid-min-*`) feed `repeat(auto-fit, minmax(min(<token>, 100%), 1fr))`, so every grid collapses to one column on phones.
