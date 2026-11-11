@@ -5,7 +5,15 @@ import { publishedOnly } from '@/access/publishedOnly'
 import { storyField } from '@/blocks/story'
 import { slugFields } from '@/fields/slug'
 import { recordPostSlug, revalidateDeletedPost, revalidatePost } from '@/hooks/revalidatePost'
-import { fillPublishedAt } from '@/lib/publishing'
+import { LIVE_PREVIEW_BREAKPOINTS, previewUrl } from '@/lib/preview'
+import { fillPublishedAt, postPath } from '@/lib/publishing'
+
+/**
+ * Draft-mode URL for a post as it is being edited (its current slug). Relative, so live preview
+ * works on every preview deployment without setting Payload's serverURL.
+ */
+const postPreviewUrl = (data: Record<string, unknown> | undefined) =>
+  typeof data?.slug === 'string' && data.slug ? previewUrl(postPath(data.slug)) : null
 
 /** Journal posts (Build Spec › Content model › posts). Same Story blocks as projects. */
 export const Posts: CollectionConfig = {
@@ -15,6 +23,12 @@ export const Posts: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'publishedAt', '_status'],
     listSearchableFields: ['title'],
+    // Live preview pane (Build Spec › Publishing) and the "Preview" button ("View draft").
+    livePreview: {
+      url: ({ data }) => postPreviewUrl(data),
+      breakpoints: LIVE_PREVIEW_BREAKPOINTS,
+    },
+    preview: (doc) => postPreviewUrl(doc),
   },
   defaultSort: '-publishedAt',
   versions: {

@@ -6,7 +6,7 @@ The row that closes a journal entry, after the story and before the finale: the 
 
 ## Anatomy
 
-A block inside `<main>`, after the `<article>`, centred at max-width `--measure-story` (inline padding `--gutter` on narrow screens). A top hairline (`--border-hairline` `--color-rule`) with `--space-7` below it, and `--section-y` below the block.
+A block inside `<main>`, after the `<article>`, aligned with the story's text column: it sits in the same box as StoryBlocks' column (max-width `--max-width-story` plus two `--gutter`s, centred, inline padding `--gutter`) and is `--measure-story` wide, starting at the column's left edge like the paragraphs above it. (Capture 10 centres both the text and this row; the P1 StoryBlocks column, reused unchanged, keeps text at the left of the story column, so the row follows the text.) A top hairline (`--border-hairline` `--color-rule`) with `--space-7` below it, and `--section-y` below the block.
 
 1. **Back link:** Button `outline-ink`, size `primary`, with a leading "←" (`aria-hidden`) and "Back to journal" from `copy.ts`, linking to `/journal`.
 2. **Related work** (only published related projects whose collection is known):

@@ -1,8 +1,5 @@
-import config from '@payload-config'
 import type { Metadata } from 'next'
-import { draftMode, headers } from 'next/headers'
 import { notFound, permanentRedirect } from 'next/navigation'
-import { getPayload } from 'payload'
 
 import { BookingFinale } from '@/components/site/BookingFinale'
 import { ChapterOpener } from '@/components/site/ChapterOpener'
@@ -13,6 +10,7 @@ import { LivePreviewListener } from '@/components/story/LivePreviewListener'
 import { StoryBlocks } from '@/components/story/StoryBlocks'
 import { MediaImage } from '@/components/ui/MediaImage'
 import { copy } from '@/copy'
+import { draftEditor } from '@/lib/draftEditor'
 import { getSiteSettings } from '@/lib/getSiteSettings'
 import { findProject, getPublishedProjectParams } from '@/lib/portfolio'
 import { collectionPath } from '@/lib/publishing'
@@ -37,18 +35,6 @@ export async function generateMetadata({ params }: PageProps<'/portfolio/[collec
     canonical,
     images: [project.cover],
   })
-}
-
-/**
- * The editor behind a draft-mode request, checked at render time: the draft-mode cookie is the
- * same for every visitor of a deployment, so on its own it never unlocks drafts. headers() is only
- * read inside draft mode, so public requests keep the static page.
- */
-async function draftEditor() {
-  if (!(await draftMode()).isEnabled) return null
-  const payload = await getPayload({ config })
-  const { user } = await payload.auth({ headers: await headers() })
-  return user ?? null
 }
 
 /** Project page (screen 07): opener, 21:9 cover, story, credits, the discipline's finale. */

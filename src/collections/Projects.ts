@@ -5,7 +5,7 @@ import { publishedOnly } from '@/access/publishedOnly'
 import { storyField } from '@/blocks/story'
 import { slugFields } from '@/fields/slug'
 import { recordProjectSlug, revalidateDeletedProject, revalidateProject } from '@/hooks/revalidateProject'
-import { previewUrl } from '@/lib/preview'
+import { LIVE_PREVIEW_BREAKPOINTS, previewUrl } from '@/lib/preview'
 import { projectPath } from '@/lib/publishing'
 
 /**
@@ -39,11 +39,7 @@ export const Projects: CollectionConfig = {
     // Live preview pane (Build Spec › Publishing) and the "Preview" button ("View draft").
     livePreview: {
       url: ({ data, req }) => projectPreviewUrl(data, req),
-      breakpoints: [
-        { label: 'Mobile', name: 'mobile', width: 390, height: 844 },
-        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
-        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
-      ],
+      breakpoints: LIVE_PREVIEW_BREAKPOINTS,
     },
     preview: (doc, { req }) => projectPreviewUrl(doc, req),
   },
