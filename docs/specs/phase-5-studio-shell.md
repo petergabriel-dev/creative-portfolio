@@ -1,6 +1,6 @@
 # Phase 5 — Studio shell
 
-Status: In progress
+Status: Done
 Depends on: P3 (the inquiries the badge counts, and Resend for password reset email), P4 (every collection and global exists)
 Build Spec refs: Admin (Studio) customisation · Access control & auth · Design system · Content model: collections › users
 
@@ -147,7 +147,7 @@ Run on `docs/p5-qa` (plan `p5-studio-shell`, T1–T6 committed on stacked local 
 | Redirects stay in the Studio | Pass | T6: `?redirect=/admin/collections/posts` landed there; `?redirect=https://example.com` landed on `/admin`; a logged-in visit to `/admin/login` went to `/admin` (or to a safe `?redirect=`). Unit tests cover `//`, `/\`, `/%2F`, `javascript:` and non-Studio paths |
 | Log-in without JavaScript | Not possible (recorded) | Payload's admin layout renders every view on the client: the server HTML body of `/admin/*` is empty and the content is only in the RSC payload, Payload's own log-in included (T6). The form still posts to a server action; no client fetch code |
 | Create-first-user while `users` is empty (invariant 10) | Pass | Final build and T6: `/admin/login` went to `/admin/create-first-user` on an empty `users` table |
-| "Forgot password?" sends a reset email | Fixed; preview re-check pending | Locally the link opens Payload's view and submitting logged "Email attempted without being configured. To: 'qa@example.com', Subject: 'Reset Your Password'". On the PR #37 preview the email arrived through Resend, but its link was relative (`/admin/reset/…`, opened as `http:///admin/reset/…`): with `serverURL` unset, Payload links from the Host header only for an allow-listed origin. The users collection now sends its own reset email whose link uses the trusted email base URL (`adminBaseUrl`), never the Host header (unit-tested) |
+| "Forgot password?" sends a reset email | Pass after one fix | Locally the link opens Payload's view and submitting logged "Email attempted without being configured. To: 'qa@example.com', Subject: 'Reset Your Password'". On the PR #37 preview the email arrived through Resend, but its link was relative (`/admin/reset/…`, opened as `http:///admin/reset/…`): with `serverURL` unset, Payload links from the Host header only for an allow-listed origin. The users collection now sends its own reset email whose link uses the trusted email base URL (`adminBaseUrl`), never the Host header (unit-tested). Owner re-check on the preview after the fix (2026-11-12): the email arrived through Resend with an absolute preview link, which opened Payload's reset page, and the new password worked |
 | Screens 20, 20--error, 21 and 42 match their captures at 1440 px | Pass, with recorded deviations | Screenshots against the captures (T4, T5, T6, final build). The sidebar was opened first: Payload starts it closed on each full load up to 1440 px (owner decision 10). Deviations are recorded in `docs/design/README.md` |
 | Screens 20 and 21 match at 390 px; all four work at 390 px with no horizontal scroll | Pass | 21 at 390 px without its stacked sidebar (owner decision 9). No horizontal scroll at 320, 390, 768, 1024 and 1440 px on the log-in (both states), the Overview and forgot. With the phone drawer open, Payload's own layout lets the page scroll sideways behind it; identical with Payload's default nav (T4) |
 | Keyboard pass of the admin's main flows | Pass after one fix | Final build, keyboard only: logged in (Email is the first stop after Back to the site), Overview → a draft project (Tab, Enter), title edited and published (Publish changes reached by Tab; REST `_status: published`), an inquiry opened from the list, status set to Replied in the select and saved, sidebar opened with the menu button, Log out → `/admin/login` with the cookie cleared. Every stop showed the ring except Payload's select fields, now fixed (below) |
@@ -156,7 +156,7 @@ Run on `docs/p5-qa` (plan `p5-studio-shell`, T1–T6 committed on stacked local 
 | `next build`: public routes keep their rendering (invariant 22) | Pass | `/`, `/about`, `/portfolio`, `/journal` and `/book` ○; collection, project, `/journal/page/[n]` and `/journal/[slug]` ● |
 | The full seed (P0–P4) fills a fresh database; a second run creates nothing | Pass | Run 1 created 54 docs, run 2 created 0: 23 projects, 12 posts, 4 disciplines, 4 categories, 4 inquiries, 7 media, 1 version each of `home` and `about`; `users` held only the QA editor (the seed creates none) |
 | DoD: code health | Pass | typecheck, lint, 405 unit tests (45 new in P5) |
-| DoD: Vercel preview | Pending | The branch is not pushed yet (owner to approve the push and PR) |
+| DoD: Vercel preview | Pass | PR #37: `checks` and `Vercel` green on every push. Owner on the protected preview (2026-11-12): created the admin user, logged in through the Studio log-in (a wrong password showed the inline error), browsed the Overview, opened the sidebar from the menu button and an editor in the Studio theme |
 
 ### Fixes made during QA
 
@@ -176,12 +176,11 @@ These sit inside Payload's built-in components and go to P6 (screens 22–31) an
 
 These are recorded as deferred, not passed:
 
-- the Vercel preview: `checks` and `Vercel` green, the Studio browsed on the preview, and a real reset email through Resend (to the Resend account's address while the test sender is in use);
 - a screen-reader pass of the sidebar badge, the Overview panels and the log-in alert;
 - the sidebar drawer on a real phone.
 
 ### Follow-ups
 
-- Push the P5 branches and open the PR into `dev` (owner approval); when the preview rows pass, set Status to `Done` here and in `docs/specs/README.md`.
+- Merge PR #37 into `dev` after the engineering docs (T8) and ADR-0007 (T9) land on it; release P5 to `main` as `v0.6.0` as for earlier phases.
 - P6: Payload's field edges (3:1), the exceptions above, and screens 22–31.
 - `next.config.ts` now sets `logging.serverFunctions: false`, so the dev server no longer prints Server Function arguments (the typed email on the log-in and Book Me forms).
