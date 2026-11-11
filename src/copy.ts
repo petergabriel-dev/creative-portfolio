@@ -204,4 +204,21 @@ export const copy = {
       open: 'Open in the Studio',
     },
   },
+  /** The Studio (P5): docs/design/components/StudioOverview.md. */
+  studio: {
+    /** Meta-line prefixes: "Project · Wedding", "Journal · Process". */
+    project: 'Project',
+    journal: 'Journal',
+    /** A doc saved before it had a title. */
+    untitled: 'Untitled',
+    /** The Overview's Selected work line; Home shows at most nine (owner decision 1). */
+    selectedWorkLine: (count: number) =>
+      count <= 0
+        ? 'Nothing is marked “On home” yet.'
+        : count === 1
+          ? "Selected work shows 1 piece you've marked “On home”."
+          : count <= 9
+            ? `Selected work shows ${count} pieces you've marked “On home”.`
+            : `Selected work shows the first 9 of ${count} pieces you've marked “On home”.`,
+  },
 } as const
