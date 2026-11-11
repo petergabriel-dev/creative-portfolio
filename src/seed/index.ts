@@ -2,8 +2,8 @@
  * Seed: `pnpm seed` (payload run src/seed/index.ts).
  *
  * Fills a fresh database with placeholder content. Safe to run twice: the
- * placeholder images, disciplines and projects are created once (found by
- * filename or slug), and site-settings is only filled while it is still empty,
+ * placeholder images, disciplines, projects, categories and posts are created
+ * once (found by filename or slug), and site-settings is only filled while it is still empty,
  * so it never overwrites real edits. Never creates users.
  */
 import { getPayload } from 'payload'
@@ -11,6 +11,7 @@ import sharp from 'sharp'
 
 import config from '../payload.config'
 import { assertSeedAllowed } from './guard'
+import { seedJournal } from './journal'
 import { seedPortfolio } from './portfolio'
 
 const PLACEHOLDER_FILENAME = 'seed-placeholder.webp'
@@ -86,6 +87,8 @@ async function seed() {
   }
 
   await seedPortfolio(payload)
+  // After the portfolio: posts link to seeded projects.
+  await seedJournal(payload)
 }
 
 try {

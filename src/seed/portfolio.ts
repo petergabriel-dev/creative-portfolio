@@ -12,13 +12,13 @@ import type { Discipline, Project } from '@/payload-types'
 /** Seeds and scripts run outside a Next.js request, where revalidatePath cannot work. */
 const context = { disableRevalidate: true }
 
-type Log = (message: string) => void
+export type Log = (message: string) => void
 
 // Placeholder frames, alternating the two loading tints (--frame, --frame-alt).
 const FRAME_COLOURS = ['#DCD6CC', '#D3CCC0'] as const
 const FRAME_COUNT = 6
 
-async function placeholderFrames(payload: Payload, log: Log): Promise<number[]> {
+export async function placeholderFrames(payload: Payload, log: Log): Promise<number[]> {
   const ids: number[] = []
   for (let index = 1; index <= FRAME_COUNT; index++) {
     const filename = `seed-frame-${index}.webp`
@@ -159,7 +159,7 @@ const PROJECTS: ProjectSeed[] = [
 
 // Lexical rich text for the Text block: paragraphs, with an optional trailing link.
 const textNode = (text: string) => ({ type: 'text', version: 1, text, format: 0, mode: 'normal', style: '', detail: 0 })
-const paragraph = (text: string, link?: { text: string; url: string }) => ({
+export const paragraph = (text: string, link?: { text: string; url: string }) => ({
   type: 'paragraph',
   version: 1,
   format: '',
@@ -183,7 +183,7 @@ const paragraph = (text: string, link?: { text: string; url: string }) => ({
       : []),
   ],
 })
-const richText = (...children: ReturnType<typeof paragraph>[]) => ({
+export const richText = (...children: ReturnType<typeof paragraph>[]) => ({
   root: { type: 'root', version: 1, format: '', indent: 0, direction: 'ltr', children },
 })
 
