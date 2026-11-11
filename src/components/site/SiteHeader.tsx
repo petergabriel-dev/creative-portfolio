@@ -38,7 +38,11 @@ export function SiteHeader({ tone, current, settings }: SiteHeaderProps) {
         </nav>
         {bookingLabel && (
           <div className={styles.booking}>
-            <Button href={BOOK_HREF} variant={tone === 'dark' ? 'outline-light' : 'ink'}>
+            <Button
+              aria-current={current === 'book' ? 'page' : undefined}
+              href={BOOK_HREF}
+              variant={tone === 'dark' ? 'outline-light' : 'ink'}
+            >
               {bookingLabel}
             </Button>
           </div>

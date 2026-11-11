@@ -24,6 +24,21 @@ describe('Button', () => {
     expect(html).not.toContain('disabled')
   })
 
+  it('passes aria-current to a link only when given', () => {
+    const current = renderToStaticMarkup(
+      <Button aria-current="page" href="/book" variant="outline-light">
+        Book Me
+      </Button>,
+    )
+    expect(current).toMatch(/^<a [^>]*aria-current="page"/)
+    const plain = renderToStaticMarkup(
+      <Button href="/book" variant="ink">
+        Book Me
+      </Button>,
+    )
+    expect(plain).not.toContain('aria-current')
+  })
+
   it('renders a type="button" button without an href', () => {
     const html = renderToStaticMarkup(<Button variant="gold">Send</Button>)
     expect(html).toMatch(/^<button [^>]*type="button"/)

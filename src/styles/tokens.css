@@ -151,6 +151,8 @@
   --color-surface-band: var(--stone);
   --color-rule: var(--rule);
   --color-field-border: var(--field-border);
+  /* Site input fill (Book Me form, P3); --field-bg stays the Studio's white */
+  --color-field-bg: var(--surface);
   --color-error: var(--error);
   --color-frame: var(--frame);
   --color-frame-alt: var(--frame-alt);

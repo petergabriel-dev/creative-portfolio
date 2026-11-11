@@ -5,7 +5,7 @@ Rules that must not break. Each one names where it is enforced.
 ## Data access
 
 1. **Public reads go through the Local API with access applied.** Front-end queries pass `overrideAccess: false` (and `draft: false` where drafts exist). Examples: `src/lib/getSiteSettings.ts`, `src/lib/portfolio.ts`, `src/lib/journal.ts`. Anonymous project and post reads are published-only (`src/access/publishedOnly.ts`), including REST requests with `?draft=true`.
-2. **Writes with `overrideAccess: true` happen in exactly two places:** the `submitInquiry` server action (P3, after server-side validation) and the guarded, offline seed (`src/seed/index.ts`), which has no user to act as.
+2. **Writes with `overrideAccess: true` happen in exactly two places:** the `submitInquiry` server action (`src/app/(frontend)/book/actions.ts`, after server-side validation in `src/lib/inquiry.ts`) and the guarded, offline seed (`src/seed/`), which has no user to act as.
 3. **GraphQL stays off.** `graphQL.disable: true` in `src/payload.config.ts`, and the GraphQL routes are not present. `/api/graphql` returns 404.
 4. **Public pages never call `/api`.** The REST API serves the Studio only.
 
@@ -63,5 +63,12 @@ Rules that must not break. Each one names where it is enforced.
 ## Publishing
 
 21. **Pages refresh, and old slugs are recorded, only when the published state changes.** Draft and autosave saves never call `revalidatePath` and never touch `previousSlugs` (`src/hooks/publishHooks.ts` for projects and posts, `src/hooks/revalidateDiscipline.ts`, `src/hooks/categoryHooks.ts`).
-22. **Public pages stay static.** `headers()`/`cookies()` are read only inside the draft-mode branch of a page (`src/lib/draftEditor.ts`), and no public page reads `searchParams`; `next build` must list `/portfolio` and `/journal` as ○ and the collection, project, `/journal/page/[n]` and `/journal/[slug]` pages as ●.
+22. **Public pages stay static.** `headers()`/`cookies()` are read only inside the draft-mode branch of a page (`src/lib/draftEditor.ts`), and no public page reads `searchParams`; `next build` must list `/portfolio`, `/journal` and `/book` as ○ and the collection, project, `/journal/page/[n]` and `/journal/[slug]` pages as ●. The `submitInquiry` server action doesn't make `/book` dynamic.
 23. **A category in use can't be deleted.** `src/hooks/categoryHooks.ts` refuses the delete with a 400 while any post's main row uses it; otherwise the database would set those posts' required category to null.
+
+## Inquiries
+
+24. **Inquiries are never readable outside the Studio, and only the server creates them.** `inquiries` access (`src/collections/Inquiries.ts`): read, update and delete for the logged-in editor; create denied to everyone, the editor included. A logged-out REST request can neither read nor create one.
+25. **An inquiry is saved before any email is sent, and never lost to one.** `submitInquiry` calls `payload.sendEmail` only after `payload.create` returns; send failures and timeouts are caught, logged and never retried. A failed save never answers `sent` ([ADR-0006](decisions/ADR-0006-inquiry-submission.md)).
+26. **Only the form fields are stored, and no visitor data is logged.** The create writes `name`, `email`, `projectType`, `timing`, `message` and `status: 'new'`, nothing else (no IP address, user agent or other form keys). Inquiry log lines carry the inquiry ID and an error's name and HTTP status, never its message or any field (`tests/unit/inquiryAction.test.ts`).
+27. **Spam gets the normal success state and saves nothing.** A filled honeypot, or a valid form sent under 3 seconds after it appeared, answers `sent` without a create (`validateInquiry` in `src/lib/inquiry.ts`).

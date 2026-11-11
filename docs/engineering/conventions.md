@@ -5,7 +5,8 @@ How code in this repo is written. Established in Phase 0.
 ## Code
 
 - TypeScript, `strict`. Import from `src/` with the `@/` alias.
-- **Server components by default.** A component becomes a client component only when it needs browser interaction. The public site has three: `RevealMore` ("More projects"), `VideoEmbed` (click-to-load) and `LivePreviewListener` (draft mode only). Add another only with the same justification.
+- **Server components by default.** A component becomes a client component only when it needs browser interaction. The public site has four: `RevealMore` ("More projects"), `VideoEmbed` (click-to-load), `LivePreviewListener` (draft mode only) and `InquiryForm` (Book Me). Add another only with the same justification.
+- **Forms post to server actions** through `useActionState`, so they work without JavaScript. Fields stay uncontrolled with `defaultValue` from the returned state (React resets the form after each action; a `<select>` also needs a `key` on that value to keep the choice). Focus moves in an effect with JavaScript, and through `autoFocus` in the server HTML without it.
 - Payload config lives in TypeScript:
   - collections in `src/collections/`, globals in `src/globals/`, hooks in `src/hooks/`, access helpers in `src/access/`;
   - shared logic in `src/lib/`;

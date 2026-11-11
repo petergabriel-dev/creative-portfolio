@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { resendAdapter } from '@payloadcms/email-resend'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
@@ -9,10 +10,12 @@ import sharp from 'sharp'
 
 import { Categories } from './collections/Categories'
 import { Disciplines } from './collections/Disciplines'
+import { Inquiries } from './collections/Inquiries'
 import { Media } from './collections/Media'
 import { Posts } from './collections/Posts'
 import { Projects } from './collections/Projects'
 import { Users } from './collections/Users'
+import { copy } from './copy'
 import { SiteSettings } from './globals/SiteSettings'
 import { isLocalDatabaseUrl } from './lib/isLocalDatabaseUrl'
 import { MAX_UPLOAD_BYTES } from './lib/media/uploadLimit'
@@ -32,10 +35,21 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  // Sidebar order follows this list (Portfolio: Projects, Collections; Journal: Posts, Categories).
-  collections: [Projects, Disciplines, Posts, Categories, Media, Users],
+  // Sidebar order follows this list (Portfolio: Projects, Collections; Journal: Posts, Categories;
+  // Inbox: Inquiries).
+  collections: [Projects, Disciplines, Posts, Categories, Inquiries, Media, Users],
   globals: [SiteSettings],
   editor: lexicalEditor(),
+  // Resend sends the inquiry alert and Payload's own emails (password reset). Without a key (CI,
+  // tests, a local setup without one) Payload logs emails to the console instead.
+  email: process.env.RESEND_API_KEY
+    ? resendAdapter({
+        apiKey: process.env.RESEND_API_KEY,
+        // Resend's test sender until P7 verifies the domain (P3 owner decision 9).
+        defaultFromAddress: process.env.EMAIL_FROM_ADDRESS || 'onboarding@resend.dev',
+        defaultFromName: copy.book.alert.fromName,
+      })
+    : undefined,
   // GraphQL is off; the admin uses REST at /api and the site uses the Local API.
   graphQL: {
     disable: true,

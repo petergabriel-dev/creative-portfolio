@@ -1,0 +1,198 @@
+/* docs/design/components/InquiryForm.md */
+.form {
+  position: relative;
+  min-width: 0;
+  padding: var(--space-6);
+  border-radius: var(--radius-site);
+  background-color: var(--color-surface-band);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.label {
+  margin-bottom: var(--space-3);
+  color: var(--color-text);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+/* Field edges use --color-text-muted: --field-border is only 2.9:1 on the stone panel (P3). */
+.control {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--tap-primary);
+  padding: var(--space-3) var(--space-5);
+  border: var(--border-hairline) solid var(--color-text-muted);
+  border-radius: var(--radius-site);
+  background-color: var(--color-field-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.control::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+.control:hover {
+  border-color: var(--color-text);
+}
+
+select.control {
+  cursor: pointer;
+}
+
+textarea.control {
+  min-height: calc(var(--space-12) * 4);
+  resize: vertical;
+}
+
+/* Error: a 2 px edge (border plus inset shadow, so nothing shifts). */
+.control[aria-invalid='true'] {
+  border-color: var(--color-error);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--color-error);
+}
+
+/* Keep the error edge under the global focus ring's halo. */
+.control[aria-invalid='true']:focus-visible {
+  box-shadow:
+    inset 0 0 0 var(--border-hairline) var(--color-error),
+    0 0 0 var(--focus-halo-width) var(--focus-halo-color);
+}
+
+.error {
+  margin-top: var(--space-2);
+  color: var(--color-error);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-body);
+}
+
+.formError {
+  margin-top: var(--space-6);
+  color: var(--color-error);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-body);
+  overflow-wrap: anywhere;
+}
+
+/* Focus moves to the failed message and the thank-you heading only so screen readers announce
+   them; neither is interactive, so no ring (links and controls keep the global dual ring). */
+.formError:focus,
+.sentTitle:focus {
+  outline: none;
+}
+
+.formErrorLink {
+  color: inherit;
+  text-underline-offset: var(--underline-offset);
+}
+
+.actions {
+  margin-top: var(--space-8);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: var(--border-hairline);
+  height: var(--border-hairline);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Thank-you panel: replaces the form. */
+.sent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+  padding: var(--space-8);
+  background-color: var(--color-surface-finale);
+  color: var(--color-on-dark-heading);
+}
+
+.sentLabel {
+  color: var(--color-booking);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+.sentTitle {
+  color: var(--color-on-dark-heading);
+  font-family: var(--font-display);
+  font-size: var(--fs-card);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-card);
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.sentBody {
+  max-width: var(--measure-body);
+  color: var(--color-on-dark);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+}
+
+.sentActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.another {
+  margin-top: var(--space-3);
+}
+
+/* Line the text link's label up with the panel text (the text variant has inline padding). */
+.another > a {
+  margin-inline-start: calc(var(--space-2) * -1);
+}
+
+@media (min-width: 768px) {
+  .form {
+    padding: var(--space-12);
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-5);
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+
+  .sent {
+    padding: var(--space-14);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control {
+    transition: none;
+  }
+}

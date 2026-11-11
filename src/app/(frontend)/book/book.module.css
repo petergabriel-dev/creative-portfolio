@@ -1,0 +1,21 @@
+/* Book Me page layout (screen 11; docs/design/README.md "Book Me page layout"). */
+.section {
+  padding: var(--section-y) var(--gutter);
+}
+
+.inner {
+  display: grid;
+  gap: var(--space-12);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+/* Side by side from 1024 px: at 768 px the form's own two columns would be too narrow beside it. */
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    align-items: start;
+    column-gap: var(--space-14);
+  }
+}
