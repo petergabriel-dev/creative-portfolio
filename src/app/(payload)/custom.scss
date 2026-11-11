@@ -37,3 +37,20 @@
 .blocks-field__drawer-toggler .btn__label {
   color: var(--theme-elevation-700);
 }
+
+// WCAG 1.4.3 (P2): list column headers were #9a9a9a on white (2.8:1). axe-core 4.14
+// reports them on every collection list (Projects too; P1's QA ran axe 4.10).
+.sort-column__label,
+.sort-column__label .field-label {
+  color: var(--theme-elevation-700);
+}
+
+// WCAG 2.5.8 (P2): list sort arrows (20 px wide), the date field's clear button and the
+// relationship chips' edit and remove controls get at least a 24 × 24 px target.
+.sort-column__button,
+.date-time-picker__clear-button,
+.relationship--multi-value-label__drawer-toggler,
+.multi-value-remove {
+  min-width: 24px;
+  min-height: 24px;
+}

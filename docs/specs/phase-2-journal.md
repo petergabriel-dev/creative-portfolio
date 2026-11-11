@@ -1,6 +1,6 @@
 # Phase 2 — Journal
 
-Status: In progress
+Status: Done
 Depends on: P1 (Story blocks, the draft-mode route, live preview, refresh hooks, slug redirects)
 Build Spec refs: Content model: collections › posts, categories · Story blocks · Access control & auth · Publishing: drafts, preview & revalidation · Front-end pages (Journal, Journal entry) · Accessibility, SEO & performance (SEO)
 
@@ -133,3 +133,49 @@ Design deviations from the captures are recorded in `docs/design/README.md`.
 - **Pagination and caching.** Resolved by owner decision 1: path URLs keep every journal page static. Publishing a post refreshes all list pages, because posts shift between pages.
 - **`publishedAt`.** Defaulting it on first publish must not overwrite a date the editor set by hand. The fill has to run before validation, since the field is required on publish (the same timing trap as P1's slug field).
 - **Category delete.** Payload's database sets a deleted category to null on the posts that use it (`ON DELETE set null`); owner decision 3 blocks the delete instead.
+
+## QA log (2026-11-11)
+
+Run on the final `dev` code (`57e756d`, PR #28) plus the Studio stylesheet fixes below, as local production builds on fresh, migrated and seeded databases. Plan `p2-journal`, tasks 1–9; the per-task commits are on `feat/p2-journal` (PR #28 was squash-merged because `dev` accepts squash only, ADR-0003). Rows marked "Tn" cite that task's verification on the same kind of build; the rest were re-run on the final build. axe is axe-core 4.14 from the project's own dependencies (WCAG 2.2 AA tags).
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| `posts` and `categories` with the Build Spec's fields and admin positions; `posts.story` uses the shared Story blocks | Pass | Migration `20261111_040428_p2_journal` applies on a fresh database after the P1 migrations. Studio: Journal group (Posts, Categories); post editor with Content and SEO tabs and sidebar Category, Published At, Related Projects, Slug (T2) |
+| A logged-out REST request for a draft post returns nothing | Pass | `where[_status][equals]=draft` → 0 docs; `?draft=true` hides drafts and a published post with a newer draft, also by id; `/api/posts/versions` → `403`; anonymous writes → `403` (T2) |
+| 11+ published posts: 10 on `/journal`, the rest on `/journal/page/2`; numbers and "Older stories →" by keyboard | Pass | Seeded 11: page 1 shows 10 with the pagination row, page 2 shows 1 with no "Older stories"; tab order header → rows → page numbers (T6) |
+| `/journal/page/1` 308s to `/journal`; out-of-range and malformed pages are 404 | Pass | curl: `1` → `308 /journal`; `3`, `9`, `0`, `02`, `abc`, `2.5` → `404` (T6) |
+| `next build`: `/journal` ○, `/journal/page/[n]` and `/journal/[slug]` ● | Pass | Route tables on the T6, T7 and final builds; P1 routes unchanged |
+| Publishing refreshes the entry, `/journal`, every `/journal/page/N` and `/`; a draft save refreshes nothing | Pass | Server logs per save; a newer post moved a post onto `/journal/page/2` on the next request (route pattern `'/(frontend)/journal/page/[n]'`); a published edit showed on the entry and `/journal` (T3, T6, T7) |
+| Category changes refresh every page; a category in use can't be deleted | Pass | A rename logs a whole-site refresh; deleting a used category → `400` "Used by 1 post. Move it to another category first.", shown as a Studio toast; an unused one deletes (T3) |
+| A project's public change refreshes every entry | Pass | Unpublishing `couple-names-wedding` removed its "See the work" link from its entry on the next visit; republishing restored it (T7) |
+| Draft changes show only in live preview and draft mode | Pass; one item unverified | Draft-mode cookie without a session → published version; cookie + editor → draft; draft-only slug → `404` for the public; `/next/preview` → `403` without a session or with a wrong secret. Studio live preview renders the entry and updates on edit; its size menu lists Mobile, Tablet and Desktop, but switching sizes was not exercised (scripted clicks on Payload's popup failed) (T7) |
+| A post slug change 308-redirects the old URL | Pass | Published rename → old URL `308` to the new one in one hop; `previousSlugs` recorded (T7) |
+| "See the work": one link for one project, titled links for several | Pass | Seeded posts with 1 and 2 related projects; unit tests for 0, 1 and 2+ (T7) |
+| Dates render as "6 Nov 2026" in Singapore time, including September | Pass | Rows show "4 Sep 2026", "11 Sep 2026"; unit tests for September, the Singapore day boundary and New Year (T5, T6) |
+| `publishedAt` fills on first publish and keeps a hand-set date | Pass | REST: publish without a date → filled; draft → empty; hand-set → kept (T2) |
+| Pages 09 and 10 match their captures at 1440 px and work at 390 px with no horizontal scroll | Pass, with recorded deviations | Screenshots at 1440 and 390 px against captures 09 and 10; no horizontal scroll at 320, 375, 390, 768, 1280 and 1440 px. Deviations: opener titles wrap wider than the captures (ChapterOpener sets no title width); entry text and pull quote sit at the left of the story column where capture 10 centres them (P1 StoryBlocks reused unchanged); the entry footer follows the text column |
+| Seed runs twice without duplicates | Pass | 4 categories and 12 posts after both runs; "already exists" on the second (T4) |
+| DoD: keyboard | Pass | Journal list: header → rows → page numbers; entry: header → breadcrumb → Back to journal → See the work → finale; dual ring on each stop. Post editor: every field reachable (Publish is disabled until a change, so it is skipped) |
+| DoD: axe WCAG 2.2 AA | Pass on site pages; Studio exceptions recorded | 0 violations on `/journal`, `/journal/page/2`, three entry variants, `/portfolio`, both collection layouts and a project page, at 1440 and 390 px. The P1 cards and rows needed the title-link fix first (`9c632aa`): axe 4.14 flags whole-card links named by `aria-labelledby` (P1's QA ran axe 4.10.2) |
+| DoD: code health | Pass | typecheck, lint, 233 unit tests |
+| DoD: Vercel preview | Pass (builds only) | PR #28 `checks` and `Vercel` green; `dev`'s deployment of `57e756d` succeeded. Protected previews were not browsed |
+
+### Studio accessibility (same policy as P0 and P1)
+
+This task added to `src/app/(payload)/custom.scss`, with axe 4.14 findings that also affect P1's lists:
+
+- List column headers used `#9a9a9a` on white (2.8:1) and now use `--theme-elevation-700`: colour-contrast 4 → 0 on Posts, 2 → 0 on Categories, 6 → 0 on Projects.
+- Sort arrows (20 px wide), the date field's clear button and the relationship chips' edit and remove controls get a 24 × 24 px minimum: target-size 8 → 0 on Posts, 4 → 0 on Categories, 12 → 0 on Projects, 4 → 1 on the post editor.
+
+These remain inside Payload's built-in components and go to the P6 theme (screens 25 and 26) and upstream Payload:
+
+- Posts list: unnamed pagination arrows (`button-name` ×2); row-select checkboxes with an empty `aria-label` (`label` ×10). Categories list: `label` ×4.
+- Post editor: `button-name` ×13 (popup, upload and block-row buttons); block drag handles (`aria-command-name` ×6); react-select parts inside `aria-hidden` (`aria-hidden-focus` ×8); react-select and checkbox labels (`label` ×5); the Lexical editor (`aria-input-field-name` ×2); document tabs (`list` ×1); the "Versions" tab named without its count (`label-content-name-mismatch` ×1); relationship chips (`nested-interactive` ×1); react-select's auto-growing input, 4 px wide until you type (`target-size` ×1).
+- Category editor: `button-name` ×1, `list` ×1.
+
+### Follow-ups
+
+- Check the Studio live preview size switching (Mobile 390, Tablet 768, Desktop 1440) by hand once.
+- Decide whether opener titles should wrap to the captures' width and whether entry text and quotes should be centred (shared P1 components; P6 theme or P7).
+- Delete the PR #28 preview deployment and its Neon branch once merged work is no longer being reviewed.
+- From P1, still open: favicon, `metadataBase` (P7).
