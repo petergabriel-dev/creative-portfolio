@@ -6,13 +6,13 @@ One project in a collection's Projects chapter (`projects` layout), linking to t
 
 ## Anatomy
 
-A single `<a>` block (flex column, gap `--space-5`):
+One card block (flex column, gap `--space-5`). The title is the only link; its `::after` (`position: absolute; inset: 0`) stretches the click and tap area over the whole card, which is `position: relative` (owner decision 2026-11-11, WCAG 2.5.3 Label in Name):
 
 1. **Image:** MediaImage of the cover in the discipline's `cardAspect`.
 2. **Text group** (flex column, gap `--space-2`):
    - **Meta:** "{projectType} · {year}", joined with the separator from `copy.ts`. `--fs-label`, `--fw-semibold`, `--tracking-label`, uppercase, `--color-text-muted`.
    - **Title:** `<h3 id>` in `--font-display`, `--fw-regular`, `--fs-card`, `--lh-card`, uppercase, `--color-text`, `text-wrap: balance`, `overflow-wrap: break-word`.
-   - **Call to action:** "View project" from `copy.ts` plus a trailing arrow (`aria-hidden`). `--fs-sm`, `--fw-medium`, underlined at `--underline-offset`.
+   - **Call to action:** "View project" from `copy.ts` plus a trailing arrow, as a visual cue only (`aria-hidden`, not a link). `--fs-sm`, `--fw-medium`, underlined at `--underline-offset`.
 
 ## Variants
 
@@ -26,7 +26,7 @@ One.
 
 - **Default:** as above.
 - **Hover:** the call-to-action underline thickens to `--border-strong`.
-- **Focus-visible:** the global dual focus ring.
+- **Focus-visible:** the global dual focus ring around the title link.
 - **Active:** same as hover.
 - **Missing cover:** the tinted frame is shown.
 - Disabled, loading and error do not apply.
@@ -49,7 +49,7 @@ Server component.
 
 ## Accessibility
 
-- One link per card, named by the title (`aria-labelledby` points at the `h3`).
+- One link per card: the title inside the `h3`, so the link's name is exactly its visible label (WCAG 2.5.3). RevealMore moves focus to this link when it reveals a card.
 - Titles are `h3`s under the Projects chapter's `h2`.
 - `touch-action: manipulation`.
 
