@@ -22,6 +22,8 @@ import { ChapterHeading } from '@/components/site/ChapterHeading'
 import { ChapterOpener } from '@/components/site/ChapterOpener'
 import { DetailsStrip } from '@/components/site/DetailsStrip'
 import { Filmstrip } from '@/components/site/Filmstrip'
+import { JournalRow } from '@/components/site/JournalRow'
+import { Pagination } from '@/components/site/Pagination'
 import { MediaImage } from '@/components/ui/MediaImage'
 import { openerTint } from '@/lib/openerTint'
 import type { Media } from '@/payload-types'
@@ -190,5 +192,94 @@ describe('openerTint', () => {
       'chapter',
     ])
     expect(openerTint(null)).toBe('chapter')
+  })
+})
+
+/** The opening tag of the first element of `tag` whose attributes contain `marker`. */
+const openingTag = (out: string, tag: string, marker: string) =>
+  out.match(new RegExp(`<${tag}\\b[^>]*${marker.replace(/[[\]/.*+?^${}()|\\]/g, '\\$&')}[^>]*>`))?.[0] ?? ''
+
+describe('JournalRow (P2)', () => {
+  const row = (extra: Partial<Parameters<typeof JournalRow>[0]> = {}) =>
+    html(
+      <JournalRow
+        categoryName="Process"
+        cover={media(4)}
+        excerpt="Before a shoot, there's a pause."
+        href="/journal/quiet"
+        publishedAt="2026-11-06T02:00:00.000Z"
+        title="The quiet minutes"
+        {...extra}
+      />,
+    )
+
+  it('links only the h2 title (name = visible label), with category · date, excerpt and a hidden cue', () => {
+    const out = row()
+    expect(out).toMatch(/<h2[^>]*><a href="\/journal\/quiet"[^>]*>The quiet minutes<\/a><\/h2>/)
+    expect(out.match(/<a\b/g)).toHaveLength(1)
+    expect(out).not.toContain('aria-labelledby')
+    expect(out).toContain('Process<span aria-hidden="true"> · </span><time dateTime="2026-11-06">6 Nov 2026</time>')
+    expect(out).toMatch(/<p class="[^"]*">Before a shoot, there&#x27;s a pause\.<\/p>/)
+    // "Read story" is a visual cue only; the stretched title link covers it.
+    expect(out).toMatch(/<span aria-hidden="true" class="[^"]*">Read story →<\/span>/)
+  })
+
+  it('never marks the cover as priority', () => {
+    expect(row()).not.toContain('data-priority')
+  })
+
+  it('drops a missing category or date with its separator, and the meta line when both are missing', () => {
+    for (const blank of [null, '  ']) {
+      const noCategory = row({ categoryName: blank })
+      expect(noCategory).not.toContain('<span aria-hidden="true"> · </span>')
+      expect(noCategory).toContain('<time dateTime="2026-11-06">6 Nov 2026</time>')
+    }
+    const noDate = row({ publishedAt: null })
+    expect(noDate).not.toContain('<time')
+    expect(noDate).not.toContain('<span aria-hidden="true"> · </span>')
+    expect(noDate).toContain('>Process</span>')
+    const neither = row({ categoryName: null, publishedAt: 'not a date' })
+    expect(neither).not.toContain('Process')
+    expect(neither).not.toContain('<time')
+    expect(neither).toMatch(/<div class="[^"]*"><h2/)
+  })
+
+  it('can render an h3 title', () => {
+    expect(row({ headingLevel: 'h3' })).toMatch(/<h3[^>]*><a [^>]*>The quiet minutes<\/a><\/h3>/)
+  })
+})
+
+describe('Pagination (P2)', () => {
+  const pageHref = (n: number) => (n === 1 ? '/journal' : `/journal/page/${n}`)
+  const pagination = (current: number, total: number) =>
+    html(<Pagination current={current} pageHref={pageHref} perPage={10} total={total} />)
+
+  it('renders nothing for a single page', () => {
+    expect(pagination(1, 1)).toBe('')
+    expect(pagination(1, 0)).toBe('')
+  })
+
+  it('is a named nav with status, numbered page links and Older stories', () => {
+    const out = pagination(1, 3)
+    expect(out).toMatch(/^<nav aria-label="Journal pages"/)
+    expect(out).toContain('Page 1 of 3<span aria-hidden="true"> · </span>10 stories per page')
+    const first = openingTag(out, 'a', 'href="/journal"')
+    expect(first).toContain('aria-current="page"')
+    expect(first).toContain('aria-label="Page 1"')
+    for (const n of [2, 3]) {
+      const link = openingTag(out, 'a', `href="/journal/page/${n}"`)
+      expect(link).toContain(`aria-label="Page ${n}"`)
+      expect(link).not.toContain('aria-current')
+    }
+    expect(out.match(/aria-current="page"/g)).toHaveLength(1)
+    // Button joins label and arrow with a non-breaking space.
+    expect(out).toMatch(/href="\/journal\/page\/2"[^>]*>Older stories<span aria-hidden="true"> →<\/span><\/a>/)
+  })
+
+  it('marks the current page and drops Older stories on the last page', () => {
+    const out = pagination(3, 3)
+    expect(openingTag(out, 'a', 'href="/journal/page/3"')).toContain('aria-current="page"')
+    expect(openingTag(out, 'a', 'href="/journal"')).not.toContain('aria-current')
+    expect(out).not.toContain('Older stories')
   })
 })

@@ -45,6 +45,10 @@ The surface's job is to **persuade**: show selected work and turn interest into 
   - Story chapter headings use `--fs-section`, not the smaller size in capture 07 (P1).
   - Below 768 px, opener titles use `--fs-display-sm` (`clamp(56px, 19vw, 80px)`), smaller than the Build Spec's 80 px minimum on 320–420 px screens. Long words like "PHOTOGRAPHY" then fit on one line instead of breaking mid-word (owner decision 2026-11-10).
   - A video block without a poster shows a tinted frame, never the provider's thumbnail (owner decision 2026-11-10; replaces the Build Spec wording).
+  - Journal pages live at `/journal` and `/journal/page/N`, not the Build Spec's `/journal?page=N` (owner decision 2026-11-11). The captures show no URLs, so nothing visual changes.
+  - Pagination is hidden when there is only one page, and there is no "Newer stories" link; earlier pages are reached through the numbers (owner decision 2026-11-11). Capture 09 shows only page 1 of 3.
+  - A journal entry with several related projects lists them by title under a "See the work" label; one related project keeps capture 10's single "See the work →" link (owner decision 2026-11-11).
+  - Journal dates read "6 Nov 2026" in Asia/Singapore time, with fixed month names (owner decision 2026-11-11).
 
 ### One colour scheme
 
@@ -113,5 +117,12 @@ Accent fills on bone are weak: terracotta 2.6:1, sage 1.7:1, off-white 1.0:1. Go
 - [StoryBlocks](components/StoryBlocks.md)
 - [VideoEmbed](components/VideoEmbed.md)
 - ChapterOpener gains a breadcrumb, a details slot, a `split` layout and the discipline tint mapping.
+
+### Components (P2)
+
+- [JournalRow](components/JournalRow.md)
+- [Pagination](components/Pagination.md)
+- [JournalEntryFooter](components/JournalEntryFooter.md)
+- BookingFinale and ChapterOpener gain their journal usages. P2 adds no tokens and no new contrast pairs: every P2 colour pair (ink and muted on bone, bone on ink) is already listed above.
 
 Grid minimum widths (`--grid-min-*`) feed `repeat(auto-fit, minmax(min(<token>, 100%), 1fr))`, so every grid collapses to one column on phones.

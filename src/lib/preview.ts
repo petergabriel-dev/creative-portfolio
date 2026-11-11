@@ -3,6 +3,13 @@ import { timingSafeEqual } from 'node:crypto'
 /** Route that turns on Next.js draft mode for editors (Build Spec › Publishing). */
 export const PREVIEW_ROUTE = '/next/preview'
 
+/** Live preview sizes for every drafts-enabled collection (Build Spec › Publishing). */
+export const LIVE_PREVIEW_BREAKPOINTS = [
+  { label: 'Mobile', name: 'mobile', width: 390, height: 844 },
+  { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+  { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+]
+
 /**
  * Only site-relative paths may be previewed: one leading slash, no "//host" or backslash tricks,
  * no scheme. Anything else would turn the preview route into an open redirect.

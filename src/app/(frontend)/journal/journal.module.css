@@ -1,0 +1,23 @@
+/* Layout for the journal list pages (screen 09). */
+.section {
+  padding: var(--section-y) var(--gutter);
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+/* Rows draw their own top hairline; the list closes with the bottom one. */
+.rows {
+  padding: 0;
+  border-bottom: var(--border-hairline) solid var(--color-rule);
+  list-style: none;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+}

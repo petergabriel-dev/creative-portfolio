@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { useId } from 'react'
 
 import { MediaImage } from '@/components/ui/MediaImage'
 import { copy } from '@/copy'
@@ -17,12 +16,13 @@ type ProjectCardProps = {
   sizes: string
 }
 
-/** One project in a collection's Projects chapter (docs/design/components/ProjectCard.md). */
+/**
+ * One project in a collection's Projects chapter (docs/design/components/ProjectCard.md). The title
+ * is the link; a stretched pseudo-element makes the whole card clickable.
+ */
 export function ProjectCard({ title, href, projectType, year, cover, aspect, sizes }: ProjectCardProps) {
-  const titleId = useId()
-
   return (
-    <Link aria-labelledby={titleId} className={styles.card} href={href}>
+    <div className={styles.card}>
       <MediaImage aspect={aspect} media={cover} sizes={sizes} />
       <div className={styles.text}>
         <span className={styles.meta}>
@@ -30,14 +30,17 @@ export function ProjectCard({ title, href, projectType, year, cover, aspect, siz
           <span aria-hidden="true">{` ${copy.separator} `}</span>
           {year}
         </span>
-        <h3 className={styles.title} id={titleId}>
-          {title}
+        <h3 className={styles.title}>
+          <Link className={styles.link} href={href}>
+            {title}
+          </Link>
         </h3>
-        <span className={styles.cta}>
+        {/* A visual cue only: the title link covers the card. */}
+        <span aria-hidden="true" className={styles.cta}>
           {copy.collection.viewProject}
-          <span aria-hidden="true">{` ${copy.arrow}`}</span>
+          {` ${copy.arrow}`}
         </span>
       </div>
-    </Link>
+    </div>
   )
 }

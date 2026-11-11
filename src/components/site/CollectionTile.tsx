@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { useId } from 'react'
 
 import { MediaImage } from '@/components/ui/MediaImage'
 import { copy } from '@/copy'
@@ -17,12 +16,13 @@ type CollectionTileProps = {
   priority?: boolean
 }
 
-/** One tile per discipline on the Portfolio page (docs/design/components/CollectionTile.md). */
+/**
+ * One tile per discipline on the Portfolio page (docs/design/components/CollectionTile.md). The
+ * name is the link; a stretched pseudo-element makes the whole tile clickable.
+ */
 export function CollectionTile({ name, href, intro, image, index, priority = false }: CollectionTileProps) {
-  const nameId = useId()
-
   return (
-    <Link aria-labelledby={nameId} className={styles.card} href={href}>
+    <div className={styles.card}>
       <MediaImage
         aspect="3:4"
         media={image}
@@ -31,15 +31,18 @@ export function CollectionTile({ name, href, intro, image, index, priority = fal
       />
       <div className={styles.text}>
         <span className={styles.meta}>{copy.portfolio.tileLabel(index)}</span>
-        <h2 className={styles.title} id={nameId}>
-          {name}
+        <h2 className={styles.title}>
+          <Link className={styles.link} href={href}>
+            {name}
+          </Link>
         </h2>
         {intro ? <span className={styles.body}>{intro}</span> : null}
-        <span className={styles.cta}>
+        {/* A visual cue only: the name link covers the tile. */}
+        <span aria-hidden="true" className={styles.cta}>
           {copy.portfolio.viewCollection}
-          <span aria-hidden="true">{` ${copy.arrow}`}</span>
+          {` ${copy.arrow}`}
         </span>
       </div>
-    </Link>
+    </div>
   )
 }
