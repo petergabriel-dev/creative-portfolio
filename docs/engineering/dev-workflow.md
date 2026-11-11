@@ -79,8 +79,12 @@ Names only; values never go in the repo, docs, CI or logs.
   - Film & Video: 3 published + 1 draft;
   - Design & Illustration and Writing & More (`list` layout): 4 each.
 - `[Couple names] wedding` uses all six Story blocks; its video is the Blender Foundation's openly licensed *Big Buck Bunny*.
+- the four journal categories (Process, Outdoors, Design, Film) and 12 posts (`src/seed/journal.ts`):
+  - 11 published, a week apart from 6 Nov 2026 (10:00 Singapore), so `/journal/page/2` exists and four dates fall in September;
+  - 1 draft without a date (`[A story still in draft]`);
+  - the first three are capture 09's rows; the first carries capture 10's story and links one project, the third links two.
 
-- Safe to run twice: images are found by filename and disciplines and projects by slug, and only missing ones are created; site-settings is only filled while it is empty. It never overwrites real edits and never touches users.
+- Safe to run twice: images are found by filename and disciplines, projects, categories and posts by slug, and only missing ones are created; site-settings is only filled while it is empty. It never overwrites real edits and never touches users.
 - It refuses `VERCEL_ENV=production`, a missing `POSTGRES_URL`, and any non-local database unless `SEED_ALLOW_REMOTE=true` is set on purpose (e.g. to seed a Neon preview branch).
 - Writes pass `context.disableRevalidate`, because `revalidatePath` only works inside a Next.js request.
 
@@ -145,6 +149,6 @@ Production deploys stay disabled until P7. Before enabling them: create a produc
 - **Visual QA:** a temporary route under `src/app/(frontend)/` that renders the component's stress cases, plus `playwright-cli` screenshots at 320, 390, 768 and 1440 px. Delete the route before committing; `playwright-cli` writes a `.playwright-cli/` folder into the current directory, so run it from a scratch directory.
   - Long full-page screenshots at 390 px are unreadable when scaled down; crop them into ~1,700 px segments (`sharp`) before reviewing.
   - Log the browser into the Studio with `playwright-cli cookie-set payload-token <JWT> --domain localhost --path /` (JWT from `POST /api/users/first-register` or `/api/users/login` on a throwaway database). Leaving a dirty Studio form opens a `beforeunload` dialog; clear it with `playwright-cli dialog-accept`.
-- **Accessibility:** inject axe-core from cdnjs inside `playwright-cli eval` (an async function that adds the script tag), then run `axe.run` with the `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa` and `wcag22aa` tags.
+- **Accessibility:** inject the axe-core already installed under `node_modules/.pnpm/axe-core@<version>/` with `playwright-cli run-code --filename <script>`, where the script calls `page.addScriptTag({ path })` and then `axe.run` with the `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa` and `wcag22aa` tags. Don't load axe from a CDN: older versions miss findings (see traps.md), and Claude Code's auto mode refuses the remote script.
 - **Production behaviour** (route table, 308s, cache headers, draft mode): on a throwaway database run `pnpm payload migrate`, `pnpm seed`, `pnpm build` and `pnpm start` (no push mode), then check with `curl -sg -D -` (`x-nextjs-cache`, `location`, `set-cookie`).
 - **Draft mode and live preview locally:** `PREVIEW_SECRET` must be set in `.env`. Log in at `/admin`, open a project and use **Live Preview** (Mobile 390, Tablet 768, Desktop 1440) or **Preview**. Both go through `/next/preview`, which needs the secret, an editor session and a site-relative path.
