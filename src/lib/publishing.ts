@@ -1,3 +1,5 @@
+import type { FieldHook } from 'payload'
+
 /** URL of a collection (discipline) page. */
 export const collectionPath = (disciplineSlug: string) => `/portfolio/${disciplineSlug}`
 
@@ -28,6 +30,15 @@ export function projectPublicPaths(state: PublicProjectState | null | undefined)
   if (state.showOnHome) paths.push('/')
   return paths
 }
+
+/**
+ * A post's `publishedAt` defaults to its first publish (Build Spec › posts; P2 owner decision 4):
+ * filled with the current time only when empty and the save publishes. A date the editor set is
+ * never overwritten, and draft or autosave saves leave it empty. Runs in `beforeValidate`, because
+ * the field is required on publish and validation runs alongside `beforeChange` (P1 slug trap).
+ */
+export const fillPublishedAt: FieldHook = ({ value, data }) =>
+  value || data?._status !== 'published' ? value : new Date().toISOString()
 
 /**
  * Adds a doc's old published slug to its `previousSlugs`, so old URLs keep 308-redirecting in

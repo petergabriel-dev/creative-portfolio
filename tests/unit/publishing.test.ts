@@ -17,6 +17,7 @@ import {
 import {
   appendPreviousSlug,
   collectionPath,
+  fillPublishedAt,
   projectPath,
   projectPublicPaths,
 } from '@/lib/publishing'
@@ -34,6 +35,32 @@ describe('paths', () => {
     expect(projectPublicPaths({ ...state, published: false })).toEqual([])
     expect(projectPublicPaths(null)).toEqual([])
     expect(projectPublicPaths({ ...state, disciplineSlug: null, showOnHome: true })).toEqual(['/'])
+  })
+})
+
+describe('fillPublishedAt', () => {
+  const run = (value: unknown, status?: 'draft' | 'published') =>
+    fillPublishedAt({ value, data: status ? { _status: status } : {} } as Parameters<typeof fillPublishedAt>[0])
+
+  it('fills an empty date with the publish time when the save publishes', () => {
+    const before = Date.now()
+    for (const empty of [undefined, null, '']) {
+      const filled = run(empty, 'published')
+      expect(typeof filled).toBe('string')
+      expect(Date.parse(filled as string)).toBeGreaterThanOrEqual(before)
+      expect(Date.parse(filled as string)).toBeLessThanOrEqual(Date.now())
+    }
+  })
+
+  it('never overwrites a date the editor set', () => {
+    expect(run('2026-11-06T02:00:00.000Z', 'published')).toBe('2026-11-06T02:00:00.000Z')
+    expect(run('2030-01-01T00:00:00.000Z', 'published')).toBe('2030-01-01T00:00:00.000Z')
+  })
+
+  it('leaves draft, autosave and status-less saves untouched', () => {
+    expect(run(undefined, 'draft')).toBeUndefined()
+    expect(run(null, 'draft')).toBeNull()
+    expect(run(undefined)).toBeUndefined()
   })
 })
 

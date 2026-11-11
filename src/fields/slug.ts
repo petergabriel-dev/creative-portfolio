@@ -17,9 +17,13 @@ const fillSlugOnCreate =
 /**
  * The URL slug (generated from `useAsSlug` on first save, editable, unique, sidebar) plus the
  * hidden `previousSlugs` list that old URLs 308-redirect from (P1 owner decision, 2026-11-10).
- * Shared by disciplines and projects, and by posts in P2.
+ * Shared by disciplines, projects and posts. Collections without pages of their own (categories)
+ * pass `previousSlugs: false`: nothing redirects from their old slugs.
  */
-export const slugFields = (useAsSlug: string): Field[] => [
+export const slugFields = (
+  useAsSlug: string,
+  { previousSlugs = true }: { previousSlugs?: boolean } = {},
+): Field[] => [
   slugField({
     useAsSlug,
     slugify: ({ valueToSlugify }) => toSlug(valueToSlugify) || undefined,
@@ -37,11 +41,15 @@ export const slugFields = (useAsSlug: string): Field[] => [
       return row
     },
   }),
-  {
-    name: 'previousSlugs',
-    type: 'text',
-    hasMany: true,
-    // Written by the publish hooks only; never edited by hand.
-    admin: { hidden: true },
-  },
+  ...(previousSlugs
+    ? [
+        {
+          name: 'previousSlugs',
+          type: 'text',
+          hasMany: true,
+          // Written by the publish hooks only; never edited by hand.
+          admin: { hidden: true },
+        } satisfies Field,
+      ]
+    : []),
 ]
