@@ -63,6 +63,15 @@ The surface's job is to **persuade**: show selected work and turn interest into 
   - Home's "Behind the camera" heading and About's section headings use `--fs-section` (Build Spec section heading size), larger or smaller than in captures 01 and 08 (as in P1).
   - The "From the journal" cards (JournalRow `card` variant) use `--fs-card` for titles, as ProjectCard does; capture 01 draws them at 40 px (P4).
   - On Home, an empty chapter (no Selected work, no `meet` heading, no disciplines, no posts) is left out and the later chapters renumber; with no hero slides the page shows the ChapterOpener with a visible `h1` instead of the slider (owner decision 2026-11-11, P4).
+  - Below 1024 px the Studio sidebar sits in Payload's drawer behind the app-header menu button, on every Studio screen; capture 21 at 390 px stacks it open above the Overview (owner decision 2026-11-11, P5).
+  - The Overview's "On the home page" panel lists the published hero slides and links "Edit Home page" to the `home` global; capture 21's "Edit in site settings" points at the wrong place, since slides live in `home` (owner decision 2026-11-11, P5).
+  - The Overview's Drafts panel covers draft projects **and** posts, with "All projects" and "All posts" links in place of capture 21's single "All projects" (owner decision 2026-11-11, P5).
+  - The Overview's Needs a reply rows show the project type only ("Photography"); capture 21's "Photography — wedding" has no matching inquiry field (P5).
+  - The Overview's Recently edited panel has a third chip, "Unpublished changes" (outlined), for a live doc with a newer autosaved draft; capture 21 shows only Published and Draft (owner decision 2026-11-11, P5).
+  - Recently edited rows stack when the panel is narrower than 720 px; capture 21 at 390 px lets the row run off the screen (P5).
+  - When more than nine projects are marked for Selected work, the Overview says "the first 9 of N"; capture 21 shows only the nine-piece case (P5).
+  - Payload's app header bar (account link, and the drawer toggle below 1024 px) stays above the Overview; capture 21 omits it (P5).
+  - The Studio log-in replaces Payload's login view so its errors show inline, as in capture 20--error, rather than as toasts (owner decision 2026-11-11, P5).
 
 ### One colour scheme
 
@@ -107,6 +116,17 @@ Ratios computed from the token values (WCAG relative luminance), 2026-11-10:
 | `--accent-gold` / `--bone-70` on `--ink-80` scrim over white | 4.8:1 / 5.0:1 | Hero Book Me fill and progress fills; outlined button and arrow borders (non-text) (P4) |
 | `--bone` / `--on-dark-strong` on `--card` | 6.6:1 / 5.8:1 | Story card title and kicker (P4) |
 | `--accent-gold` on `--card` | 4.0:1 | Current story card's rule (non-text) (P4) |
+| `--on-dark` on `--ink` | 10.5:1 | Studio sidebar links (P5) |
+| `--bone` on `--ink-raised` | 11.2:1 | Studio sidebar current link (P5) |
+| `--ink-raised` / `--ink-rule` on `--ink` | 1.4:1 / 1.5:1 | Current-link fill and the footer hairline: decorative; the current link also changes weight and has `aria-current` (P5) |
+| `--accent-gold` on `--ink` / `--ink` on `--accent-gold` | 9.2:1 | "Studio · CMS" label; the inquiries badge (P5) |
+| `--ink` / `--muted` on `--surface` | 16.7:1 / 6.6:1 | Overview panel text (P5) |
+| `--chip-published-fg` on `--chip-published-bg` | 7.8:1 | Published chip (P5) |
+| `--chip-draft-fg` on `--chip-draft-bg` | 5.5:1 | Draft chip and "{n} unpublished" (P5) |
+| `--chip-published-fg` on `--surface` | 9.3:1 | "Unpublished changes" chip text and border (P5) |
+| `--field-border` on `--field-bg` / on `--bone` | 3.6:1 / 3.2:1 | Studio field edges (non-text, 3:1 required) (P5) |
+| `--error` on `--field-bg` | 7.6:1 | Studio log-in error edge (P5) |
+| `--muted` on `--field-bg` | 6.9:1 | Payload's secondary text after the Studio theme maps its mid greys to `--color-text-muted` (P5) |
 
 Accent fills on bone are weak: terracotta 2.6:1, sage 1.7:1, off-white 1.0:1. Gold booking buttons sit on dark sections in the captures; any accent button on a light section needs a visible boundary.
 
@@ -176,3 +196,38 @@ Accent fills on bone are weak: terracotta 2.6:1, sage 1.7:1, off-white 1.0:1. Go
 **About page layout** (`/about`, screen 08): ChapterOpener `split` (context line, title, lead; Book Me `gold` and "View my work" `outline-light` to `/portfolio`) → `<main>` padded `--section-y` / `--gutter`, max width `--max-width`: below 1024 px the portrait (MediaImage 4:5) then the sections, `--space-12` apart; from 1024 px two columns `minmax(0, 5fr) minmax(0, 6fr)`, gap `--space-20`, top-aligned. Sections stack `--space-12` apart; each is a `<section aria-labelledby>` with ChapterHeading ("Chapter 0N", the section heading) and its rich-text body (`--fs-lead`, `--lh-story`, `--color-text`; links underlined, `--color-text`). → BookingFinale (`site-settings.finaleHeadline`, the same body as the journal pages, as in capture 08) → SiteFooter.
 
 Grid minimum widths (`--grid-min-*`) feed `repeat(auto-fit, minmax(min(<token>, 100%), 1fr))`, so every grid collapses to one column on phones.
+
+### Components (P5): the Studio
+
+- [StudioNav](components/StudioNav.md) (with StudioBrand, also used as Payload's `graphics.Logo` and `graphics.Icon`)
+- [StudioOverview](components/StudioOverview.md) (the `/admin` dashboard)
+- [StudioLogin](components/StudioLogin.md)
+- Button is reused unchanged in the Studio (`ink`, `outline-ink`, `text`).
+- New tokens: primitives `--ink-raised`, `--ink-rule`, `--fs-studio-title`, `--studio-nav-width`, `--studio-thumb-w`, `--tap-cms`; semantic `--color-studio-*`, `--color-on-studio-accent` and `--color-chip-*`. The Studio brand label and badge use fixed gold (`--accent-gold`), not `site-settings.accent`.
+- Light only: the admin's dark theme is switched off (`admin.theme: 'light'`), so the Studio tokens have no dark values, like the site.
+
+**Studio theme** (`src/app/(payload)/custom.scss`, loaded after `tokens.css`): Payload's own views (lists, editors, forgot, reset, create-first-user) keep their layout and take the Studio palette through Payload's CSS variables. Built-in views are not rebuilt to match captures 22–31 (P6). `--font-body` has the same name in Payload and in `tokens.css`, so the admin's text is Inter.
+
+| Payload variable | Studio token | Payload uses it for |
+|---|---|---|
+| `--theme-bg` | `--color-studio-page` | Page background |
+| `--theme-text` | `--color-text` | Body text |
+| `--theme-input-bg` | `--color-studio-field-bg` | Field fill |
+| `--theme-elevation-0` | `--color-studio-field-bg` | Inputs, popups, table rows |
+| `--theme-elevation-50` | `--color-studio-card` | Raised panels |
+| `--theme-elevation-100` | `--color-surface-band` | Hover and subtle backgrounds |
+| `--theme-elevation-150` (`--theme-border-color`) | `--color-studio-card-border` | Borders |
+| `--theme-elevation-200` | `--color-frame-alt` | Stronger backgrounds, icons |
+| `--theme-elevation-250` | `--color-studio-field-border` | Field and control borders (3.6:1 on white; Payload's grey was 1.8:1) |
+| `--theme-elevation-300` … `-650` | `--color-text-muted` | Secondary text and icons (6.9:1 on white) |
+| `--theme-elevation-700` … `-1000` | `--color-text` | Text and dark fills |
+| `--style-radius-s`, `--style-radius-m` | `--radius-cms-field` | Fields, small controls |
+| `--style-radius-l` | `--radius-cms-card` | Cards, drawers |
+| `--nav-width` (from 1024 px) | `--studio-nav-width` | Sidebar width |
+| `--accessibility-outline` | `--focus-ring-width` solid `--focus-ring-color` | Payload's own focus outline; a catch-all `:focus-visible` rule adds the `--focus-halo-*` ring |
+
+Payload's buttons (`.btn`) take `--radius-pill`, like the site's Button. The P0–P3 accessibility fixes in `custom.scss` move from `--theme-elevation-700` to `--color-text-muted`.
+
+**Overview layout** (`/admin`, screen 21): StudioNav → the page on `--color-studio-page`: header (label, title, greeting, actions) → a panel grid (`--grid-min-tile` auto-fit, `--space-6` gap) with Needs a reply, Drafts and On the home page, then Recently edited across the row. See [StudioOverview](components/StudioOverview.md).
+
+**Log-in layout** (`/admin/login`, screen 20): two equal panels from 1024 px (ink brand panel left, bone form panel right), stacked below 1024 px. See [StudioLogin](components/StudioLogin.md).

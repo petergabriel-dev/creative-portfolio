@@ -1,6 +1,6 @@
 # Design Tokens
 
-<!-- token-hash: 4695990d74ccc7f3cab1c9ba29feb782bf574b9957f55d8cc35bb6e2ba6f5d1a -->
+<!-- token-hash: e8b26e4f0692dacbde6db7568be7f83a558928ae07f7144abbc581ea4efceb9f -->
 
 ## Primitive
 
@@ -45,6 +45,7 @@
 | --fs-section | clamp(52px, 6vw, 84px) | — |
 | --fs-sm | 14px | — |
 | --fs-story-card | 30px | — |
+| --fs-studio-title | 64px | — |
 | --fw-medium | 500 | — |
 | --fw-regular | 400 | — |
 | --fw-semibold | 600 | — |
@@ -59,6 +60,8 @@
 | --ink | #1B1A17 | — |
 | --ink-50 | rgb(27 26 23 / 0.5) | — |
 | --ink-80 | rgb(27 26 23 / 0.8) | — |
+| --ink-raised | #353331 | — |
+| --ink-rule | #3A3833 | — |
 | --lh-body | 1.6 | — |
 | --lh-body-loose | 1.7 | — |
 | --lh-card | 0.95 | — |
@@ -106,7 +109,10 @@
 | --space-9 | 36px | — |
 | --stone | #EAE6DF | — |
 | --story-card-w | 204px | — |
+| --studio-nav-width | 264px | — |
+| --studio-thumb-w | 64px | — |
 | --surface | #FBFAF7 | — |
+| --tap-cms | 48px | — |
 | --tap-min | 44px | — |
 | --tap-primary | 52px | — |
 | --tint-design | #28302B | — |
@@ -123,6 +129,12 @@
 |---|---|---|
 | --color-action | var(--ink) | — |
 | --color-booking | var(--gold) | — |
+| --color-chip-changes-bg | var(--surface) | — |
+| --color-chip-changes-fg | var(--chip-published-fg) | — |
+| --color-chip-draft-bg | var(--chip-draft-bg) | — |
+| --color-chip-draft-fg | var(--chip-draft-fg) | — |
+| --color-chip-published-bg | var(--chip-published-bg) | — |
+| --color-chip-published-fg | var(--chip-published-fg) | — |
 | --color-error | var(--error) | — |
 | --color-field-bg | var(--surface) | — |
 | --color-field-border | var(--field-border) | — |
@@ -135,11 +147,25 @@
 | --color-on-dark-heading | var(--bone) | — |
 | --color-on-dark-strong | var(--on-dark-strong) | — |
 | --color-on-dark-subtle | var(--on-ink-muted) | — |
+| --color-on-studio-accent | var(--ink) | — |
 | --color-outline-on-dark | var(--bone-70) | — |
 | --color-page | var(--bone) | — |
 | --color-play-scrim | var(--ink-50) | — |
 | --color-rule | var(--rule) | — |
 | --color-rule-on-dark | var(--bone-20) | — |
+| --color-studio-accent | var(--accent-gold) | — |
+| --color-studio-card | var(--surface) | — |
+| --color-studio-card-border | var(--rule) | — |
+| --color-studio-field-bg | var(--field-bg) | — |
+| --color-studio-field-border | var(--field-border) | — |
+| --color-studio-nav-bg | var(--ink) | — |
+| --color-studio-nav-current | var(--ink-raised) | — |
+| --color-studio-nav-label | var(--on-ink-muted) | — |
+| --color-studio-nav-rule | var(--ink-rule) | — |
+| --color-studio-nav-text | var(--on-dark) | — |
+| --color-studio-nav-text-strong | var(--bone) | — |
+| --color-studio-page | var(--bone) | — |
+| --color-studio-row-rule | var(--rule-soft) | — |
 | --color-surface-band | var(--stone) | — |
 | --color-surface-finale | var(--ink) | — |
 | --color-surface-footer | var(--ink) | — |
