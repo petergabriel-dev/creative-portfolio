@@ -103,4 +103,21 @@ export const copy = {
     /** Accessible name of the project credits section. */
     credits: 'Credits',
   },
+  book: {
+    /** The owner's inquiry alert email: plain text (P3 owner decision 10). */
+    alert: {
+      /** Sender name for every email the site sends (the alert and Payload's password reset). */
+      fromName: 'Portfolio website',
+      subject: (projectType: string, name: string) => `New inquiry · ${projectType} · ${name}`,
+      intro: (name: string) => `New inquiry from ${name}`,
+      name: 'Name',
+      email: 'Email',
+      projectType: 'Project type',
+      timing: 'Timing',
+      message: 'Message',
+      /** Shown when the visitor left timing empty. */
+      noTiming: '—',
+      open: 'Open in the Studio',
+    },
+  },
 } as const
