@@ -35,6 +35,14 @@ export default buildConfig({
     user: Users.slug,
     // Light only at launch (P5): the Studio theme in custom.scss has no dark values.
     theme: 'light',
+    // The Studio sidebar and brand (P5, docs/design/components/StudioNav.md).
+    components: {
+      Nav: '/components/studio/StudioNav#StudioNav',
+      graphics: {
+        Logo: '/components/studio/StudioBrand#StudioLogo',
+        Icon: '/components/studio/StudioBrand#StudioIcon',
+      },
+    },
     importMap: {
       baseDir: path.resolve(dirname),
     },

@@ -2,17 +2,17 @@
 
 ## Purpose
 
-The Studio sidebar on every admin view (screen 42), and **StudioBrand**, the lens mark + site name + "Studio · CMS" block that the sidebar, the login (StudioLogin) and Payload's own minimal views (`graphics.Logo`, `graphics.Icon`) share. Sources: captures 42 and 21 (1440 px), mobile 21; the Build Spec section "Admin (Studio) customisation"; the P5 owner decisions of 2026-11-11 (`docs/specs/phase-5-studio-shell.md`).
+The Studio sidebar on every admin view (screen 42), and **StudioBrand**, the lens mark + site name + "Studio · CMS" block that the sidebar, the login (StudioLogin) and Payload's `graphics.Logo` and `graphics.Icon` share. Sources: captures 42 and 21 (1440 px), mobile 21; the Build Spec section "Admin (Studio) customisation"; the P5 owner decisions of 2026-11-11 (`docs/specs/phase-5-studio-shell.md`).
 
 It replaces Payload's default nav (white, collapsible groups, gear menu, icon logout). It reuses Payload's exported `NavWrapper` (base class `nav`) and `NavHamburger`, so the drawer, its open/closed state and the app-header toggle stay Payload's.
 
 ## Anatomy
 
-**Sidebar** (`NavWrapper`, then `<nav aria-label="Studio">`): `--color-studio-nav-bg`, full height, padding `--space-10` block-start, `--space-8` block-end, `--space-4` inline. Children in order:
+**Sidebar** (`NavWrapper`, then `<nav aria-label="Studio">`): `--color-studio-nav-bg`, full height, padding `--space-8` block-end and `--space-4` inline. The block-start padding stays Payload's (`--app-header-height`), so the template's menu button above the brand never covers it (capture 42 starts the brand `--space-10` from the top; P5). Links stretch to the full width. Children in order:
 
 1. **StudioBrand** `full`, tone `dark`, inset `--space-3` so it lines up with the link text.
-2. **Overview link**, `--space-8` below the brand: a 2 × 2 grid icon (four `--border-hairline` squares, `--space-5` box, `currentColor`, `aria-hidden`) then "Overview", `--space-3` apart.
-3. **Groups**, in this order (Build Spec; capture 42 leaves out Admin, the Build Spec wins), each `--space-7` below the previous item:
+2. **Overview link**, `--space-7` below the brand: a 2 × 2 grid icon (four `--border-hairline` squares, `--space-5` box, `currentColor`, `aria-hidden`) then "Overview", `--space-3` apart.
+3. **Groups**, in this order (Build Spec; capture 42 leaves out Admin, the Build Spec wins), each `--space-4` below the previous item:
 
    | Group label | Links → href |
    |---|---|
@@ -25,7 +25,7 @@ It replaces Payload's default nav (white, collapsible groups, gear menu, icon lo
 
    - **Group label:** `<p id>` with `--fs-label`, `--fw-semibold`, `--tracking-label`, uppercase, `--color-studio-nav-label`, inset `--space-3`, `--space-2` above its list.
    - **List:** `<ul aria-labelledby>` (the label's id), no bullets.
-4. **Rule:** `--border-hairline` solid `--color-studio-nav-rule`, `--space-8` above and `--space-6` below.
+4. **Rule:** `--border-hairline` solid `--color-studio-nav-rule`, `--space-6` above and `--space-4` below.
 5. **Footer**, inset `--space-3`, items `--space-2` apart:
    - "View the site" + `↗` (`aria-hidden`) + visually hidden "(opens in a new tab)": `<a href="/" target="_blank" rel="noopener">`, `--fs-sm`, `--fw-medium`, `--color-studio-nav-text-strong`, underlined at `--underline-offset`.
    - "Signed in as {name}": `<p>`, `--fs-sm`, `--color-studio-nav-label`. `{name}` is `users.name`, trimmed; the email when the name is blank.
@@ -50,13 +50,13 @@ All copy (group labels, link labels, "Studio · CMS", footer text, "{n} new", "(
 | Component | Variant | Use |
 |---|---|---|
 | StudioBrand | `full`, tone `dark`: name `--color-studio-nav-text-strong`, label `--color-studio-accent` | Sidebar, login left panel |
-| StudioBrand | `full`, tone `light`: name `--color-text`, label `--color-text-muted` | `graphics.Logo` on Payload's minimal views (forgot, reset, create-first-user) on the bone page. Gold on bone is 1.7:1, so the light tone never uses gold |
+| StudioBrand | `full`, tone `light`: name `--color-text`, label `--color-text-muted` | `graphics.Logo`, which Payload 3.93 draws only on its login and verify views (bone page; its forgot, reset and create-first-user views have no logo). Gold on bone is 1.7:1, so the light tone never uses gold |
 | StudioBrand | `icon` | `graphics.Icon` (app header, collapsed nav) |
 | Badge | shown / hidden | Hidden when there are no `new` inquiries (owner decision) |
 
 ## Sizes
 
-One. The sidebar is `--studio-nav-width` wide from 1024 px.
+One. The sidebar is `--studio-nav-width` wide from 769 px.
 
 ## States
 
@@ -68,7 +68,7 @@ One. The sidebar is `--studio-nav-width` wide from 1024 px.
 | Current | `aria-current="page"`, `--color-studio-nav-current` fill, `--color-studio-nav-text-strong`, `--fw-semibold` (the weight is the non-colour cue) |
 | Active | Same as hover |
 | Empty | No `new` inquiries: no badge |
-| Drawer open / closed | Payload's (below 1024 px) |
+| Open / closed | Payload's: the app header's menu button toggles it at every width |
 | Disabled, loading, error | Not applicable (server-rendered links) |
 
 **Current link:** worked out on the server from the route segments. Overview is current only on `/admin` itself; a collection or global link is current on its list, its create view and any of its documents (the path equals the href or starts with `{href}/`).
@@ -111,8 +111,8 @@ The name comes from `site-settings` (`getSiteSettings()`); the badge count from 
 
 ## Responsive
 
-- **From 1024 px:** a fixed sidebar `--studio-nav-width` (264 px) wide beside the page (Payload's `--nav-width` is set to it).
-- **Below 1024 px:** Payload's drawer, toggled from the app header and closed with `NavHamburger` (owner decision 2026-11-11; capture 21 at 390 px stacks the sidebar open above the page instead). The drawer content is this same sidebar.
+- **From 769 px:** when open, the sidebar sits beside the page, `--studio-nav-width` (264 px) wide (Payload's `--nav-width` is set to it). Payload's open/closed behaviour is kept (owner decision 2026-11-11): up to 1440 px every full page load starts with it closed, the app header's menu button opens it, and it stays open while moving around the Studio; wider screens remember the editor's choice. Captures 21 and 42 show it open at 1440 px.
+- **Up to 768 px:** Payload's full-width drawer, closed with `NavHamburger` (owner decision 2026-11-11; capture 21 at 390 px stacks the sidebar open above the page instead). The drawer content is this same sidebar. With the drawer open, Payload's own layout lets the page scroll sideways behind it (measured with Payload's default nav too); it is closed again on navigation.
 - Long site names wrap and stop at two lines; long labels wrap inside the link.
 - No horizontal scroll at 320 px.
 

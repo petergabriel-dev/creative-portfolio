@@ -22,7 +22,8 @@ These rank above the Build Spec (see the precedence rules in `README.md`).
 6. **Login messages:** blank field "Enter your email and password to log in."; wrong details "That email and password don't match." (never says which); locked "This account is locked after too many wrong tries. Try again in 15 minutes." (accepted: it confirms the email is the editor's); anything else "Something went wrong. Try again."
 7. **Own sidebar.** `admin.components.Nav` is our server component (Payload's nav has no place for a badge on one link). It reuses Payload's `NavWrapper` and `NavHamburger`; Payload's collapsible groups and gear menu are dropped.
 8. **Badge** hidden when there are no `new` inquiries. No database index on `inquiries.status`: one editor's table stays small, and a plain count avoids a migration.
-9. **Phones:** below 1024 px the sidebar stays in Payload's drawer behind the app-header menu button, on every Studio screen. This replaces capture 21's sidebar stacked open at 390 px.
+9. **Phones:** up to 768 px (Payload's mobile breakpoint) the sidebar stays in Payload's full-width drawer behind the app-header menu button, on every Studio screen. This replaces capture 21's sidebar stacked open at 390 px.
+10. **Sidebar open/closed** (decided during T4): Payload's behaviour is kept. Up to 1440 px every full page load starts with the sidebar closed (the menu button opens it; it stays open while moving around the Studio); wider screens remember the choice. QA opens it before comparing with captures 21 and 42.
 
 Design deviations from the captures are recorded in `docs/design/README.md`.
 
@@ -40,7 +41,7 @@ Design deviations from the captures are recorded in `docs/design/README.md`.
 - It applies to every admin view. P6 then refines screens 22–31 against their captures.
 
 **Logo and icon**
-- Custom `graphics.Logo` and `graphics.Icon`: the lens mark plus the site name, with "Studio · CMS" in gold underneath (on the bone minimal views the label is muted, since gold on bone is 1.7:1).
+- Custom `graphics.Logo` and `graphics.Icon`: the lens mark plus the site name, with "Studio · CMS" in gold underneath (where Payload draws its logo on a bone page, its login and verify views, the label is muted, since gold on bone is 1.7:1).
 - The name comes from `site-settings.name`.
 
 **Navigation** (our sidebar, owner decision 7)
@@ -103,7 +104,7 @@ No new fields. The badge and the Overview read `inquiries`, `projects`, `posts`,
 | `/admin` | The Overview dashboard replaces Payload's default dashboard |
 | `/admin/login` | Our login view, through Payload's `login()`: lockout after 5 failed attempts; a logged-in visit and a successful log-in go to `?redirect=` when it is a safe `/admin` path, else `/admin` |
 | Every `/admin/*` view | Theme, logo and grouped nav with the badge |
-| `/admin/forgot`, `/admin/reset/:token`, `/admin/create-first-user` | Payload's views, themed, with the Studio logo |
+| `/admin/forgot`, `/admin/reset/:token`, `/admin/create-first-user` | Payload's views, themed (Payload draws no logo on them) |
 
 ## Acceptance criteria
 

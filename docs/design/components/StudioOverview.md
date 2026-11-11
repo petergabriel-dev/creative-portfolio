@@ -135,7 +135,7 @@ A pure view takes these plain values, so every state renders in tests without a 
   - Drafts covers projects and posts, with two footer links.
   - Needs a reply shows `projectType` only: inquiries have no sub-type field.
   - Recently edited has the third chip, "Unpublished changes".
-  - Payload's app header bar (account link; the drawer toggle below 1024 px) stays above the page; capture 21 omits it.
+  - Payload's app header bar (breadcrumb, account link and the sidebar's menu button) stays above the page; capture 21 omits it.
 - Motion: underline and colour transitions over `--duration-fast`, none under `prefers-reduced-motion`.
 
 ## Preview

@@ -63,14 +63,14 @@ The surface's job is to **persuade**: show selected work and turn interest into 
   - Home's "Behind the camera" heading and About's section headings use `--fs-section` (Build Spec section heading size), larger or smaller than in captures 01 and 08 (as in P1).
   - The "From the journal" cards (JournalRow `card` variant) use `--fs-card` for titles, as ProjectCard does; capture 01 draws them at 40 px (P4).
   - On Home, an empty chapter (no Selected work, no `meet` heading, no disciplines, no posts) is left out and the later chapters renumber; with no hero slides the page shows the ChapterOpener with a visible `h1` instead of the slider (owner decision 2026-11-11, P4).
-  - Below 1024 px the Studio sidebar sits in Payload's drawer behind the app-header menu button, on every Studio screen; capture 21 at 390 px stacks it open above the Overview (owner decision 2026-11-11, P5).
+  - Up to 768 px the Studio sidebar sits in Payload's full-width drawer behind the app-header menu button, on every Studio screen; capture 21 at 390 px stacks it open above the Overview. From 769 px it sits beside the page when open, and Payload's open/closed behaviour is kept: up to 1440 px each full page load starts with it closed, though captures 21 and 42 show it open (owner decisions 2026-11-11, P5).
   - The Overview's "On the home page" panel lists the published hero slides and links "Edit Home page" to the `home` global; capture 21's "Edit in site settings" points at the wrong place, since slides live in `home` (owner decision 2026-11-11, P5).
   - The Overview's Drafts panel covers draft projects **and** posts, with "All projects" and "All posts" links in place of capture 21's single "All projects" (owner decision 2026-11-11, P5).
   - The Overview's Needs a reply rows show the project type only ("Photography"); capture 21's "Photography — wedding" has no matching inquiry field (P5).
   - The Overview's Recently edited panel has a third chip, "Unpublished changes" (outlined), for a live doc with a newer autosaved draft; capture 21 shows only Published and Draft (owner decision 2026-11-11, P5).
   - Recently edited rows stack when the panel is narrower than 720 px; capture 21 at 390 px lets the row run off the screen (P5).
   - When more than nine projects are marked for Selected work, the Overview says "the first 9 of N"; capture 21 shows only the nine-piece case (P5).
-  - Payload's app header bar (account link, and the drawer toggle below 1024 px) stays above the Overview; capture 21 omits it (P5).
+  - Payload's app header bar (breadcrumb, account link and the sidebar's menu button) stays above every Studio view, the Overview included; captures 21 and 42 omit it. The sidebar keeps Payload's block-start padding so that menu button never covers the brand (P5).
   - The Studio log-in replaces Payload's login view so its errors show inline, as in capture 20--error, rather than as toasts (owner decision 2026-11-11, P5).
 
 ### One colour scheme

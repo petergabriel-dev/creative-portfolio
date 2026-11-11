@@ -1,0 +1,70 @@
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.dark {
+  --brand-name: var(--color-studio-nav-text-strong);
+  --brand-label: var(--color-studio-accent);
+}
+
+/* Gold on bone is 1.7:1, so the light tone uses muted text for the label. */
+.light {
+  --brand-name: var(--color-text);
+  --brand-label: var(--color-text-muted);
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  margin: 0;
+  color: var(--brand-name);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-wordmark);
+  text-transform: uppercase;
+}
+
+.mark {
+  flex: none;
+  width: var(--mark-size);
+  height: var(--mark-size);
+}
+
+/* Long names wrap and stop at two lines; the full name stays in the DOM. */
+.name {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.label {
+  margin: 0;
+  color: var(--brand-label);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-wordmark);
+  text-transform: uppercase;
+}
+
+.icon {
+  display: inline-flex;
+  color: inherit;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: var(--border-hairline);
+  height: var(--border-hairline);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

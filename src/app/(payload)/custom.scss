@@ -4,8 +4,8 @@
 // !important. Tokens only: no colour values here (invariant 18). Light only
 // (`admin.theme: 'light'`), so there are no dark values.
 //
-// Payload classes targeted below (check them on every Payload upgrade): .btn--style-primary,
-// .btn--style-secondary, .btn--style-pill, .field-description, .array-field__add-row,
+// Payload classes targeted below (check them on every Payload upgrade): .nav, .nav__scroll,
+// .btn--style-primary, .btn--style-secondary, .btn--style-pill, .field-description, .array-field__add-row,
 // .upload-relationship-details__meta, .array-actions__button, .collapsible__drag,
 // .tabs-field__tab-button, .upload__dropzoneContent__orText, .upload__dragAndDropText,
 // .blocks-field__drawer-toggler, .sort-column__label, .sort-column__button,
@@ -63,6 +63,19 @@
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
   box-shadow: 0 0 0 var(--focus-halo-width) var(--focus-halo-color);
+}
+
+// The Studio sidebar (StudioNav, P5): Payload's nav shell in ink. Its block-start padding stays
+// Payload's (--app-header-height) so the template's menu button never covers the brand.
+.nav {
+  border-inline: 0;
+  background-color: var(--color-studio-nav-bg);
+}
+
+.nav__scroll {
+  --nav-padding-inline-start: var(--space-4);
+  --nav-padding-inline-end: var(--space-4);
+  --nav-padding-block-end: var(--space-8);
 }
 
 // Pill buttons, like the site's Button (Build Spec › Admin: "pill buttons").

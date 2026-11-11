@@ -206,6 +206,37 @@ export const copy = {
   },
   /** The Studio (P5): docs/design/components/StudioOverview.md. */
   studio: {
+    /** StudioBrand's second line, and the name the icon gives a link that wraps it. */
+    brandLabel: 'Studio · CMS',
+    iconLabel: 'Studio',
+    /** The sidebar (docs/design/components/StudioNav.md). */
+    nav: {
+      ariaLabel: 'Studio',
+      overview: 'Overview',
+      portfolio: 'Portfolio',
+      projects: 'Projects',
+      collections: 'Collections',
+      journal: 'Journal',
+      posts: 'Posts',
+      categories: 'Categories',
+      inbox: 'Inbox',
+      inquiries: 'Inquiries',
+      library: 'Library',
+      media: 'Media',
+      settings: 'Settings',
+      siteSettings: 'Site settings',
+      homePage: 'Home page',
+      aboutPage: 'About page',
+      admin: 'Admin',
+      users: 'Users',
+      /** The inquiries badge; hidden at 0 (owner decision 8). */
+      newCount: (count: number) => `${count} new`,
+      viewSite: 'View the site',
+      viewSiteArrow: '↗',
+      newTab: '(opens in a new tab)',
+      signedInAs: (name: string) => `Signed in as ${name}`,
+      logOut: 'Log out',
+    },
     /** Meta-line prefixes: "Project · Wedding", "Journal · Process". */
     project: 'Project',
     journal: 'Journal',

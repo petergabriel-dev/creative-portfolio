@@ -101,7 +101,7 @@ type LoginState = { error: 'empty' | 'invalid' | 'locked' | 'failed' | null; ema
 
 ## Usage
 
-- Only at `/admin/login`. Payload's forgot-password, reset and create-first-user views stay built in, themed by `custom.scss`, with StudioBrand `full` tone `light` as their logo.
+- Only at `/admin/login`. Payload's forgot-password, reset and create-first-user views stay built in and themed by `custom.scss`; Payload 3.93 draws no logo on them.
 - Motion: border and colour transitions over `--duration-fast`, none under `prefers-reduced-motion`.
 
 ## Preview
