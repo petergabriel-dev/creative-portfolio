@@ -1,6 +1,8 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
+import { adminBaseUrl } from '@/lib/inquiry'
+import { resetPasswordEmailHtml } from '@/lib/studioLogin'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -23,6 +25,11 @@ export const Users: CollectionConfig = {
     cookies: {
       sameSite: 'Lax',
       secure: process.env.NODE_ENV === 'production',
+    },
+    // An absolute reset link from the trusted email base URL (P5 QA: Payload's own email linked to
+    // a relative /admin/reset/… while serverURL is unset).
+    forgotPassword: {
+      generateEmailHTML: ({ token } = {}) => resetPasswordEmailHtml(String(token ?? ''), adminBaseUrl()),
     },
   },
   fields: [

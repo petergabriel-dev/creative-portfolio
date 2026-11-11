@@ -256,6 +256,11 @@ export const copy = {
         failed: 'Something went wrong. Try again.',
       },
     },
+    /** Payload's password-reset email, with an absolute link (P5 QA fix). */
+    resetEmail: {
+      intro: 'Someone asked to reset the password for your Studio account. If it was you, open this link to choose a new one:',
+      ignore: "If you didn't ask for this, ignore this email; your password stays the same.",
+    },
     /** The Overview at /admin (docs/design/components/StudioOverview.md, capture 21). */
     overview: {
       label: 'Studio',

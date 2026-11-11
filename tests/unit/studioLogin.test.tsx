@@ -187,3 +187,23 @@ describe('StudioLoginFormView', () => {
     expect(html).toMatch(/role="status"[^>]*>Logging in…/)
   })
 })
+
+describe('the password-reset email', () => {
+  it('links to the Studio reset view with an absolute URL, escaping what it inserts', async () => {
+    const { resetPasswordEmailHtml } = await import('@/lib/studioLogin')
+    const html = resetPasswordEmailHtml('2e8c436e', 'https://creative-portfolio-git-x.vercel.app')
+    expect(html).toContain('<a href="https://creative-portfolio-git-x.vercel.app/admin/reset/2e8c436e">')
+    expect(resetPasswordEmailHtml('a"b<c', 'https://example.com')).toContain('/admin/reset/a%22b%3Cc')
+    expect(html).not.toMatch(/href="\/admin/)
+  })
+
+  it("is the users collection's reset email, built from the trusted base URL rather than the Host header", async () => {
+    vi.stubEnv('NEXT_PUBLIC_SERVER_URL', 'https://studio.example.com/')
+    const { Users } = await import('@/collections/Users')
+    const forgot = Users.auth && typeof Users.auth === 'object' ? Users.auth.forgotPassword : undefined
+    const html = await forgot?.generateEmailHTML?.({ token: 'abc123', req: { headers: new Headers({ host: 'evil.example' }) } } as never)
+    expect(html).toContain('href="https://studio.example.com/admin/reset/abc123"')
+    expect(html).not.toContain('evil.example')
+    vi.unstubAllEnvs()
+  })
+})

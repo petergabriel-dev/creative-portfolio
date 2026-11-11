@@ -1,5 +1,7 @@
 import { getSafeRedirect } from 'payload/shared'
 
+import { copy } from '@/copy'
+
 /** The Studio's home; every log-in redirect stays under it. */
 export const STUDIO_HOME = '/admin'
 
@@ -35,4 +37,22 @@ export function safeStudioRedirect(redirectTo: unknown): string {
 export const formText = (formData: FormData, name: string) => {
   const value = formData.get(name)
   return typeof value === 'string' ? value : ''
+}
+
+/** Payload's reset view under the Studio (`admin.routes.reset`, Payload's default). */
+const RESET_ROUTE = `${STUDIO_HOME}/reset`
+
+const escapeHtml = (value: string) =>
+  value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!)
+
+/**
+ * The password-reset email. Payload builds its link from `serverURL`, which stays unset (traps.md),
+ * and otherwise from the request's Host header only when that origin is allow-listed, so its own
+ * email carries a relative link. This one uses the trusted email base URL (`adminBaseUrl`), never
+ * the Host header, so the link can't be pointed at another site.
+ */
+export function resetPasswordEmailHtml(token: string, baseUrl: string): string {
+  const url = escapeHtml(`${baseUrl}${RESET_ROUTE}/${encodeURIComponent(token)}`)
+  const t = copy.studio.resetEmail
+  return `<p>${escapeHtml(t.intro)}</p><p><a href="${url}">${url}</a></p><p>${escapeHtml(t.ignore)}</p>`
 }
