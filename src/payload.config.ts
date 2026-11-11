@@ -45,6 +45,8 @@ export default buildConfig({
       views: {
         // The Overview replaces Payload's dashboard at /admin (docs/design/components/StudioOverview.md).
         dashboard: { Component: '/components/studio/StudioOverview#StudioOverview' },
+        // Our log-in at /admin/login: inline errors, Payload's login() underneath (StudioLogin.md).
+        login: { Component: '/components/studio/StudioLogin#StudioLogin' },
       },
     },
     importMap: {

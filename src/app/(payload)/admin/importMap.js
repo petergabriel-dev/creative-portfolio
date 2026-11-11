@@ -18,6 +18,7 @@ import { StudioNav as StudioNav_b0f014bb5b54ecd0062a8e20e2cc30c3 } from '../../.
 import { StudioIcon as StudioIcon_75eeaf0e88da2420e8fc6cf6a5489204 } from '../../../components/studio/StudioBrand'
 import { StudioLogo as StudioLogo_75eeaf0e88da2420e8fc6cf6a5489204 } from '../../../components/studio/StudioBrand'
 import { StudioOverview as StudioOverview_440360fe56cb7f3d103c09972621c16c } from '../../../components/studio/StudioOverview'
+import { StudioLogin as StudioLogin_e31834a36070a94eb193face16cd5c34 } from '../../../components/studio/StudioLogin'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 
@@ -43,6 +44,7 @@ export const importMap = {
   "/components/studio/StudioBrand#StudioIcon": StudioIcon_75eeaf0e88da2420e8fc6cf6a5489204,
   "/components/studio/StudioBrand#StudioLogo": StudioLogo_75eeaf0e88da2420e8fc6cf6a5489204,
   "/components/studio/StudioOverview#StudioOverview": StudioOverview_440360fe56cb7f3d103c09972621c16c,
+  "/components/studio/StudioLogin#StudioLogin": StudioLogin_e31834a36070a94eb193face16cd5c34,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e
 }

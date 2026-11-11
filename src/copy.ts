@@ -237,6 +237,25 @@ export const copy = {
       signedInAs: (name: string) => `Signed in as ${name}`,
       logOut: 'Log out',
     },
+    /** The log-in at /admin/login (docs/design/components/StudioLogin.md, captures 20 and 20--error). */
+    login: {
+      label: 'Studio',
+      title: 'Log in',
+      email: 'Email',
+      password: 'Password',
+      submit: 'Log in',
+      pending: 'Logging in…',
+      forgot: 'Forgot password?',
+      backToSite: 'Back to the site',
+      lockNote: 'After 5 wrong tries the account locks for 15 minutes.',
+      /** Owner decision 6 (2026-11-11). "invalid" never says whether the email exists. */
+      errors: {
+        empty: 'Enter your email and password to log in.',
+        invalid: "That email and password don't match.",
+        locked: 'This account is locked after too many wrong tries. Try again in 15 minutes.',
+        failed: 'Something went wrong. Try again.',
+      },
+    },
     /** The Overview at /admin (docs/design/components/StudioOverview.md, capture 21). */
     overview: {
       label: 'Studio',

@@ -5,6 +5,7 @@
 // (`admin.theme: 'light'`), so there are no dark values.
 //
 // Payload classes targeted below (check them on every Payload upgrade): .nav, .nav__scroll,
+// .template-minimal.login, .template-minimal__wrap,
 // .btn--style-primary, .btn--style-secondary, .btn--style-pill, .field-description, .array-field__add-row,
 // .upload-relationship-details__meta, .array-actions__button, .collapsible__drag,
 // .tabs-field__tab-button, .upload__dropzoneContent__orText, .upload__dragAndDropText,
@@ -76,6 +77,17 @@
   --nav-padding-inline-start: var(--space-4);
   --nav-padding-inline-end: var(--space-4);
   --nav-padding-block-end: var(--space-8);
+}
+
+// Our log-in view (StudioLogin, P5) fills the screen inside Payload's minimal template, which
+// otherwise centres a 480 px column; Payload gives that template the class "login" on /admin/login.
+.template-minimal.login {
+  display: block;
+  padding: 0;
+}
+
+.template-minimal.login .template-minimal__wrap {
+  max-width: none;
 }
 
 // Pill buttons, like the site's Button (Build Spec › Admin: "pill buttons").

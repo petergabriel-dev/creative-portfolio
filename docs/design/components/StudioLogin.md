@@ -13,10 +13,10 @@ The Studio log-in screen at `/admin/login` (screen 20 and its error state). It r
 1. StudioBrand `full`, tone `dark` (see StudioNav).
 2. **Headline block**, pushed to the bottom from 1024 px (`margin-block-start: auto`), `--space-14` below the brand below 1024 px:
    - a short rule: `--rule-short` wide, `--border-strong` high, `--color-on-dark-heading`, `--space-6` above the headline;
-   - the headline `<p>`: `site-settings.headline`, `--font-display`, `--fw-regular`, `--fs-section`, `--lh-section`, uppercase, `--color-on-dark-heading`, `text-wrap: balance`. Without a headline the block shows the rule only;
-   - "Back to the site": Button `text` → `/`, colour inherited, `--space-10` above.
+   - the headline `<p>`: `site-settings.headline`, `--font-display`, `--fw-regular`, `--fs-section`, `--lh-section`, uppercase, `--color-on-dark-heading`, `text-wrap: pretty`, so the last line never holds one word (capture 20: "Every moment has / a story" at 1440 px). Without a headline the block shows the rule only;
+   - "Back to the site": Button `text` → `/`, colour inherited, `--space-10` above, its label lined up with the headline.
 
-**Form panel** (`--color-studio-page`): padding `--space-12` block and `--space-5` inline below 1024 px; from 1024 px the column is centred vertically with `--space-20` padding-inline-start. The column is at most `--measure-body` wide.
+**Form panel** (`--color-studio-page`): padding `--space-12` block and `--space-5` inline below 1024 px; from 1024 px the column is centred in the panel (both axes, as capture 20) with `--space-20` padding. The column is at most `--measure-body` wide.
 
 1. **Label:** `<p>` "Studio": `--fs-label`, `--fw-semibold`, `--tracking-label`, uppercase, `--color-text-muted`.
 2. **Title:** `<h1>` "Log in": `--font-display`, `--fw-regular`, `--fs-studio-title`, `--lh-section`, uppercase, `--color-text`.
@@ -76,7 +76,7 @@ type StudioLoginFormProps = { redirect: string }
 type LoginState = { error: 'empty' | 'invalid' | 'locked' | 'failed' | null; email: string }
 ```
 
-- The form posts to a `'use server'` action that calls Payload's `login()` from `@payloadcms/next/auth`, so it works without JavaScript.
+- The form posts to a `'use server'` action that calls Payload's `login()` from `@payloadcms/next/auth`; there is no client-side fetch code. Payload's admin layout renders every view on the client (the server HTML body is empty), so the Studio, this log-in included, needs JavaScript (P5).
 - Success and the logged-in visit both redirect to `getSafeRedirect({ redirectTo, fallbackTo: '/admin' })` from `payload/shared`: never an absolute or protocol-relative URL.
 - The action logs only an unexpected error's `name`; never the email, password or message.
 
@@ -84,7 +84,7 @@ type LoginState = { error: 'empty' | 'invalid' | 'locked' | 'failed' | null; ema
 
 - One `<h1>` ("Log in"); the headline on the brand panel is a `<p>`.
 - Visible `<label for>` on both fields; `type="email"`, `autocomplete` email / current-password; `required` stays for assistive technology while `noValidate` lets the server's message show.
-- **Focus:** after an error the alert gets focus (with JavaScript in an effect; without JavaScript the server HTML puts `autofocus` on it). The alert's `role="alert"` announces it.
+- **Focus:** after an error the alert gets focus (an effect, plus `autofocus` when it mounts). The alert's `role="alert"` announces it.
 - Fields marked invalid point at the alert with `aria-describedby`.
 - Targets: fields `--tap-cms` (48 px); Buttons ≥ 44 px; "Back to the site" and "Forgot password?" meet 44 × 44 px through Button `text`.
 - Contrast (computed 2026-11-11):
@@ -97,7 +97,7 @@ type LoginState = { error: 'empty' | 'invalid' | 'locked' | 'failed' | null; ema
 
 - **From 1024 px:** two equal columns (`1fr 1fr`), full height, as capture 20.
 - **Below 1024 px:** the brand panel becomes a band above the form (mobile capture 20): brand, then the rule, headline and "Back to the site"; the form follows at full width.
-- No horizontal scroll at 320 px. A long headline wraps (balanced); a long site name wraps to two lines.
+- No horizontal scroll at 320 px. A long headline wraps; a long site name wraps to two lines.
 
 ## Usage
 
