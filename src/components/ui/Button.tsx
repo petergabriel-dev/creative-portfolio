@@ -23,7 +23,13 @@ type CommonProps = {
   children: ReactNode
 }
 
-type LinkButtonProps = CommonProps & { href: string }
+type LinkButtonProps = CommonProps & {
+  href: string
+  /** The header Book Me pill on /book (P3). */
+  'aria-current'?: 'page'
+  /** Client components only: "Send another inquiry" resets the form in place (P3). */
+  onClick?: MouseEventHandler<HTMLAnchorElement>
+}
 
 type ActionButtonProps = CommonProps & {
   href?: undefined
@@ -50,7 +56,7 @@ export function Button(props: LinkButtonProps | ActionButtonProps) {
 
   if (props.href !== undefined) {
     return (
-      <Link className={className} href={props.href}>
+      <Link aria-current={props['aria-current']} className={className} href={props.href} onClick={props.onClick}>
         {content}
       </Link>
     )

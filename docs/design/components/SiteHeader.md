@@ -28,6 +28,7 @@ Padding `--space-6` block, `--gutter` inline. Inner width `--max-width`, centred
 - **Link default:** transparent bottom border.
 - **Hover:** bottom border `--color-text-muted` (light) or `--color-on-dark` (dark).
 - **Current:** `aria-current="page"` and a bottom border in the tone's text colour. Only one link can be current.
+- **Current = book** (P3): on `/book` the Book Me pill gets `aria-current="page"` and no nav link is current. The pill looks the same as on other pages (capture 11).
 - **Focus-visible:** global dual focus ring.
 - **Active:** same as hover.
 - **Empty name:** the LensMark shows alone; the link keeps an accessible name from `copy.ts` ("Home"). Never crashes.
@@ -37,7 +38,7 @@ Padding `--space-6` block, `--gutter` inline. Inner width `--max-width`, centred
 ```ts
 type SiteHeaderProps = {
   tone: 'dark' | 'light'
-  current?: 'home' | 'portfolio' | 'about' | 'journal'
+  current?: 'home' | 'portfolio' | 'about' | 'journal' | 'book'
   settings: { name?: string | null; bookingLabel?: string | null }
 }
 ```

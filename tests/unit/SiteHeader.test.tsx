@@ -21,6 +21,12 @@ describe('SiteHeader', () => {
     expect(html).toMatch(/<a href="\/about"[^>]*aria-current="page"/)
   })
 
+  it('marks only the Book Me pill as current on /book', () => {
+    const html = renderToStaticMarkup(<SiteHeader current="book" settings={settings} tone="dark" />)
+    expect(html.match(/aria-current="page"/g)).toHaveLength(1)
+    expect(html).toMatch(/<a href="\/book"[^>]*aria-current="page"/)
+  })
+
   it('marks no link as current when none is passed', () => {
     const html = renderToStaticMarkup(<SiteHeader settings={settings} tone="dark" />)
     expect(html).not.toContain('aria-current')

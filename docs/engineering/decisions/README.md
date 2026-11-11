@@ -7,3 +7,4 @@
 | ADR-0003 | Active | Branching, PR and CI gates, and release versioning | opening a branch or PR; merging into dev or main; tagging a release; changing CI, rulesets or Vercel deploy settings |
 | ADR-0004 | Active | Slug redirects from previous slugs on the doc, and publish hooks driven by the main row | changing a slug field, a collection URL or its redirects; adding a drafts-enabled collection with public pages; touching publish or revalidation hooks |
 | ADR-0005 | Active | Journal path pagination, refresh scope and Singapore dates | changing journal URLs or pagination; touching post, category or project publish hooks; formatting a date; deleting or renaming categories |
+| ADR-0006 | Active | Inquiry submission - save first, then alert; text project type; client timing check | changing the Book Me form, the submitInquiry action, the inquiries collection or its access; touching email sending, Resend or spam checks; logging anything about an inquiry |

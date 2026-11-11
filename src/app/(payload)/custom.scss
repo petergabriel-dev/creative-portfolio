@@ -54,3 +54,10 @@
   min-width: 24px;
   min-height: 24px;
 }
+
+// WCAG 4.1.2 (P3): on a read-only date field (inquiries "Received") Payload still renders an
+// enabled, unnamed clear button that does nothing. Hide it so it is neither a nameless control
+// nor a dead tab stop.
+.date-time-field.read-only .date-time-picker__clear-button {
+  display: none;
+}

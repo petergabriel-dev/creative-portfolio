@@ -49,6 +49,11 @@ The surface's job is to **persuade**: show selected work and turn interest into 
   - Pagination is hidden when there is only one page, and there is no "Newer stories" link; earlier pages are reached through the numbers (owner decision 2026-11-11). Capture 09 shows only page 1 of 3.
   - A journal entry with several related projects lists them by title under a "See the work" label; one related project keeps capture 10's single "See the work →" link (owner decision 2026-11-11).
   - Journal dates read "6 Nov 2026" in Asia/Singapore time, with fixed month names (owner decision 2026-11-11).
+  - Book Me's project-type options are the discipline names ("Film & Video"), not capture 11's shorter labels ("Film or video"); the Build Spec wins (P3).
+  - Book Me's opener context line and the "Working on" value are fixed copy in `copy.ts`, worded as in capture 11, not built from discipline names (owner decision 2026-11-11).
+  - Book Me's "Good to know" heading uses `--fs-section`, larger than in capture 11 (Build Spec section heading size, as in P1).
+  - Book Me's form fields have `--color-text-muted` borders, darker than capture 11's `--field-border`: on the stone form panel `--field-border` reaches only 2.9:1, below the 3:1 WCAG 2.2 requires for a control's edge (P3).
+  - Book Me's "Sending…" and failed-save states are not drawn in the captures; they are specified in [InquiryForm](components/InquiryForm.md) (P3).
 
 ### One colour scheme
 
@@ -83,6 +88,12 @@ Ratios computed from the token values (WCAG relative luminance), 2026-11-10:
 | `--bone` icon on `--ink-50` scrim | 3.0:1 over a white poster, 3.2:1 over bone, 14.1:1 over the tinted frame | Video play icon (non-text, 3:1 required) (P1) |
 | `--ink-50` scrim against a white poster / `--bone-70` border against the scrim on `--chapter` | 3.4:1 / 7.6:1 | Video play button boundary (non-text) (P1) |
 | `--bone-20` rule on `--chapter` | 1.8:1 | Decorative hairline above opener details; carries no meaning (P1) |
+| `--ink` on `--stone` / on `--surface` | 14.0:1 / 16.7:1 | Book Me form labels on the panel / text typed in fields (P3) |
+| `--muted` on `--surface` | 6.6:1 | Field placeholders (P3) |
+| `--muted` border on `--stone` / on `--surface` | 5.5:1 / 6.6:1 | Field edges on the form panel (non-text, 3:1 required) (P3) |
+| `--field-border` on `--stone` | 2.9:1 | Fails 3:1, so it is not used for site fields on the panel (P3) |
+| `--error` on `--stone` / on `--surface` | 6.1:1 / 7.3:1 | Field errors and failed-save message on the panel; error edge on fields (P3) |
+| `--surface` on `--stone` | 1.2:1 | Field fill against the panel; the border carries the edge (P3) |
 
 Accent fills on bone are weak: terracotta 2.6:1, sage 1.7:1, off-white 1.0:1. Gold booking buttons sit on dark sections in the captures; any accent button on a light section needs a visible boundary.
 
@@ -124,5 +135,14 @@ Accent fills on bone are weak: terracotta 2.6:1, sage 1.7:1, off-white 1.0:1. Go
 - [Pagination](components/Pagination.md)
 - [JournalEntryFooter](components/JournalEntryFooter.md)
 - BookingFinale and ChapterOpener gain their journal usages. P2 adds no tokens and no new contrast pairs: every P2 colour pair (ink and muted on bone, bone on ink) is already listed above.
+
+### Components (P3)
+
+- [InquiryForm](components/InquiryForm.md) (the form and its thank-you panel)
+- [GoodToKnow](components/GoodToKnow.md)
+- SiteHeader accepts `current="book"` (the Book Me pill gets `aria-current="page"`); Button links accept `aria-current`; ChapterOpener gains the Book Me usage.
+- One new semantic token: `--color-field-bg` (`--surface`, the site input fill). `--field-bg` (white) stays the Studio's.
+
+**Book Me page layout** (`/book`, screen 11): ChapterOpener with the dark header → one light section (Chapter 01), padded `--section-y` block and `--gutter` inline, max width `--max-width` → SiteFooter. No BookingFinale (the only page without one). Inside the section, GoodToKnow and InquiryForm stack below 1024 px (GoodToKnow first, `--space-12` apart). From 1024 px they sit side by side, top-aligned: GoodToKnow about one third of the width, InquiryForm the rest, column gap `--space-14`. 1024 px is the header's existing second breakpoint; at 768 px the form's own two-column grid would leave fields too narrow beside GoodToKnow.
 
 Grid minimum widths (`--grid-min-*`) feed `repeat(auto-fit, minmax(min(<token>, 100%), 1fr))`, so every grid collapses to one column on phones.

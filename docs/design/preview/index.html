@@ -15,7 +15,7 @@
 <body style="background-color: var(--color-page); color: var(--color-text); font-family: var(--font-body); font-size: var(--fs-body); line-height: var(--lh-body)">
   <header style="padding: var(--space-8) var(--gutter)">
     <h1 style="font-family: var(--font-display); font-size: var(--fs-section); font-weight: var(--fw-regular); line-height: var(--lh-section)">DESIGN SYSTEM GALLERY</h1>
-    <p style="color: var(--color-text-muted)">Creative Portfolio · Cinematic Chapters · P0–P2 components.</p>
+    <p style="color: var(--color-text-muted)">Creative Portfolio · Cinematic Chapters · P0–P3 components.</p>
   </header>
   <main>
     <nav aria-label="Preview examples" style="padding: var(--space-2) var(--gutter)"><a href="example.html">Example screen</a></nav>
@@ -135,6 +135,53 @@
         </div>
         <figcaption style="padding-top: var(--space-2); font-size: var(--fs-caption); color: var(--color-text-muted)">[Caption] · nothing loads from the provider until the click</figcaption>
       </figure>
+    </section>
+
+    <section aria-labelledby="pv-book" style="padding: var(--section-y) var(--gutter)">
+      <h2 id="pv-book" style="font-size: var(--fs-label); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">GOODTOKNOW · INQUIRYFORM: DEFAULT, ERRORS, SENDING, FAILED, SENT (P3)</h2>
+      <dl style="max-width: var(--max-width-narrow); border-top: var(--border-hairline) solid var(--color-rule)">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-1) var(--space-6); padding-block: var(--space-5); border-bottom: var(--border-hairline) solid var(--color-rule)">
+          <dt style="font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">PREFER EMAIL?</dt>
+          <dd style="margin: 0"><a href="#pv-book" style="color: var(--color-text); text-decoration: none">[your@email.com]</a></dd>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-1) var(--space-6); padding-block: var(--space-5); border-bottom: var(--border-hairline) solid var(--color-rule)">
+          <dt style="font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label); color: var(--color-text-muted)">WORKING ON</dt>
+          <dd style="margin: 0">Photography, film, design &amp; writing</dd>
+        </div>
+      </dl>
+      <p style="max-width: var(--measure-body); padding-top: var(--space-6); font-size: var(--fs-sm); color: var(--color-text-muted)">This starts a conversation — nothing is booked until we've talked it through.</p>
+
+      <form aria-label="Booking inquiry (preview)" novalidate style="max-width: var(--max-width-narrow); margin-top: var(--space-12); padding: var(--space-6); background-color: var(--color-surface-band)">
+        <p style="padding-bottom: var(--space-6)">
+          <label for="pv-name" style="display: block; padding-bottom: var(--space-3); font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label)">YOUR NAME</label>
+          <input id="pv-name" type="text" style="box-sizing: border-box; width: 100%; min-height: var(--tap-primary); padding: var(--space-3) var(--space-5); border: var(--border-hairline) solid var(--color-text-muted); border-radius: var(--radius-site); background-color: var(--color-field-bg); color: var(--color-text); font: inherit">
+        </p>
+        <p style="padding-bottom: var(--space-6)">
+          <label for="pv-email" style="display: block; padding-bottom: var(--space-3); font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label)">EMAIL</label>
+          <input id="pv-email" type="email" aria-invalid="true" aria-describedby="pv-email-error" style="box-sizing: border-box; width: 100%; min-height: var(--tap-primary); padding: var(--space-3) var(--space-5); border: var(--border-hairline) solid var(--color-error); box-shadow: inset 0 0 0 var(--border-hairline) var(--color-error); border-radius: var(--radius-site); background-color: var(--color-field-bg); color: var(--color-text); font: inherit">
+          <span id="pv-email-error" style="display: block; padding-top: var(--space-2); font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-error)">Please check your email address.</span>
+        </p>
+        <p style="padding-bottom: var(--space-6)">
+          <label for="pv-message" style="display: block; padding-bottom: var(--space-3); font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label)">TELL ME ABOUT IT</label>
+          <textarea id="pv-message" rows="4" placeholder="What it's for, who it's for, and what you'd love it to feel like." style="box-sizing: border-box; width: 100%; padding: var(--space-3) var(--space-5); border: var(--border-hairline) solid var(--color-text-muted); border-radius: var(--radius-site); background-color: var(--color-field-bg); color: var(--color-text); font: inherit"></textarea>
+        </p>
+        <p tabindex="-1" style="padding-bottom: var(--space-6); font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-error)">Failed state: Sorry — your message didn't send. Please try again, or email me at <a href="#pv-book" style="color: inherit; text-underline-offset: var(--underline-offset)">[your@email.com]</a>.</p>
+        <p style="display: flex; flex-wrap: wrap; gap: var(--space-4)">
+          <button type="button" style="min-height: var(--tap-primary); padding-inline: var(--space-7); border: var(--border-hairline) solid var(--color-action); border-radius: var(--radius-pill); background-color: var(--color-action); color: var(--color-on-action); font-size: var(--fs-label-lg); font-weight: var(--fw-medium); letter-spacing: var(--tracking-label)">SEND INQUIRY</button>
+          <button type="button" disabled style="min-height: var(--tap-primary); padding-inline: var(--space-7); border: var(--border-hairline) solid var(--color-action); border-radius: var(--radius-pill); background-color: var(--color-action); color: var(--color-on-action); font-size: var(--fs-label-lg); font-weight: var(--fw-medium); letter-spacing: var(--tracking-label); opacity: var(--opacity-disabled)">SENDING…</button>
+        </p>
+      </form>
+
+      <div style="max-width: var(--max-width-narrow); margin-top: var(--space-12); padding: var(--space-8); background-color: var(--color-surface-finale); color: var(--color-on-dark-heading)">
+        <p style="font-size: var(--fs-label); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label); color: var(--color-booking)">INQUIRY SENT</p>
+        <h3 tabindex="-1" style="padding-top: var(--space-5); font-family: var(--font-display); font-size: var(--fs-card); font-weight: var(--fw-regular); line-height: var(--lh-card)">THANK YOU — I'LL BE IN TOUCH SOON</h3>
+        <p style="max-width: var(--measure-body); padding-top: var(--space-5); font-size: var(--fs-lead); color: var(--color-on-dark)">I'll read your note and reply within [response time] so we can talk through your plans.</p>
+        <p style="display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-4); padding-top: var(--space-6)">
+          <a href="#pv-book" style="display: inline-flex; align-items: center; min-height: var(--tap-primary); padding-inline: var(--space-7); border-radius: var(--radius-pill); background-color: var(--color-booking); color: var(--color-on-booking); font-size: var(--fs-label-lg); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label); text-decoration: none">BROWSE THE PORTFOLIO</a>
+          <a href="#pv-book" style="display: inline-flex; align-items: center; min-height: var(--tap-primary); padding-inline: var(--space-7); border: var(--border-hairline) solid var(--color-outline-on-dark); border-radius: var(--radius-pill); color: var(--color-on-dark-heading); font-size: var(--fs-label-lg); font-weight: var(--fw-medium); letter-spacing: var(--tracking-label); text-decoration: none">BACK TO HOME</a>
+        </p>
+        <p style="padding-top: var(--space-3)"><a href="#pv-book" style="display: inline-flex; align-items: center; min-height: var(--tap-min); color: inherit; font-size: var(--fs-sm); font-weight: var(--fw-medium); text-underline-offset: var(--underline-offset)">Send another inquiry</a></p>
+      </div>
     </section>
 
     <section aria-labelledby="pv-finale" style="background-color: var(--color-surface-finale); color: var(--color-on-dark-heading); padding: var(--finale-y) var(--gutter)">

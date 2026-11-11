@@ -31,6 +31,8 @@ Names only; values never go in the repo, docs, CI or logs.
 | `NEXT_PUBLIC_SERVER_URL` | optional | not set | not set until P7 |
 | `ENABLE_EXPERIMENTAL_COREPACK` | — | `1` | `1` |
 | `SEED_ALLOW_REMOTE` | only to seed a non-local DB on purpose | — | never |
+| `RESEND_API_KEY` | `.env` (optional: without it emails are only logged) | Vercel env (secret, Sensitive), Preview only; a send-only key | not set until P7 |
+| `EMAIL_FROM_ADDRESS` | optional | not set (Resend's test sender) | the verified domain's address, P7 |
 
 - Neon is **never** connected to the Development environment: local work always uses Docker Postgres.
 - `.env`, `.env*.local` and `.vercel/` are gitignored. `.env.local` is written by `vercel link` / `vercel env pull`.
@@ -83,10 +85,20 @@ Names only; values never go in the repo, docs, CI or logs.
   - 11 published, a week apart from 6 Nov 2026 (10:00 Singapore), so `/journal/page/2` exists and four dates fall in September;
   - 1 draft without a date (`[A story still in draft]`);
   - the first three are capture 09's rows; the first carries capture 10's story and links one project, the third links two.
+- four inquiries (`src/seed/inquiries.ts`): two `new`, one `replied`, one `archived`, bracketed names and `example.com` emails. Seeding them sends no email.
 
-- Safe to run twice: images are found by filename and disciplines, projects, categories and posts by slug, and only missing ones are created; site-settings is only filled while it is empty. It never overwrites real edits and never touches users.
+- Safe to run twice: images are found by filename, disciplines, projects, categories and posts by slug, and inquiries by email, and only missing ones are created; site-settings is only filled while it is empty. It never overwrites real edits and never touches users.
 - It refuses `VERCEL_ENV=production`, a missing `POSTGRES_URL`, and any non-local database unless `SEED_ALLOW_REMOTE=true` is set on purpose (e.g. to seed a Neon preview branch).
 - Writes pass `context.disableRevalidate`, because `revalidatePath` only works inside a Next.js request.
+
+## Email and the Book Me form
+
+- With `RESEND_API_KEY` in `.env`, local submissions really send the owner alert. The alert goes to `site-settings.contactEmail`.
+- Until the domain is verified (P7), the From address is Resend's test sender. Point `contactEmail` at your Resend signup address (or Resend's `delivered@resend.dev` test inbox) when testing; other recipients are expected to be refused.
+- On a preview: create the admin user, then set Site settings → Contact email to the Resend signup address before testing the form.
+- The Resend key is send-only, so the API can't read sent emails back; check them in the Resend dashboard (Emails).
+- To see the failed-save state on a throwaway database: `ALTER TABLE inquiries ADD CONSTRAINT qa_block CHECK (false) NOT VALID`, submit, then `ALTER TABLE inquiries DROP CONSTRAINT qa_block`. To see a failed alert, run with an invalid `RESEND_API_KEY`: the inquiry still saves.
+- Submitting a valid form within 3 seconds of it appearing (with JavaScript) is treated as spam: the thank-you shows and nothing is saved. Wait a moment when testing by hand.
 
 ## Media locally
 
