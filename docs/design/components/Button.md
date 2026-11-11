@@ -47,6 +47,7 @@ type ButtonProps = {
   variant: 'gold' | 'ink' | 'outline-ink' | 'outline-light' | 'text'
   size?: 'default' | 'primary' // default 'default'
   href?: string // present → <a> via next/link
+  'aria-current'?: 'page' // <a> only, e.g. the header Book Me pill on /book (P3)
   trailingArrow?: boolean // appends the copy.ts arrow, aria-hidden (text variant)
   children: React.ReactNode
   disabled?: boolean // <button> only
@@ -72,6 +73,7 @@ Same at every width: inline size follows the label, never forced full width. Wra
 
 - Booking actions on dark sections use `gold`. The header Book Me pill is `ink` (light tone) or `outline-light` (dark tone), never gold.
 - Use `text` for secondary links next to a pill.
+- On dark surfaces the `text` variant inherits the surface's heading colour, e.g. "Send another inquiry" in the Book Me thank-you panel (P3).
 - Transitions: `color`, `background-color`, `border-color`, `text-decoration-color` over `--duration-fast`; none under `prefers-reduced-motion`.
 
 ## Preview

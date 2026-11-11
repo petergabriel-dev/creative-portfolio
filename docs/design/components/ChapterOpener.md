@@ -95,6 +95,7 @@ Server component.
 - Project opener: breadcrumb and details slot.
 - Journal list opener (P2): `stacked`, default tint, context line "Journal", title and lead from `copy.ts`, no actions (capture 09).
 - Journal entry opener (P2): `stacked`, default tint, breadcrumb "Journal", context line "{category} · {date}" (missing parts dropped), the post's title, its excerpt as the lead, no actions (capture 10).
+- Book Me opener (P3): `stacked`, default tint, context line "Book me · photography, film, design & writing" (fixed copy, owner decision 2026-11-11), title "Let's talk about your project", lead from `copy.ts` ending "…and reply within {replyTime}." (the clause is dropped when `replyTime` is empty), no actions (capture 11).
 - About opener in a later phase.
 - No motion.
 
