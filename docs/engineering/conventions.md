@@ -18,6 +18,8 @@ How code in this repo is written. Established in Phase 0.
 - **Whole-route refreshes** use a route pattern with `type: 'page'`, written as the route file with its group (`'/(frontend)/journal/[slug]'`); keep the patterns as constants in `src/lib/publishing.ts`.
 - **Slugs** use `slugFields(useAsSlug)` from `src/fields/slug.ts`: ASCII `toSlug`, a format validator and the hidden `previousSlugs` list.
 - Each collection and global sets its `admin.group` and `useAsTitle` from the Build Spec when it is created.
+- **Studio components** (P5) live in `src/components/studio/` and are wired in `src/payload.config.ts` (`admin.components`: `Nav`, `graphics`, `views`). After changing that wiring, run `pnpm generate:importmap` with the normal `.env` and commit `importMap.js`; a dev server started with an empty `BLOB_READ_WRITE_TOKEN` rewrites it in a different order, so discard that churn.
+- **Studio reads** live in `src/lib/studio.ts` and run as the logged-in editor (`overrideAccess: false`, `user`), never through `src/lib/` public reads. Pure helpers take `payload` and `user` as arguments so tests pass a fake.
 - Mark intentional shortcuts with a `// ponytail:` comment that names the limitation and the upgrade path.
 - **Dates** are shown only through `formatDate` / `isoDate` (`src/lib/date.ts`): Asia/Singapore time, "6 Nov 2026", month names from `copy.months`.
 
@@ -32,7 +34,7 @@ How code in this repo is written. Established in Phase 0.
 - **Variants over copies:** a shared component that needs another look on one page gets a `variant` prop whose default renders exactly the old markup (CollectionTile `home`, JournalRow `card`).
 - Motion: colour and border transitions only (and the hero's progress width), `--duration-fast`, switched off under `prefers-reduced-motion`.
 - `docs/design/` specs are authoritative; `docs/design/reference/` is visual data only.
-- Studio CSS goes in `src/app/(payload)/custom.scss`, using Payload's theme variables (`--theme-text`, `--theme-elevation-*`) so light and dark admin themes keep contrast. The P5 theme moves it onto the design tokens.
+- **Studio CSS** (P5): Payload's own views are themed in `src/app/(payload)/custom.scss` by mapping Payload's CSS variables onto the Studio tokens (`--color-studio-*`), with no colour literals. Every Payload class it targets is listed in its header comment; prefer a variable to a class. Our Studio components use CSS Modules with the same tokens and set their own `font-size` (Payload's base is 13 px). The admin is light only (`admin.theme: 'light'`).
 
 ## Text
 

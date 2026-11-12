@@ -33,6 +33,22 @@ const blobPrefix =
 export default buildConfig({
   admin: {
     user: Users.slug,
+    // Light only at launch (P5): the Studio theme in custom.scss has no dark values.
+    theme: 'light',
+    // The Studio sidebar and brand (P5, docs/design/components/StudioNav.md).
+    components: {
+      Nav: '/components/studio/StudioNav#StudioNav',
+      graphics: {
+        Logo: '/components/studio/StudioBrand#StudioLogo',
+        Icon: '/components/studio/StudioBrand#StudioIcon',
+      },
+      views: {
+        // The Overview replaces Payload's dashboard at /admin (docs/design/components/StudioOverview.md).
+        dashboard: { Component: '/components/studio/StudioOverview#StudioOverview' },
+        // Our log-in at /admin/login: inline errors, Payload's login() underneath (StudioLogin.md).
+        login: { Component: '/components/studio/StudioLogin#StudioLogin' },
+      },
+    },
     importMap: {
       baseDir: path.resolve(dirname),
     },

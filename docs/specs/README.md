@@ -40,7 +40,7 @@ The Build Spec has its own eight-step build order, layer by layer ("Build order 
 | P2 Journal | `phase-2-journal.md` | The owner publishes journal posts. Visitors read the paged list and the entries | P1 | 09, 10 | 25, 26 as default views | Done |
 | P3 Book Me | `phase-3-book-me.md` | Visitors send inquiries. The owner gets an email alert and handles inquiries in the Studio | P0, P1 | 11 (+ errors, sent) | 27 as default view | Done |
 | P4 Home + About | `phase-4-home-about.md` | The `home` and `about` globals drive the Home and About pages. Adds the hero slider and Selected work | P1, P2 | 01, 08 | 30, 31 as default views | Done |
-| P5 Studio shell | `phase-5-studio-shell.md` | Studio theme, logo, nav badge, Overview dashboard and themed login | P3, P4 | — | 20, 21, 42 (visual match) | Draft |
+| P5 Studio shell | `phase-5-studio-shell.md` | Studio theme, logo, nav badge, Overview dashboard and themed login | P3, P4 | — | 20, 21, 42 (visual match) | Done |
 | P6 Studio extras | `phase-6-studio-extras.md` | Filter pills, two-panel inbox and accent swatches, plus a theme pass on every Studio screen | P5 | — | 22–31 (theme-level match) | Draft |
 | P7 Launch | `phase-7-launch.md` | Finish SEO, full QA, real content and production go-live | P0–P6 | All (QA pass) | All (QA pass) | Draft |
 

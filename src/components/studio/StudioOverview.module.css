@@ -1,0 +1,296 @@
+/* docs/design/components/StudioOverview.md (capture 21). Mobile first. */
+.page {
+  padding: var(--space-8) var(--space-5) var(--space-12);
+  background-color: var(--color-studio-page);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  /* Payload's admin body is 13 px; the Overview sets its own base. */
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.label {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-studio-title);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-section);
+  text-transform: uppercase;
+}
+
+.greeting {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-body);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-tile), 100%), 1fr));
+  gap: var(--space-6);
+  align-items: start;
+  margin-top: var(--space-8);
+}
+
+.panel {
+  min-width: 0;
+  padding: var(--space-6);
+  border: var(--border-hairline) solid var(--color-studio-card-border);
+  border-radius: var(--radius-cms-card);
+  background-color: var(--color-studio-card);
+}
+
+.wide {
+  grid-column: 1 / -1;
+  container-type: inline-size;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-hairline) solid var(--color-studio-row-rule);
+}
+
+.heading {
+  margin: 0;
+  font-size: var(--fs-label-lg);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-nav);
+  text-transform: uppercase;
+}
+
+.pill {
+  display: inline-flex;
+  flex: none;
+  justify-self: start;
+  align-items: center;
+  min-height: var(--space-6);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+
+.pillInk {
+  background-color: var(--color-action);
+  color: var(--color-on-action);
+}
+
+.chipPublished {
+  background-color: var(--color-chip-published-bg);
+  color: var(--color-chip-published-fg);
+}
+
+.chipDraft {
+  background-color: var(--color-chip-draft-bg);
+  color: var(--color-chip-draft-fg);
+}
+
+.chipChanges {
+  border: var(--border-hairline) solid var(--color-chip-changes-fg);
+  background-color: var(--color-chip-changes-bg);
+  color: var(--color-chip-changes-fg);
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+  padding-block: var(--space-5);
+  border-bottom: var(--border-hairline) solid var(--color-studio-row-rule);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.inquiryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+
+.docRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.slideRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  font-size: var(--fs-body);
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The title is the row's only link; its ::after stretches over the whole row (conventions). */
+.titleLink {
+  color: var(--color-text);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  text-underline-offset: var(--underline-offset);
+}
+
+.titleLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.titleLink:hover {
+  text-decoration: underline;
+}
+
+.meta {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+.date {
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+}
+
+.thumb {
+  display: block;
+  flex: none;
+  width: var(--studio-thumb-w);
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  background-color: var(--color-frame);
+}
+
+.number {
+  flex: none;
+  width: var(--space-6);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.subLabel {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.selectedWork {
+  margin: var(--space-5) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+}
+
+.empty {
+  margin: 0;
+  padding-block: var(--space-5);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+}
+
+/* Recently edited: stacked on narrow panels, one grid row from 720 px (capture 21). */
+.recentRow {
+  display: grid;
+  grid-template-columns: var(--studio-thumb-w) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+}
+
+.details {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 2;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.collection {
+  font-size: var(--fs-sm);
+}
+
+.edit {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding-inline: var(--space-12);
+  }
+
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
+/* One grid for the whole list, rows on subgrid, so the columns line up across rows. */
+@container (min-width: 720px) {
+  .recentRows {
+    display: grid;
+    grid-template-columns: var(--studio-thumb-w) minmax(0, 3fr) minmax(0, 2fr) auto auto auto;
+    column-gap: var(--space-6);
+  }
+
+  .recentRow {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    column-gap: var(--space-6);
+  }
+
+  .details {
+    display: contents;
+  }
+}
