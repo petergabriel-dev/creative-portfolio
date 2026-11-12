@@ -16,7 +16,7 @@ The two-panel inbox at `/admin/collections/inquiries` (screen 27): the editor re
    - `--radius-pill`, min-height `--tap-min`, padding-inline `--space-5`, `--border-hairline` solid `--color-studio-field-border`, `--fs-sm`;
    - text: the status name (`--fw-semibold`, `--color-text`) then its count (`--fw-regular`), `--space-2` apart;
    - current: `--color-action` fill and border, `--color-on-action` text, `aria-current="true"`.
-   - Each link goes to `?status=<status>` (page 1, newest selected).
+   - Each link goes to `?status=<status>&id=` (page 1, newest selected). Links without a selection send `id` empty so an earlier `id` can't return to the address bar (P6 QA, traps.md).
 3. **Panels**, `--space-7` below the status links: the list, then the detail.
 4. **List** (`<ul>`, cards `--space-3` apart). Each **card** is an `<li>`: `position: relative`, `--color-studio-card`, `--border-hairline` solid `--color-studio-card-border`, `--radius-cms-card`, padding `--space-4` block and `--space-5` inline.
    - Row 1: the name as `<h2><a>`, `--fs-body`, `--fw-semibold`, `--color-text`, no underline, its `::after` stretched over the card (conventions: card links); the date received at the inline end, `<time datetime>` through `formatDate`, `--fs-sm`, `--color-text-muted`.

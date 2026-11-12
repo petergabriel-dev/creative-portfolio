@@ -1,6 +1,6 @@
 # Phase 6 — Studio extras
 
-Status: In progress
+Status: Done
 Depends on: P5 (theme, nav, badge)
 Build Spec refs: Admin (Studio) customisation (the phase-2 rows: collection filter pills, two-panel inbox, accent swatches) · Book Me & inquiries flow (statuses) · Globals › site-settings (`accent`) · Design system
 
@@ -131,3 +131,61 @@ None specific to this phase.
 - **Custom list view.** Replacing the inquiries list view must keep Payload's access control and pagination. Check that many inquiries still load page by page.
 - **Accent contrast.** Off-white `#F3F1EC` is nearly the bone page colour. Wherever a Book Me button or progress line appears on a light background, it may fail the 3:1 non-text contrast rule. Checked 2026-11-12: every gold button on the site sits on a dark surface (openers, BookingFinale, hero), so P6 changes nothing on the site; in the Studio the swatch ring and the ink preview panel cover it (owner decision 9).
 - **Upgrades.** Custom admin views and field components depend on Payload's component API. Pin the version and re-test after upgrades.
+
+## QA log (2026-11-12)
+
+Run on `docs/p6-qa` (plan `p6-studio-extras`, T1–T11 committed on stacked local branches). The checks used a local production build (`pnpm build`, `pnpm start`) on a fresh database: the 8 committed migrations (P6 needs none: `payload migrate:create --skip-empty` wrote no file), seeded twice with the local `./media` folder moved aside (traps.md), plus 45 inquiries inserted by SQL (43 new, one with a very long name, email and unbroken word, one replied with an address Payload wouldn't accept; dev-workflow.md), with an empty `BLOB_READ_WRITE_TOKEN` and `RESEND_API_KEY`. Rows marked "Tn" cite that task's verification on `pnpm dev` with the same code. axe is axe-core 4.14 from the project's own dependencies (WCAG 2.2 AA tags).
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| Build Spec box 7.2: filter pills, two-panel inbox and accent swatches built and in use | Pass | All three on the production build: the inbox at `/admin/collections/inquiries`, the pills above the Projects list, the swatches on Site settings |
+| Pills: a pill shows only its collection, and its count equals its rows | Pass | All 23, Photography 11 ("1-10 of 11"), Film & Video 4 ("1-4 of 4"); Enter on a pill filters, reload keeps it; an unknown slug shows All as current |
+| Pills work with search and a status condition | Pass | Photography plus a draft condition from the filter builder: 1 row; Photography plus "wedding": 2 rows. REST ignores `?collection=` (23 either way), so relationship pickers are unaffected (T5) |
+| Inbox: status changes update the status, the counts and the nav badge | Pass | Keyboard "Mark as replied": New 46 → 45, Replied 3 → 4, badge "45 new"; "Mark as new" on the only archived inquiry: Archived 1 → 0 (T4 and final build) |
+| Inbox: the next inquiry is selected, the change announced, focus on its heading | Pass | After "Mark as replied" the next card was selected, the live region read "Marked as replied." and focus was on `#inbox-detail-heading`; emptying a tab focused "Nothing waiting." and announced "Marked as new." |
+| "Reply by email" opens a `mailto:` link to the visitor | Pass | `mailto:qa21@example.com`; no link for `not-an-email`; header characters in the local part are encoded (unit test) |
+| More than 20 page through Newer and Older; reload and Back keep tab, page and selection | Pass after one fix | Page 2 with `id=25` survived a reload; Older reached page 3 (6 cards). Back, Back to the first-loaded page, and Forward each showed the right inquiry. The address bar kept a stale `id` after Older; fixed below |
+| The Overview's Needs a reply rows open the inbox with that inquiry selected | Pass | Rows link to `?status=new&id=<id>` and land on it |
+| The inbox works by keyboard alone | Pass | Tab and Enter select a card (focus moves to its heading); status buttons by Enter; a tab change keeps focus on the tab |
+| A failed change keeps the inquiry and says so | Pass | An inquiry deleted under the open page: "Couldn't change the status. Try again.", URL and selection unchanged, buttons enabled; the log line read "Inquiry 5 status change failed (NotFound)" |
+| Access | Pass | Logged-out inbox → `/admin/login?redirect=<inbox URL>`; logged-out REST read and create of inquiries 403; `/api/graphql` 404. Every Studio Local API call runs as the editor (unit tests, invariant 28) |
+| Swatches: a keyboard radio group; saving changes the site's booking colour without a redeploy | Pass | Arrow keys moved gold → terracotta; the preview followed the swatch and the Booking button label; Save stored `terracotta`; the static `/portfolio` (`x-nextjs-cache: HIT`) then drew its Book Me buttons in rgb(224, 122, 95) instead of rgb(233, 180, 76) |
+| Theme pass: screens 22–31 with 23--seo and 24--list consistent with their captures at 1440 and 390 px | Pass, with recorded deviations | Screenshots against the captures (T7–T9). Cards, labels, rows, sidebar cards, titles, chips and 3:1 field edges in place; what layout-only config and CSS can't reach is listed in `docs/design/README.md` › "Studio theme pass (P6)" |
+| axe: no WCAG 2.2 AA violations on the screens | Pass on P6 components; Payload exceptions recorded | 0 on the inbox (1440, 390), the pills and the swatch field. Screens 22–31 report only findings inside Payload's components, matching the P2, P4 and P5 baselines (list below), plus the SEO plugin's inline colours, new to the log |
+| No new custom component hard-codes a colour value | Pass | No hex, `rgb()` or `!important` in the P6 CSS Modules or the P6 section of `custom.scss` |
+| No migration | Pass | `payload migrate:create --skip-empty` wrote no file (T7, T8, final); a fresh database migrated with the 8 committed migrations |
+| No horizontal scroll | Pass | 390 and 1440 px on all twelve screens; 320 px on the inbox, Projects list, Site settings and the Overview |
+| `next build`: public routes keep their rendering (invariant 22) | Pass | `/`, `/about`, `/portfolio`, `/journal` and `/book` ○; collection, project, `/journal/page/[n]` and `/journal/[slug]` ● |
+| The seed fills a fresh database; a second run creates nothing | Pass | Run 1 created 54 docs, run 2 created 0 (23 projects, 12 posts, 4 disciplines, 4 categories, 4 inquiries, 7 media); `users` empty before the QA editor was registered |
+| DoD: code health | Pass | typecheck, lint, 506 unit tests (101 new in P6) |
+| DoD: Vercel preview | Pending | PR into `dev`: `checks` and `Vercel` to be recorded |
+
+### Fixes made during QA
+
+- **A stale `id` or `collection` came back to the address bar.** Payload's list wrapper keeps the first URL's query in state and merges it back after every client navigation, so links that left a parameter out let the old one return: after Older the bar still read `id=25`, and after "All" it read `collection=photography`, so a reload showed a different inquiry or re-filtered the list. Links that clear a value now send it empty (`id=`, `collection=`); Payload drops the empty key (`inboxHref`, `filterPillHref`, unit tests updated; traps.md).
+- During the tasks: Back/Forward after a full load (Payload sets `history.state` to `null`; `StudioInboxFocus` re-runs the navigation, T4); fact columns at 1024 px (auto-fit, T4); the slide image column (30%, T8); card gutters and header layout (T9).
+
+### Studio accessibility (same policy as P0–P5)
+
+These sit inside Payload's built-in components and go to upstream Payload. They match the earlier baselines, with each editor's counts depending on how many rows it holds:
+
+- Projects, Posts and Media lists (22, 25, 28): row checkboxes without a name (`label` ×10 / ×10 / ×7) and the pagination arrows (`button-name` ×2).
+- Project editor (23): as P5's baseline (`aria-command-name` ×15, `aria-hidden-focus` ×14, `aria-input-field-name` ×2, `button-name` ×26, `label-content-name-mismatch` ×1, `label` ×7, `list` ×1; at 390 px also `scrollable-region-focusable` ×1 and `target-size` ×10).
+- Post editor (26): as P2's baseline (`button-name` ×13, `aria-command-name` ×6, `aria-hidden-focus` ×8, `label` ×5, `aria-input-field-name` ×2, `list` ×1, `label-content-name-mismatch` ×1, `nested-interactive` ×1, `target-size` ×1).
+- Collection editor (24), Site settings (29), Home (30) and About (31): the same kinds (block and array row headers, react-select parts, popup buttons, the Lexical editor, document tabs). Home's array-row popups give `nested-interactive` ×3 and `target-size` ×3 (P4 logged ×5).
+- **New: the SEO tab (23--seo, and the same plugin on 24 and 26).** `@payloadcms/plugin-seo` writes inline colours: help text and its links `#9a9a9a` on the card (2.7:1) and white on `#ff0000` "Missing" / "No image" (4.0:1), `color-contrast` ×8. A stylesheet fix would need `!important` and colour values (invariant 18), and hiding the checklist was left out of scope (owner decision 1), so this is recorded for the plugin upstream.
+
+### Deferred owner checks
+
+These are recorded as deferred, not passed:
+
+- a screen-reader pass of the inbox's announcements and focus moves, the swatch radio group and the filter pills;
+- the inbox and the editors on a real phone;
+- an owner look at the themed screens 22–31 on the preview.
+
+### Follow-ups
+
+- Merge the P6 PR into `dev` after `checks` and `Vercel` pass; release P6 to `main` as `v0.7.0`, as for earlier phases.
+- On each Payload upgrade: re-check the inbox list-view props, `ListQueryProvider`'s URL handling (the empty-parameter and Back/Forward workarounds), `baseFilter`, the swatch field props and the classes listed in `custom.scss` (ADR-0008).
+- Upstream: the SEO plugin's inline colours and Payload's unnamed controls above.
+- Left by choice: Payload still runs its own list query before the inbox renders (one small read per load); the inbox has no bulk actions or search (owner decision 5).

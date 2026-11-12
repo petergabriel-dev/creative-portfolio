@@ -34,12 +34,12 @@ const render = (current: string | null, searchParams = {}) =>
   )
 
 describe('filterPillHref', () => {
-  it('sets or removes the collection and drops the page', () => {
+  it('sets the collection, or sends it empty for All, and drops the page', () => {
     expect(filterPillHref({ collection: 'film-video', page: '3' }, 'photography')).toBe(
       '/admin/collections/projects?collection=photography',
     )
-    expect(filterPillHref({ collection: 'film-video', page: '3' }, null)).toBe('/admin/collections/projects')
-    expect(filterPillHref(undefined, null)).toBe('/admin/collections/projects')
+    expect(filterPillHref({ collection: 'film-video', page: '3' }, null)).toBe('/admin/collections/projects?collection=')
+    expect(filterPillHref(undefined, null)).toBe('/admin/collections/projects?collection=')
   })
 
   it('keeps search, filter-builder conditions, sort and limit', () => {
@@ -64,7 +64,7 @@ describe('filterPillHref', () => {
   })
 
   it('keeps repeated values', () => {
-    expect(filterPillHref({ tag: ['a', 'b'] }, null)).toBe('/admin/collections/projects?tag=a&tag=b')
+    expect(filterPillHref({ tag: ['a', 'b'] }, null)).toBe('/admin/collections/projects?tag=a&tag=b&collection=')
   })
 })
 
@@ -80,13 +80,13 @@ describe('StudioFilterPillsView', () => {
     const html = render('photography')
     expect(html.match(/aria-current="true"/g)).toHaveLength(1)
     expect(html).toMatch(/<a href="\/admin\/collections\/projects\?collection=photography" aria-current="true"/)
-    expect(html).toMatch(/<a href="\/admin\/collections\/projects" class="[^"]*">All /)
+    expect(html).toMatch(/<a href="\/admin\/collections\/projects\?collection=" class="[^"]*">All /)
     expect(html).toContain('> projects</span>')
     expect(html).toContain('> project</span>')
   })
 
   it('marks All as current with no collection', () => {
-    expect(render(null)).toMatch(/<a href="\/admin\/collections\/projects" aria-current="true"/)
+    expect(render(null)).toMatch(/<a href="\/admin\/collections\/projects\?collection=" aria-current="true"/)
   })
 })
 
@@ -114,6 +114,6 @@ describe('StudioFilterPills (beforeListTable)', () => {
       user: { id: 7 },
       searchParams: { collection: 'sculpture' },
     } as unknown as ListViewServerProps)
-    expect(renderToStaticMarkup(node!)).toMatch(/<a href="\/admin\/collections\/projects" aria-current="true"/)
+    expect(renderToStaticMarkup(node!)).toMatch(/<a href="\/admin\/collections\/projects\?collection=" aria-current="true"/)
   })
 })

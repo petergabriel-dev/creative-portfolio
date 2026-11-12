@@ -13,7 +13,9 @@ type SearchParams = Record<string, string | string[] | undefined>
 
 /**
  * A pill's link: the list's current parameters (search, filter-builder `where`, sort, limit,
- * columns…) kept, `page` dropped, and `collection` set to the slug or removed for "All".
+ * columns…) kept, `page` dropped, and `collection` set to the slug, or sent empty for "All".
+ * Payload's list wrapper merges the first URL's query back on every client navigation, so a
+ * missing `collection` would come back; an empty one overrides it and Payload then drops it.
  */
 export function filterPillHref(searchParams: SearchParams | undefined, slug: string | null): string {
   const params = new URLSearchParams()
@@ -21,9 +23,8 @@ export function filterPillHref(searchParams: SearchParams | undefined, slug: str
     if (key === 'page' || key === COLLECTION_PARAM || value === undefined) continue
     for (const item of Array.isArray(value) ? value : [value]) params.append(key, item)
   }
-  if (slug) params.set(COLLECTION_PARAM, slug)
-  const query = params.toString()
-  return query ? `${PROJECTS_PATH}?${query}` : PROJECTS_PATH
+  params.set(COLLECTION_PARAM, slug ?? '')
+  return `${PROJECTS_PATH}?${params.toString()}`
 }
 
 type ViewProps = { counts: ProjectCounts; current: string | null; hrefFor: (slug: string | null) => string }

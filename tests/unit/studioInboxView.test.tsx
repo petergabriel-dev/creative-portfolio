@@ -84,9 +84,9 @@ describe('StudioInboxView: header and status links', () => {
     const html = render(data())
     expect(html).toContain('<nav aria-label="Inquiry status"')
     // The next/link mock writes href first (conventions: Tests).
-    expect(html).toMatch(/<a href="\/admin\/collections\/inquiries\?status=new" aria-current="true" class="[^"]*">New <span[^>]*>2<\/span><\/a>/)
-    expect(html).toMatch(/<a href="\/admin\/collections\/inquiries\?status=replied" class="[^"]*">Replied <span[^>]*>1<\/span><\/a>/)
-    expect(html).toMatch(/<a href="\/admin\/collections\/inquiries\?status=archived" class="[^"]*">Archived <span[^>]*>0<\/span><\/a>/)
+    expect(html).toMatch(/<a href="\/admin\/collections\/inquiries\?status=new&amp;id=" aria-current="true" class="[^"]*">New <span[^>]*>2<\/span><\/a>/)
+    expect(html).toMatch(/<a href="\/admin\/collections\/inquiries\?status=replied&amp;id=" class="[^"]*">Replied <span[^>]*>1<\/span><\/a>/)
+    expect(html).toMatch(/<a href="\/admin\/collections\/inquiries\?status=archived&amp;id=" class="[^"]*">Archived <span[^>]*>0<\/span><\/a>/)
     expect(html).not.toContain('>All')
   })
 })
@@ -177,7 +177,7 @@ describe('StudioInboxView: empty tab', () => {
     expect(html).toMatch(/<p class="[^"]*" id="inbox-empty" tabindex="-1">Nothing waiting.<\/p>/i)
     expect(html).not.toContain('inbox-detail-heading')
     expect(html).not.toContain('aria-label="Inquiries"')
-    expect(html).toContain('href="/admin/collections/inquiries?status=archived" aria-current="true"')
+    expect(html).toContain('href="/admin/collections/inquiries?status=archived&amp;id=" aria-current="true"')
   })
 })
 

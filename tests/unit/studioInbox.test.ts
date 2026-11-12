@@ -55,9 +55,9 @@ describe('parseInboxQuery', () => {
 })
 
 describe('inboxHref', () => {
-  it('always points at the inbox, page 1 and no selection left out', () => {
-    expect(inboxHref({ status: 'new' })).toBe('/admin/collections/inquiries?status=new')
-    expect(inboxHref({ status: 'replied', page: 1, id: null })).toBe('/admin/collections/inquiries?status=replied')
+  it('always points at the inbox, page 1 left out and no selection sent empty', () => {
+    expect(inboxHref({ status: 'new' })).toBe('/admin/collections/inquiries?status=new&id=')
+    expect(inboxHref({ status: 'replied', page: 1, id: null })).toBe('/admin/collections/inquiries?status=replied&id=')
     expect(inboxHref({ status: 'archived', page: 3, id: 9 })).toBe('/admin/collections/inquiries?status=archived&page=3&id=9')
     expect(inboxHref({ status: 'new', id: 4 }).startsWith(`${INBOX_PATH}?`)).toBe(true)
   })
@@ -248,8 +248,8 @@ describe('studioInbox: paging', () => {
     expect(data.rows).toHaveLength(20)
     expect(data.rows[0].id).toBe(25)
     expect(data.rows[0].href).toBe('/admin/collections/inquiries?status=new&page=2&id=25')
-    expect(data.newerHref).toBe('/admin/collections/inquiries?status=new')
-    expect(data.olderHref).toBe('/admin/collections/inquiries?status=new&page=3')
+    expect(data.newerHref).toBe('/admin/collections/inquiries?status=new&id=')
+    expect(data.olderHref).toBe('/admin/collections/inquiries?status=new&page=3&id=')
   })
 
   it('clamps a page past the end to the last page', async () => {
@@ -258,7 +258,7 @@ describe('studioInbox: paging', () => {
     expect(data.query.page).toBe(3)
     expect(data.rows).toHaveLength(5)
     expect(data.olderHref).toBeNull()
-    expect(data.newerHref).toBe('/admin/collections/inquiries?status=new&page=2')
+    expect(data.newerHref).toBe('/admin/collections/inquiries?status=new&page=2&id=')
   })
 
   it('selects an inquiry from another page of the same tab', async () => {

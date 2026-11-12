@@ -39,11 +39,17 @@ export function parseInboxQuery(searchParams: SearchParams | undefined): InboxQu
   }
 }
 
-/** Every inbox link is built here, so a link or a redirect can only ever point at the inbox. */
+/**
+ * Every inbox link is built here, so a link or a redirect can only ever point at the inbox.
+ * "No selection" is sent as an empty `id=`: Payload's list wrapper keeps the first URL's query in
+ * state and merges it back on every client navigation, so leaving `id` out would let an old `id`
+ * reappear in the address bar (and a reload select it). An empty value overrides it, and Payload's
+ * `sanitizeQuery` then drops the key (traps.md).
+ */
 export function inboxHref({ status, page = 1, id = null }: { status: InquiryStatus; page?: number; id?: number | null }) {
   const params = new URLSearchParams({ status })
   if (page > 1) params.set('page', String(page))
-  if (id !== null) params.set('id', String(id))
+  params.set('id', id === null ? '' : String(id))
   return `${INBOX_PATH}?${params.toString()}`
 }
 

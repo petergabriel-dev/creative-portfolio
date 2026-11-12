@@ -13,7 +13,7 @@ Collection filter pills on the Projects list (screen 22): one tap shows the proj
   - text: the name (`--fw-semibold`, `--color-text`), then the count (`--fw-regular`), then a visually hidden " projects" / " project" so the name reads "Photography 3 projects";
   - current: `--color-action` fill and border, `--color-on-action` text, `aria-current="true"`.
 - **Counts:** All = every project; a discipline = its projects. Drafts are included and each project is counted once, from its latest version, so a count equals the rows the list shows for that pill with no search or other filter. Counts don't change with search or filter-builder conditions.
-- **Links:** each keeps the list's current `search`, `where`, `sort` and `limit` parameters, drops `page`, and sets `collection=<slug>` ("All" removes it).
+- **Links:** each keeps the list's current `search`, `where`, `sort` and `limit` parameters, drops `page`, and sets `collection=<slug>`; "All" sends it empty (`collection=`), which Payload then drops from the address bar, so an earlier collection can't come back (P6 QA, traps.md).
 
 Names come from the disciplines; the visually hidden suffix lives in `copy.ts`.
 

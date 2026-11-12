@@ -49,12 +49,12 @@ describe('setInquiryStatus', () => {
     await expect(act({ id: '7', status: 'archived', tab: 'replied', next: '' })).resolves.toMatchObject({
       ok: true,
       notice: 'Archived.',
-      href: '/admin/collections/inquiries?status=replied',
+      href: '/admin/collections/inquiries?status=replied&id=',
     })
     await expect(act({ id: '7', status: 'new', tab: 'archived' })).resolves.toMatchObject({
       ok: true,
       notice: 'Marked as new.',
-      href: '/admin/collections/inquiries?status=archived',
+      href: '/admin/collections/inquiries?status=archived&id=',
     })
   })
 
