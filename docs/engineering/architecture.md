@@ -124,7 +124,7 @@ In the Studio, the one client component of ours is `StudioLoginForm`; the sideba
 
 ## Studio (Payload admin)
 
-The Studio is Payload's admin with our theme, sidebar, Overview and log-in (P5; [ADR-0007](decisions/ADR-0007-studio-custom-views-and-login.md)), plus the inquiries inbox, the Projects filter pills and the accent swatches (P6). Specs: `docs/design/components/Studio*.md`.
+The Studio is Payload's admin with our theme, sidebar, Overview and log-in (P5; [ADR-0007](decisions/ADR-0007-studio-custom-views-and-login.md)), plus the inquiries inbox, the Projects filter pills and the accent swatches (P6; [ADR-0008](decisions/ADR-0008-studio-extras.md)). Specs: `docs/design/components/Studio*.md`.
 
 | Piece | Where | How |
 |---|---|---|
