@@ -17,7 +17,7 @@ Status values: `Draft` → `Ready` (blocking questions resolved) → `In progres
 
 When sources disagree, the higher one wins:
 
-1. User decisions from 2026-11-10 onwards (P2's, P3's and P4's from 2026-11-11), recorded in this README, in each phase spec's "Owner decisions" section and in [`docs/engineering/decisions/`](../engineering/decisions/README.md)
+1. User decisions from 2026-11-10 onwards (P2's to P5's from 2026-11-11, P6's from 2026-11-12), recorded in this README, in each phase spec's "Owner decisions" section and in [`docs/engineering/decisions/`](../engineering/decisions/README.md)
 2. The Build Spec, [`build-spec.md`](../design/reference/creative-portfolio/build-spec.md) (6 Nov 2026)
 3. Handoff captures (9 Nov 2026). These are the visual target.
 
@@ -41,7 +41,7 @@ The Build Spec has its own eight-step build order, layer by layer ("Build order 
 | P3 Book Me | `phase-3-book-me.md` | Visitors send inquiries. The owner gets an email alert and handles inquiries in the Studio | P0, P1 | 11 (+ errors, sent) | 27 as default view | Done |
 | P4 Home + About | `phase-4-home-about.md` | The `home` and `about` globals drive the Home and About pages. Adds the hero slider and Selected work | P1, P2 | 01, 08 | 30, 31 as default views | Done |
 | P5 Studio shell | `phase-5-studio-shell.md` | Studio theme, logo, nav badge, Overview dashboard and themed login | P3, P4 | — | 20, 21, 42 (visual match) | Done |
-| P6 Studio extras | `phase-6-studio-extras.md` | Filter pills, two-panel inbox and accent swatches, plus a theme pass on every Studio screen | P5 | — | 22–31 (theme-level match) | Draft |
+| P6 Studio extras | `phase-6-studio-extras.md` | Filter pills, two-panel inbox and accent swatches, plus a theme pass on every Studio screen | P5 | — | 22–31 (theme-level match) | In progress |
 | P7 Launch | `phase-7-launch.md` | Finish SEO, full QA, real content and production go-live | P0–P6 | All (QA pass) | All (QA pass) | Draft |
 
 ## Definition of Done (every phase)
