@@ -20,17 +20,29 @@ export const STATUS_ACTIONS: Record<InquiryStatus, readonly InquiryStatus[]> = {
   archived: ['new'],
 }
 
-type Props = { id: number; status: InquiryStatus; tab: InquiryStatus; page: number; nextId: number | null }
+type Props = { id: number; status: InquiryStatus; tab: InquiryStatus; page: number; nextId: number | null; email: string }
 
 /**
- * The selected inquiry's status buttons: one form posting to `setInquiryStatus`, each button sending
- * its target status. On success the inbox moves to the same tab with the next inquiry selected, the
- * notice is announced and focus follows (StudioInboxFocus). Rendered with `key={id}`, so an error
- * never carries over to another inquiry.
+ * The selected inquiry's "Copy email" and status buttons. "Copy email" (owner decision 10) puts the
+ * visitor's address on the clipboard and announces the result. The status buttons are one form
+ * posting to `setInquiryStatus`, each button sending its target status. On success the inbox moves
+ * to the same tab with the next inquiry selected, the notice is announced and focus follows
+ * (StudioInboxFocus). Rendered with `key={id}`, so an error never carries over to another inquiry.
  */
-export function StudioInboxActions({ id, status, tab, page, nextId }: Props) {
+export function StudioInboxActions({ id, status, tab, page, nextId, email }: Props) {
   const router = useRouter()
   const { announce, focusNext } = useInboxFocus()
+  // The Clipboard API needs a secure context (https, or localhost in development); otherwise, or if
+  // the browser refuses, say so: the address stays visible under Email.
+  const copyEmail = async () => {
+    try {
+      if (!navigator.clipboard) throw new Error('Clipboard unavailable')
+      await navigator.clipboard.writeText(email)
+      announce(t.copied)
+    } catch {
+      announce(t.errors.copyFailed)
+    }
+  }
   const [state, formAction, pending] = useActionState(async (previous: InboxActionState, formData: FormData) => {
     const result = await setInquiryStatus(previous, formData)
     if (result?.ok) {
@@ -43,6 +55,9 @@ export function StudioInboxActions({ id, status, tab, page, nextId }: Props) {
 
   return (
     <>
+      <Button onClick={() => void copyEmail()} type="button" variant="text">
+        {t.copyEmail}
+      </Button>
       <form action={formAction} aria-busy={pending || undefined} className={styles.statusForm}>
         <input name="id" type="hidden" value={id} />
         <input name="tab" type="hidden" value={tab} />

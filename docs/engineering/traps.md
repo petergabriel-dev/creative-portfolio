@@ -116,6 +116,8 @@ Gotchas actually hit while building, with the fix that worked. Versions: Next.js
 - **Payload's upload card needs about 370 px.** In a `row`, a 25% upload beside a 75% group wraps onto two lines at 1440 px (flex items wrap before they shrink); Home and About use 30% / 33% (P6).
 - **List relationship cells load their labels lazily** and show "<No Collection>" until the row scrolls into view; a screenshot at 390 px looks like missing data. Scroll each row into view before reading cells (P6).
 - **The SEO plugin's checklist writes inline colours** (`#9a9a9a` help text 2.7:1, white on `#ff0000` 4.0:1). The stylesheet can't override them without `!important` and colour values (invariant 18), so they are recorded as exceptions (P6 QA log).
+- **A `mailto:` link does nothing without a mail handler.** Next's `Link` leaves non-local URLs to the browser, and a browser with no `mailto:` handler (the owner uses Gmail in Brave) opens nothing, with no error to see. The inbox opens Gmail's compose window instead and offers "Copy email" (P6 owner decision 10). Scripted QA can't open a `mailto:` either: check the `href`.
+- **`navigator.clipboard` needs a secure context** (https, or `localhost` in development) and may be refused; it is `undefined` on plain http. "Copy email" announces a failure line rather than staying silent. In Playwright, grant `clipboard-read` and `clipboard-write` for the origin to read it back (P6).
 - **Vercel runtime logs carry no HTTP status codes** (`vercel logs --json` lists only console output per request). Protected previews can't be `curl`ed without a bypass, so status codes are checked on a local production build.
 
 ## Local machine

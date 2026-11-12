@@ -32,7 +32,8 @@ The two-panel inbox at `/admin/collections/inquiries` (screen 27): the editor re
    - **Facts:** a `<dl>`, `--space-6` padding-block, a `--color-studio-row-rule` bottom border. Four groups: Project (`projectType`), Timing (`timing`, or "Not given" in `--color-text-muted`), Email (the address as text), Received (`<time>` through `formatDate`). `<dt>`: `--fs-label`, `--fw-semibold`, `--tracking-label`, uppercase, `--color-text-muted`; `<dd>`: `--fs-body`, `--color-text`, `--space-1` above, `overflow-wrap: anywhere`.
    - **Message:** `<p>`, `--fs-lead`, `--lh-body-loose`, `--color-text`, `white-space: pre-line` (keeps the visitor's line breaks), `--space-6` padding-block-start, max width `--measure-story`.
    - **Actions** (StudioInboxActions), `--space-7` above: a row of Buttons, `--space-3` apart, wrapping:
-     - "Reply by email": Button `ink` link to `mailto:<email>`, only when the stored email passes `EMAIL_PATTERN` (`src/lib/inquiry.ts`);
+     - "Reply in Gmail ↗": Button `ink` link to Gmail's compose window (`gmailReplyHref`: `https://mail.google.com/mail/?view=cm&fs=1&to=<email>&su=<subject>`, plus `authuser=<site-settings.contactEmail>` when that address is valid), opening in a new tab (`target="_blank"`, `rel="noopener noreferrer"`); the ↗ is `aria-hidden` and a visually hidden "(opens in a new tab)" follows the label, as StudioNav's "View the site". Shown only when the stored email passes `isEmail` (`src/lib/inquiry.ts`); the subject is "Re: your Book Me inquiry" (owner decision 2026-11-12, after release);
+     - "Copy email": Button `text`, `type="button"`, shown for every selected inquiry; it copies the stored address to the clipboard (`navigator.clipboard.writeText`) and announces the result;
      - the status buttons for the inquiry's status, Button `outline-ink`, `type="submit"`, in one `<form>` posting to `setInquiryStatus` (each button carries its target status as `name="status"` `value`):
 
        | Status | Buttons, in order |
@@ -42,7 +43,7 @@ The two-panel inbox at `/admin/collections/inquiries` (screen 27): the editor re
        | Archived | Mark as new |
 
      - "Open full record": Button `text` with the trailing arrow, to `/admin/collections/inquiries/<id>` (notes, delete), `--space-5` above the row on its own line.
-   - **Notice:** a visually hidden `role="status"` region, owned by StudioInboxActions; **error:** `role="alert"` `<p>` below the actions, `--color-error`, `--fw-semibold`, `--space-4` above.
+   - **Notice:** a visually hidden `role="status"` region, owned by StudioInboxFocus (the same place on every inbox page); **error:** `role="alert"` `<p>` below the actions, `--color-error`, `--fw-semibold`, `--space-4` above.
 7. **Empty tab:** in place of list and detail, one card (as the detail card) holding `<p>` "Nothing waiting.", `--fs-body`, `--color-text-muted`.
 
 **Status chip:** `--radius-pill`, min-height `--space-6`, padding-inline `--space-3`, `--fs-label`, `--fw-semibold`, text always shown:
@@ -53,13 +54,13 @@ The two-panel inbox at `/admin/collections/inquiries` (screen 27): the editor re
 | Replied | Replied | `--color-chip-replied-bg` | `--color-chip-replied-fg` |
 | Archived | Archived | `--color-chip-archived-bg` | `--color-chip-archived-fg` |
 
-All copy (label, title, description, status names, "Not given", "Nothing waiting.", fact labels, action labels, "Open full record", "Newer", "Older", notices, errors) lives in `copy.ts`.
+All copy (label, title, description, status names, "Not given", "Nothing waiting.", fact labels, action labels, "Reply in Gmail", the reply subject, "Copy email", "Open full record", "Newer", "Older", notices, errors) lives in `copy.ts`.
 
 ## Variants
 
 - Tab: New, Replied, Archived (no "All" tab).
 - The selected inquiry's status picks its buttons (table above).
-- With or without a reply link (email check).
+- With or without the Gmail link (email check); "Copy email" is always there.
 
 ## Sizes
 
@@ -78,6 +79,8 @@ One. The title uses the fixed `--fs-studio-title`, as the Overview.
 | Success | The page moves to the same tab with the next inquiry selected (the previous one if the changed one was last; none if the tab is now empty), the notice ("Marked as replied.", "Archived." or "Marked as new.") is written into the live region, focus moves to the new detail heading, or to the "Nothing waiting." card's text when the tab is empty. Counts and the sidebar badge are fresh |
 | Error | "Couldn't change the status. Try again." in the alert; status unchanged, no navigation |
 | Signed out | "You're logged out. Log in again to change the status." in the alert |
+| Copied | "Copy email" put the address on the clipboard: "Email copied." in the live region; nothing else changes |
+| Copy failed | The clipboard is unavailable or refused: "Couldn't copy. Select the address above." in the live region; the address stays visible under Email |
 | Empty | The tab's empty card |
 | Loading | None: the page is a server component, rendered complete |
 | Disabled | Status buttons while pending only |
@@ -103,10 +106,11 @@ type StudioInboxData = {
   nextId: number | null // the card to select after a status change
   newerHref: string | null
   olderHref: string | null
+  replyAccount: string | null // site-settings.contactEmail when valid: Gmail's authuser
 }
 
-// StudioInboxActions ('use client'): at a stable place in the tree, never keyed by inquiry
-type StudioInboxActionsProps = { id: number; status: InquiryStatus; tab: InquiryStatus; page: number; nextId: number | null; replyHref: string | null }
+// StudioInboxActions ('use client'): keyed by inquiry; StudioInboxFocus owns the live region and focus
+type StudioInboxActionsProps = { id: number; status: InquiryStatus; tab: InquiryStatus; page: number; nextId: number | null; email: string }
 
 // setInquiryStatus (server action) result
 type InboxActionState = { ok: true; notice: string; href: string; at: number } | { ok: false; error: 'failed' | 'signedOut' } | null
@@ -119,7 +123,7 @@ A pure `StudioInboxView({ data })` renders every state in tests without a databa
 - One `<h1>` ("Inquiries"). The list cards' names are `<h2>`; the detail heading is an `<h2>` with `tabIndex={-1}` as the focus target.
 - Status links and the pager are `<nav>` landmarks with labels; the current status link and the selected card link carry `aria-current="true"` (they are links that navigate, not ARIA tabs).
 - Keyboard: Tab moves through status links, card name links, pager links and the detail's actions; Enter on a card selects it and focus moves to the detail heading. The interpretation of the spec's "moving through the list selects an inquiry" is Tab + Enter: selection does not follow focus, because each selection loads the page.
-- Status buttons are real `<button>`s in a `<form>`; "Reply by email" and "Open full record" are links.
+- Status buttons and "Copy email" are real `<button>`s; "Reply in Gmail" and "Open full record" are links. "Reply in Gmail" says it opens a new tab (visually hidden text), and its name starts with its visible label (WCAG 2.5.3).
 - Announcements: the success notice goes into a `role="status"` region that is already in the page before the text changes; errors use `role="alert"`. A repeated notice re-announces (the state carries a timestamp and the region is cleared first).
 - The status chip, counts and selected state are text or `aria-current`, never colour alone.
 - Targets: card links cover the whole card; pills and pager links ≥ `--tap-min`; Buttons per Button.
@@ -141,7 +145,8 @@ A pure `StudioInboxView({ data })` renders every state in tests without a databa
   - "Open full record →" reaches notes and delete, which the inbox doesn't show;
   - "Newer" and "Older" page through more than 20 inquiries;
   - the cards and the detail show `projectType` only ("Photography"); capture 27's "Photography — wedding" has no matching field;
-  - there is no bulk select, bulk delete or search.
+  - there is no bulk select, bulk delete or search;
+  - capture 27's "Reply by email" is "Reply in Gmail ↗" with a "Copy email" button beside it: the owner replies from Gmail in the browser, where the old mail-app link opened nothing (owner decision 2026-11-12, after release).
 - Payload's app header bar stays above the page, as on every Studio view.
 
 ## Preview

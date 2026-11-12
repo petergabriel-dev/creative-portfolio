@@ -2,6 +2,7 @@ import type { BaseFilter, Payload, TypedUser, Where } from 'payload'
 
 import { copy } from '@/copy'
 import { heroSlides } from '@/lib/heroSlides'
+import { isEmail } from '@/lib/inquiry'
 import {
   excerpt,
   INBOX_PAGE_SIZE,
@@ -90,6 +91,8 @@ export type StudioInboxData = {
   nextId: number | null
   newerHref: string | null
   olderHref: string | null
+  /** site-settings.contactEmail when it is a valid address: the Google account "Reply in Gmail" uses. */
+  replyAccount: string | null
 }
 
 const toSelected = (doc: Inquiry): InboxSelected => ({
@@ -106,12 +109,13 @@ const toSelected = (doc: Inquiry): InboxSelected => ({
 /**
  * The inbox for one tab (owner decisions 3–7): the three status counts, one page of 20 newest
  * first, and the selected inquiry: `query.id` when it exists **and** has the tab's status, else the
- * page's first card. At most five Local API calls: three counts and a `findByID` in parallel, then
- * the page (its number clamped to the last page, so an emptied last page shows the one before).
+ * page's first card. At most six Local API calls: three counts, a `findByID` and the site's contact
+ * email (the account "Reply in Gmail" uses, owner decision 10) in parallel, then the page (its
+ * number clamped to the last page, so an emptied last page shows the one before).
  */
 export async function studioInbox({ payload, user }: Reader, query: InboxQuery): Promise<StudioInboxData> {
   const { status } = query
-  const [counted, byId] = await Promise.all([
+  const [counted, byId, settings] = await Promise.all([
     Promise.all(
       INQUIRY_STATUSES.map((s) =>
         payload.count({ collection: 'inquiries', where: { status: { equals: s } }, ...asEditor(user) }),
@@ -120,7 +124,9 @@ export async function studioInbox({ payload, user }: Reader, query: InboxQuery):
     query.id === null
       ? null
       : payload.findByID({ collection: 'inquiries', id: query.id, depth: 0, disableErrors: true, ...asEditor(user) }),
+    payload.findGlobal({ slug: 'site-settings', select: { contactEmail: true }, depth: 0, ...asEditor(user) }),
   ])
+  const contactEmail = text(settings.contactEmail)
   const counts = Object.fromEntries(INQUIRY_STATUSES.map((s, i) => [s, counted[i].totalDocs])) as Record<
     InquiryStatus,
     number
@@ -157,6 +163,7 @@ export async function studioInbox({ payload, user }: Reader, query: InboxQuery):
     nextId: selected ? nextSelection(ids, selected.id) : null,
     newerHref: page > 1 ? inboxHref({ status, page: page - 1 }) : null,
     olderHref: page < lastPage ? inboxHref({ status, page: page + 1 }) : null,
+    replyAccount: isEmail(contactEmail) ? contactEmail : null,
   }
 }
 
