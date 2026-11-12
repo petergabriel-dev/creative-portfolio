@@ -124,7 +124,7 @@ In the Studio, the one client component of ours is `StudioLoginForm`; the sideba
 
 ## Studio (Payload admin)
 
-The Studio is Payload's admin with our theme, sidebar, Overview and log-in (P5; [ADR-0007](decisions/ADR-0007-studio-custom-views-and-login.md)). Specs: `docs/design/components/Studio*.md`.
+The Studio is Payload's admin with our theme, sidebar, Overview and log-in (P5; [ADR-0007](decisions/ADR-0007-studio-custom-views-and-login.md)), plus the inquiries inbox, the Projects filter pills and the accent swatches (P6). Specs: `docs/design/components/Studio*.md`.
 
 | Piece | Where | How |
 |---|---|---|
@@ -134,6 +134,10 @@ The Studio is Payload's admin with our theme, sidebar, Overview and log-in (P5; 
 | Overview | `views.dashboard` → `StudioOverview` | `studioOverview()` (`src/lib/studio.ts`): at most nine Local API calls in parallel, all as the editor. Counts and live status come from the main rows; row titles, covers and dates from each doc's latest version (`findVersions`, `latest: true`), since autosave never touches a live doc's main row |
 | Log-in | `views.login` → `StudioLogin` | Payload's RootPage still sends an empty `users` table to create-first-user first. `StudioLoginForm` posts with `useActionState` to `loginAction`, which calls Payload's `login()` (`@payloadcms/next/auth`: password check, lockout, HTTP-only cookie) and redirects through `safeStudioRedirect` (Payload's `getSafeRedirect`, then `/admin` paths only) |
 | Forgot and reset | Payload's views | Themed by `custom.scss`; the reset email is ours (see Email) |
+| Inquiries inbox | `inquiries` `admin.components.views.list` → `StudioInbox` | Replaces Payload's list view. `studioInbox()` reads three status counts, a `findByID` for `?id=` and one page of 20, newest first, all as the editor. Tab, page and selection live in the URL (`inboxHref()` in `src/lib/studioInbox.ts` builds every link). `StudioInboxActions` posts to the `setInquiryStatus` server action, which authenticates from the session, writes only `status` as the editor and returns the next inbox URL; the client replaces the URL. `StudioInboxFocus` owns the live region and focus. The Overview's Needs a reply rows link here |
+| Filter pills | `projects` `admin.components.beforeListTable` → `StudioFilterPills`; `admin.baseFilter` → `collectionFilter` | Pills link to `?collection=<slug>` (keeping search and filters); `collectionFilter` turns the slug into a `collection equals` condition that Payload ANDs with the list's own query. Counts come from one `find({ draft: true })` grouped by collection, so they match the rows |
+| Accent swatches | `site-settings.accent` `admin.components.Field` → `StudioAccentSwatches` | A client field component on Payload's `useField`: native radios drawn as swatches, writing the same select values; the preview reuses the site's `Button` |
+| Editor layout | collection and global configs | Unnamed `group` cards, `row`s, `admin.position: 'sidebar'`, `admin.width`, labels and descriptions (P6 owner decision 1). They store nothing: no migration, same data shape. `custom.scss` (P6 section) styles the cards, lists and fields |
 
 - Payload's admin renders every view on the client (the server HTML body is empty), so the Studio needs JavaScript.
 - `next.config.ts` sets `logging.serverFunctions: false`: Next's dev server otherwise prints each Server Function call with its arguments, including the typed email in the log-in's and Book Me's previous state.
