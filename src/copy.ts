@@ -320,6 +320,13 @@ export const copy = {
       /** Ends a message excerpt cut on the server. */
       ellipsis: '…',
     },
+    /** Collection filter pills on the Projects list (docs/design/components/StudioFilterPills.md). */
+    pills: {
+      label: 'Filter by collection',
+      all: 'All',
+      /** Visually hidden after the count, so a pill reads "Photography 3 projects". */
+      countSuffix: (count: number) => (count === 1 ? ' project' : ' projects'),
+    },
     /** Meta-line prefixes: "Project · Wedding", "Journal · Process". */
     project: 'Project',
     journal: 'Journal',

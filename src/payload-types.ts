@@ -136,6 +136,8 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Everything in your portfolio. Mark a project “On home” to show it in Selected work.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "projects".
  */

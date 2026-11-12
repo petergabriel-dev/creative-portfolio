@@ -14,6 +14,7 @@ import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
+import { StudioFilterPills as StudioFilterPills_4e740f7e6152dd7deb0f5d08a2a2f4c5 } from '../../../components/studio/StudioFilterPills'
 import { StudioInbox as StudioInbox_8890a514a5042a536c15529e487f9535 } from '../../../components/studio/StudioInbox'
 import { StudioNav as StudioNav_b0f014bb5b54ecd0062a8e20e2cc30c3 } from '../../../components/studio/StudioNav'
 import { StudioIcon as StudioIcon_75eeaf0e88da2420e8fc6cf6a5489204 } from '../../../components/studio/StudioBrand'
@@ -41,6 +42,7 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
+  "/components/studio/StudioFilterPills#StudioFilterPills": StudioFilterPills_4e740f7e6152dd7deb0f5d08a2a2f4c5,
   "/components/studio/StudioInbox#StudioInbox": StudioInbox_8890a514a5042a536c15529e487f9535,
   "/components/studio/StudioNav#StudioNav": StudioNav_b0f014bb5b54ecd0062a8e20e2cc30c3,
   "/components/studio/StudioBrand#StudioIcon": StudioIcon_75eeaf0e88da2420e8fc6cf6a5489204,

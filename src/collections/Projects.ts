@@ -7,6 +7,7 @@ import { slugFields } from '@/fields/slug'
 import { recordProjectSlug, revalidateDeletedProject, revalidateProject } from '@/hooks/revalidateProject'
 import { LIVE_PREVIEW_BREAKPOINTS, previewUrl } from '@/lib/preview'
 import { projectPath } from '@/lib/publishing'
+import { collectionFilter } from '@/lib/studio'
 
 /**
  * Draft-mode URL for a project as it is being edited (its current slug and collection). Relative,
@@ -36,6 +37,14 @@ export const Projects: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'collection', 'projectType', 'year', '_status', 'showOnHome'],
     listSearchableFields: ['title'],
+    // Capture 22's line; Payload also shows it above each project's edit form (P6 owner decision 2).
+    description: 'Everything in your portfolio. Mark a project “On home” to show it in Selected work.',
+    // Collection filter pills (P6, docs/design/components/StudioFilterPills.md): ?collection=<slug>
+    // narrows the list, ANDed with search and the filter builder.
+    baseFilter: collectionFilter,
+    components: {
+      beforeListTable: ['/components/studio/StudioFilterPills#StudioFilterPills'],
+    },
     // Live preview pane (Build Spec › Publishing) and the "Preview" button ("View draft").
     livePreview: {
       url: ({ data, req }) => projectPreviewUrl(data, req),
