@@ -899,6 +899,8 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * Your details, links and labels — used on every page. Collections live under Portfolio; the hero lives under Home page.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
  */
@@ -908,7 +910,7 @@ export interface SiteSetting {
   roleLine: string;
   location: string;
   /**
-   * Receives inquiry alerts and is shown on Book Me.
+   * Also shown on Book Me.
    */
   contactEmail: string;
   replyTime: string;
@@ -928,7 +930,7 @@ export interface SiteSetting {
   finaleHeadline: string;
   footerNote: string;
   /**
-   * Fallback SEO for pages without their own.
+   * Used when a page has no SEO of its own.
    */
   defaultMeta: {
     /**
@@ -942,30 +944,28 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
+ * The hero slider and the sections under it. Changes stay in draft until you publish.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home".
  */
 export interface Home {
   id: number;
-  /**
-   * One to six slides. The order here is the slider order.
-   */
   heroSlides: {
+    image: number | Media;
     /**
      * Leave blank to use the site headline from Site settings.
      */
     title?: string | null;
     /**
-     * The line above the title, e.g. "Featured · Project title".
+     * e.g. "Featured · Project title".
      */
     placeLine: string;
     /**
-     * About 20 words.
+     * e.g. "Collection 01".
      */
+    cardKicker: string;
     body: string;
-    /**
-     * The collection or project the second button opens.
-     */
     link:
       | {
           relationTo: 'disciplines';
@@ -976,56 +976,44 @@ export interface Home {
           value: number | Project;
         };
     /**
-     * The second button's words, e.g. "View photography".
+     * e.g. "View photography".
      */
     linkLabel: string;
-    image: number | Media;
-    /**
-     * The small line on the story card, e.g. "Collection 01".
-     */
-    cardKicker: string;
     /**
      * Shows while the photo loads.
      */
     tint: 'warm' | 'plum' | 'forest' | 'clay' | 'default';
     id?: string | null;
   }[];
-  /**
-   * One line under "Selected work".
-   */
   selectedWorkIntro: string;
   meet: {
+    portrait: number | Media;
     heading: string;
     body: string;
-    portrait: number | Media;
   };
-  /**
-   * How many of the latest journal posts "From the journal" shows.
-   */
   journalCount: number;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
 /**
+ * The opener, portrait and the short sections about you.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "about".
  */
 export interface About {
   id: number;
   /**
+   * Set the focal point in the media library.
+   */
+  portrait: number | Media;
+  /**
    * e.g. "About · the person behind the work".
    */
   contextLine: string;
   title: string;
   lead: string;
-  /**
-   * Shown at 4:5; set the focal point in the media library.
-   */
-  portrait: number | Media;
-  /**
-   * One to four sections, shown as Chapter 01, 02 and so on.
-   */
   sections: {
     heading: string;
     body: {
@@ -1090,13 +1078,13 @@ export interface HomeSelect<T extends boolean = true> {
   heroSlides?:
     | T
     | {
+        image?: T;
         title?: T;
         placeLine?: T;
+        cardKicker?: T;
         body?: T;
         link?: T;
         linkLabel?: T;
-        image?: T;
-        cardKicker?: T;
         tint?: T;
         id?: T;
       };
@@ -1104,9 +1092,9 @@ export interface HomeSelect<T extends boolean = true> {
   meet?:
     | T
     | {
+        portrait?: T;
         heading?: T;
         body?: T;
-        portrait?: T;
       };
   journalCount?: T;
   _status?: T;
@@ -1119,10 +1107,10 @@ export interface HomeSelect<T extends boolean = true> {
  * via the `definition` "about_select".
  */
 export interface AboutSelect<T extends boolean = true> {
+  portrait?: T;
   contextLine?: T;
   title?: T;
   lead?: T;
-  portrait?: T;
   sections?:
     | T
     | {
