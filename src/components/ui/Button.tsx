@@ -29,6 +29,9 @@ type LinkButtonProps = CommonProps & {
   'aria-current'?: 'page'
   /** Client components only: "Send another inquiry" resets the form in place (P3). */
   onClick?: MouseEventHandler<HTMLAnchorElement>
+  /** A link that opens a new tab (the Studio inbox's "Reply in Gmail", P6); say so in the label. */
+  target?: '_blank'
+  rel?: string
 }
 
 type ActionButtonProps = CommonProps & {
@@ -59,7 +62,14 @@ export function Button(props: LinkButtonProps | ActionButtonProps) {
 
   if (props.href !== undefined) {
     return (
-      <Link aria-current={props['aria-current']} className={className} href={props.href} onClick={props.onClick}>
+      <Link
+        aria-current={props['aria-current']}
+        className={className}
+        href={props.href}
+        onClick={props.onClick}
+        rel={props.rel}
+        target={props.target}
+      >
         {content}
       </Link>
     )

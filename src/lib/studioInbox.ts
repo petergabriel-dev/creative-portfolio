@@ -69,14 +69,22 @@ export function nextSelection(ids: number[], id: number): number | null {
   return ids[index + 1] ?? ids[index - 1] ?? null
 }
 
+const GMAIL_COMPOSE = 'https://mail.google.com/mail/'
+
 /**
- * "Reply by email": a mailto link only for an address Payload's email field accepts. The local part
- * may legally hold `?`, `&` or `=`, which a mail client would read as headers (`a?bcc=x@…`), so it is
- * percent-encoded (RFC 6068); the domain is letters, digits, dots and hyphens only.
+ * "Reply in Gmail" (P6 owner decision 10): Gmail's compose window addressed to the visitor, only
+ * for an address Payload's email field accepts. The owner replies from Gmail in the browser, where
+ * a `mailto:` link opened nothing. `authuser` picks the signed-in Google account matching the
+ * site's contact email (left out when that isn't a valid address); every value is encoded by
+ * `URLSearchParams`, so nothing in an address can add parameters.
+ * ponytail: Gmail's compose URL is a de-facto format, not a documented API; "Copy email" covers
+ * any other mail service, and switching back to `mailto:` is a change to this one function.
  */
-export function replyHref(email: string): string | null {
-  const address = email.trim()
-  if (!isEmail(address)) return null
-  const at = address.lastIndexOf('@')
-  return `mailto:${encodeURIComponent(address.slice(0, at))}@${address.slice(at + 1)}`
+export function gmailReplyHref(email: string, account: string | null): string | null {
+  const to = email.trim()
+  if (!isEmail(to)) return null
+  const params = new URLSearchParams({ view: 'cm', fs: '1', to, su: copy.studio.inbox.replySubject })
+  const from = account?.trim() ?? ''
+  if (from && isEmail(from)) params.set('authuser', from)
+  return `${GMAIL_COMPOSE}?${params.toString()}`
 }

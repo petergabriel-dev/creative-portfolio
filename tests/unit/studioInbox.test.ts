@@ -4,13 +4,13 @@ import { describe, expect, it, vi } from 'vitest'
 import { collectionFilter, projectCountsByCollection, studioInbox } from '@/lib/studio'
 import {
   excerpt,
+  gmailReplyHref,
   INBOX_PATH,
   inboxHref,
   type InquiryStatus,
   nextSelection,
   parseInboxQuery,
   parsePositiveInt,
-  replyHref,
 } from '@/lib/studioInbox'
 
 const user = { id: 7, email: 'editor@example.com', collection: 'users' } as unknown as TypedUser
@@ -94,18 +94,31 @@ describe('nextSelection', () => {
   })
 })
 
-describe('replyHref', () => {
-  it('links a valid address', () => {
-    expect(replyHref(' ana@example.com ')).toBe('mailto:ana@example.com')
+describe('gmailReplyHref', () => {
+  const params = (href: string | null) => {
+    const url = new URL(href!)
+    return { base: `${url.origin}${url.pathname}`, all: Object.fromEntries(url.searchParams) }
+  }
+
+  it('opens Gmail compose addressed to the visitor, with the subject and the contact account', () => {
+    expect(params(gmailReplyHref(' ana@example.com ', 'owner@example.com'))).toEqual({
+      base: 'https://mail.google.com/mail/',
+      all: { view: 'cm', fs: '1', to: 'ana@example.com', su: 'Re: your Book Me inquiry', authuser: 'owner@example.com' },
+    })
   })
 
-  it('percent-encodes header characters in the local part', () => {
-    expect(replyHref('a?bcc=x@example.com')).toBe('mailto:a%3Fbcc%3Dx@example.com')
-    expect(replyHref('a&b@example.com')).toBe('mailto:a%26b@example.com')
+  it.each([null, '', '  ', 'not-an-email'])('leaves the account out for %j', (account) => {
+    expect(params(gmailReplyHref('ana@example.com', account)).all).not.toHaveProperty('authuser')
+  })
+
+  it('encodes every value, so nothing in an address adds parameters', () => {
+    const href = gmailReplyHref('a?bcc=x&cc=y@example.com', null)!
+    expect(href).toContain('to=a%3Fbcc%3Dx%26cc%3Dy%40example.com')
+    expect(Object.keys(params(href).all).sort()).toEqual(['fs', 'su', 'to', 'view'])
   })
 
   it.each(['not-an-email', 'javascript:alert(1)', 'a@b', '', 'ana@example.com?subject=x'])('gives no link for %j', (email) => {
-    expect(replyHref(email)).toBeNull()
+    expect(gmailReplyHref(email, 'owner@example.com')).toBeNull()
   })
 })
 
@@ -134,8 +147,8 @@ const inquiry = (id: number, status: InquiryStatus, day: number, extra: Partial<
 
 type Where = { status: { equals: InquiryStatus } }
 
-/** A Payload stand-in for the inbox: counts, a newest-first page and findByID, all recorded. */
-function inboxPayload(docs: Doc[]) {
+/** A Payload stand-in for the inbox: counts, a newest-first page, findByID and site-settings, all recorded. */
+function inboxPayload(docs: Doc[], contactEmail: unknown = 'owner@example.com') {
   const ofStatus = (where: Where) =>
     docs.filter((d) => d.status === where.status.equals).sort((a, b) => b.createdAt.localeCompare(a.createdAt))
   return {
@@ -145,11 +158,16 @@ function inboxPayload(docs: Doc[]) {
       return { docs: all.slice((page - 1) * limit, page * limit), totalDocs: all.length }
     }),
     findByID: vi.fn(async ({ id }: { id: number }) => docs.find((d) => d.id === id) ?? null),
+    findGlobal: vi.fn(async () => ({ contactEmail })),
   }
 }
 
-const inbox = async (docs: Doc[], query: { status?: InquiryStatus; page?: number; id?: number | null } = {}) => {
-  const payload = inboxPayload(docs)
+const inbox = async (
+  docs: Doc[],
+  query: { status?: InquiryStatus; page?: number; id?: number | null } = {},
+  contactEmail?: unknown,
+) => {
+  const payload = inboxPayload(docs, contactEmail)
   const data = await studioInbox(
     { payload: payload as unknown as Payload, user },
     { status: query.status ?? 'new', page: query.page ?? 1, id: query.id ?? null },
@@ -158,7 +176,7 @@ const inbox = async (docs: Doc[], query: { status?: InquiryStatus; page?: number
 }
 
 const callsOf = (payload: ReturnType<typeof inboxPayload>) =>
-  [payload.count, payload.find, payload.findByID].flatMap((fn) => fn.mock.calls.map((c) => c[0] as Record<string, unknown>))
+  [payload.count, payload.find, payload.findByID, payload.findGlobal].flatMap((fn) => fn.mock.calls.map((c) => c[0] as Record<string, unknown>))
 
 const seed = [
   inquiry(1, 'new', 1),
@@ -169,14 +187,28 @@ const seed = [
 ]
 
 describe('studioInbox: access and cost', () => {
-  it('runs every call as the editor through access control, at most five calls', async () => {
+  it('runs every call as the editor through access control, at most six calls', async () => {
     const { payload } = await inbox(seed, { id: 4 })
     const calls = callsOf(payload)
-    expect(calls.length).toBeLessThanOrEqual(5)
+    expect(calls.length).toBeLessThanOrEqual(6)
     for (const call of calls) {
       expect(call.overrideAccess).toBe(false)
       expect(call.user).toBe(user)
     }
+  })
+
+  it('reads only the contact email from site-settings, as the reply account', async () => {
+    const { payload, data } = await inbox(seed)
+    expect(payload.findGlobal).toHaveBeenCalledWith(
+      expect.objectContaining({ slug: 'site-settings', select: { contactEmail: true }, overrideAccess: false, user }),
+    )
+    expect(data.replyAccount).toBe('owner@example.com')
+  })
+
+  it.each([[null], [''], ['not-an-email'], [42]])('has no reply account for a contact email of %j', async (contactEmail) => {
+    const payload = inboxPayload(seed, contactEmail)
+    const data = await studioInbox({ payload: payload as unknown as Payload, user }, { status: 'new', page: 1, id: null })
+    expect(data.replyAccount).toBeNull()
   })
 
   it('reads one page of the tab, newest first, 20 at a time', async () => {
