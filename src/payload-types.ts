@@ -940,7 +940,7 @@ export interface SiteSetting {
       }[]
     | null;
   /**
-   * Used for Book Me buttons and progress lines only.
+   * Book Me buttons and progress only
    */
   accent: 'gold' | 'terracotta' | 'sage' | 'offwhite';
   bookingLabel: string;

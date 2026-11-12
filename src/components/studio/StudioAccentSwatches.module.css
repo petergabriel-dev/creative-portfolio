@@ -1,0 +1,119 @@
+/* docs/design/components/StudioAccentSwatches.md (capture 29). Mobile first. */
+.field {
+  margin-block-end: var(--space-6);
+  font-family: var(--font-body);
+  /* Payload's admin body is 13 px; the field sets its own base. */
+  font-size: var(--fs-body);
+}
+
+.fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  margin-block-end: var(--space-3);
+  padding: 0;
+  color: var(--color-text);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+}
+
+.option {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+/* The native radio drawn as the swatch; --swatch is set inline to the accent's token. */
+.swatch {
+  width: var(--space-10);
+  height: var(--space-10);
+  margin: 0;
+  border: var(--border-hairline) solid var(--color-studio-field-border);
+  border-radius: var(--radius-pill);
+  background-color: var(--swatch);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+  appearance: none;
+}
+
+.swatch:not(:checked):hover {
+  border-color: var(--color-text);
+}
+
+/* Selected: a card-coloured gap, then an ink ring, outside the swatch's own ring. */
+.swatch:checked,
+.swatch:checked:focus-visible {
+  box-shadow:
+    0 0 0 var(--space-1) var(--color-studio-card),
+    0 0 0 calc(var(--space-1) + var(--border-strong)) var(--color-text);
+}
+
+/* The focus outline sits outside the selected ring, so both stay visible. */
+.swatch:checked:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: calc(var(--space-1) + var(--border-strong) + var(--border-strong));
+}
+
+.swatch:disabled {
+  cursor: default;
+  opacity: var(--opacity-disabled);
+}
+
+.name {
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+}
+
+.swatch:checked + .name {
+  color: var(--color-text);
+  font-weight: var(--fw-semibold);
+}
+
+.preview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-cms-field);
+  background-color: var(--color-studio-nav-bg);
+}
+
+.previewLabel {
+  color: var(--color-studio-nav-label);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .body {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swatch {
+    transition: none;
+  }
+}

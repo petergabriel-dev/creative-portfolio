@@ -320,6 +320,12 @@ export const copy = {
       /** Ends a message excerpt cut on the server. */
       ellipsis: '…',
     },
+    /** Site settings › accent (docs/design/components/StudioAccentSwatches.md). */
+    swatches: {
+      preview: 'Preview',
+      /** The preview button's words while Booking button label is blank. */
+      fallbackLabel: 'Book Me',
+    },
     /** Collection filter pills on the Projects list (docs/design/components/StudioFilterPills.md). */
     pills: {
       label: 'Filter by collection',

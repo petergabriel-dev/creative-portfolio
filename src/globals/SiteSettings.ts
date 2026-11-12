@@ -53,7 +53,12 @@ export const SiteSettings: GlobalConfig = {
       required: true,
       defaultValue: DEFAULT_ACCENT,
       options: ACCENT_OPTIONS.map(({ label, value }) => ({ label, value })),
-      admin: { description: 'Used for Book Me buttons and progress lines only.' },
+      // Drawn as four swatches with a Book Me preview (P6, docs/design/components/StudioAccentSwatches.md).
+      label: 'Accent colour',
+      admin: {
+        description: 'Book Me buttons and progress only',
+        components: { Field: '/components/studio/StudioAccentSwatches#StudioAccentSwatches' },
+      },
     },
     { name: 'bookingLabel', type: 'text', required: true },
     { name: 'headline', type: 'text', required: true },
