@@ -72,6 +72,10 @@ The surface's job is to **persuade**: show selected work and turn interest into 
   - When more than nine projects are marked for Selected work, the Overview says "the first 9 of N"; capture 21 shows only the nine-piece case (P5).
   - Payload's app header bar (breadcrumb, account link and the sidebar's menu button) stays above every Studio view, the Overview included; captures 21 and 42 omit it. The sidebar keeps Payload's block-start padding so that menu button never covers the brand (P5).
   - The Studio log-in replaces Payload's login view so its errors show inline, as in capture 20--error, rather than as toasts (owner decision 2026-11-11, P5).
+  - The inquiries inbox shows only the buttons that apply to the selected inquiry's status, adds "Mark as new", an "Open full record →" link (notes and delete) and "Newer"/"Older" paging; capture 27 shows only a new inquiry's three buttons. Cards and detail show `projectType` only, without capture 27's sub-type ("Photography — wedding"). There is no "All" tab, bulk select or search (owner decisions 2026-11-12, P6).
+  - The collection filter pills sit in Payload's `beforeListTable` slot, below Payload's own search and filter bar; capture 22 puts them on one row with the search field (P6).
+  - Each accent swatch shows its name, so the choice never rests on colour alone (WCAG 1.4.1); capture 29 shows unlabelled swatches (owner decision 2026-11-12, P6).
+  - The theme pass on Payload's own screens 22–26 and 28–31 stops at the theme stylesheet and layout-only admin options (owner decision 2026-11-12, P6). What that leaves different from the captures is listed under "Studio theme pass (P6)" below.
 
 ### One colour scheme
 
@@ -81,7 +85,7 @@ The Build Spec defines no dark mode, so the token file has a single `:root` sche
 
 `site-settings.accent` picks one of `--accent-gold`, `--accent-terracotta`, `--accent-sage` or `--accent-offwhite`. The root layout sets `--gold` inline on `<html>` to `var(<that token>)`, and components read it through `--color-booking`. The header's Book Me pill is **not** gold: it is ink on light sections and outlined on dark ones (captures 40 and 12).
 
-Known risk: the off-white accent on bone sections has almost no contrast. It cannot appear in P0 (no gold button ships). In P1, gold buttons and the finale label sit only on dark surfaces (openers and BookingFinale), where every accent passes. It must be handled before gold buttons land on light sections (P6).
+Known risk: the off-white accent on bone sections has almost no contrast. It cannot appear in P0 (no gold button ships). In P1, gold buttons and the finale label sit only on dark surfaces (openers and BookingFinale), where every accent passes. Checked again in P6 (2026-11-12): every `gold` Button and accent progress line on the site still sits on a dark surface (openers, BookingFinale, the hero under its scrim, the Book Me thank-you panel), so nothing on the site changes. In the Studio, the accent appears only in [StudioAccentSwatches](components/StudioAccentSwatches.md): each swatch has a `--field-border` ring and the Book Me preview sits on an ink panel. A future gold button on a light section still needs a visible boundary.
 
 ### Contrast (WCAG 2.2 AA)
 
@@ -127,6 +131,12 @@ Ratios computed from the token values (WCAG relative luminance), 2026-11-10:
 | `--field-border` on `--field-bg` / on `--bone` | 3.6:1 / 3.2:1 | Studio field edges (non-text, 3:1 required) (P5) |
 | `--error` on `--field-bg` | 7.6:1 | Studio log-in error edge (P5) |
 | `--muted` on `--field-bg` | 6.9:1 | Payload's secondary text after the Studio theme maps its mid greys to `--color-text-muted` (P5) |
+| `--field-border` on `--surface` | 3.5:1 | Accent swatch rings; Payload's resting field edges inside Studio cards (non-text, 3:1 required) (P6) |
+| `--ink` on `--surface` / on `--field-bg` | 16.7:1 / 17.4:1 | Selected swatch ring; selected inbox card edge (P6) |
+| `--bone` on `--ink` | 15.4:1 | New inquiry chip; current status pill and filter pill (P6) |
+| `--chip-published-fg` on `--chip-published-bg` / `--chip-draft-fg` on `--chip-draft-bg` | 7.8:1 / 5.5:1 | Replied / Archived inquiry chips (P6) |
+| `--field-border` on `--bone` | 3.2:1 | Status and filter pill edges (P6) |
+| Accent fills against `--surface` | gold 1.8:1, terracotta 2.8:1, sage 1.9:1, off-white 1.1:1 | Swatch fills alone fail 3:1 against the card; the `--field-border` ring carries each swatch's edge and the name carries its meaning (P6) |
 
 Accent fills on bone are weak: terracotta 2.6:1, sage 1.7:1, off-white 1.0:1. Gold booking buttons sit on dark sections in the captures; any accent button on a light section needs a visible boundary.
 
@@ -218,7 +228,7 @@ Grid minimum widths (`--grid-min-*`) feed `repeat(auto-fit, minmax(min(<token>, 
 | `--theme-elevation-100` | `--color-surface-band` | Hover and subtle backgrounds |
 | `--theme-elevation-150` (`--theme-border-color`) | `--color-studio-card-border` | Borders |
 | `--theme-elevation-200` | `--color-frame-alt` | Stronger backgrounds, icons |
-| `--theme-elevation-250` | `--color-studio-field-border` | Control borders on hover and some field edges (3.6:1 on white; Payload's grey was 1.8:1). Resting field borders use `--theme-elevation-150` (1.5:1 on white, as Payload's own grey); a 3:1 field edge in Payload's editors is left to P6 (screens 22–31) |
+| `--theme-elevation-250` | `--color-studio-field-border` | Control borders on hover and some field edges (3.6:1 on white; Payload's grey was 1.8:1). Resting field borders use `--theme-elevation-150` (1.5:1 on white, as Payload's own grey); P6 draws the resting edge of inputs, textareas, selects and upload fields with `--color-studio-field-border` instead (3.6:1 on white, 3.5:1 on a card), leaving `--theme-elevation-150` for card borders |
 | `--theme-elevation-300` … `-650` | `--color-text-muted` | Secondary text and icons (6.9:1 on white) |
 | `--theme-elevation-700` … `-1000` | `--color-text` | Text and dark fills |
 | `--style-radius-s`, `--style-radius-m` | `--radius-cms-field` | Fields, small controls |
@@ -231,3 +241,45 @@ Payload's buttons (`.btn`) take `--radius-pill`, like the site's Button. The P0�
 **Overview layout** (`/admin`, screen 21): StudioNav → the page on `--color-studio-page`: header (label, title, greeting, actions) → a panel grid (`--grid-min-tile` auto-fit, `--space-6` gap) with Needs a reply, Drafts and On the home page, then Recently edited across the row. See [StudioOverview](components/StudioOverview.md).
 
 **Log-in layout** (`/admin/login`, screen 20): two equal panels from 1024 px (ink brand panel left, bone form panel right), stacked below 1024 px. See [StudioLogin](components/StudioLogin.md).
+
+### Components (P6): Studio extras
+
+- [StudioInbox](components/StudioInbox.md) (with StudioInboxActions): replaces Payload's list view for `inquiries`.
+- [StudioFilterPills](components/StudioFilterPills.md): Payload's `beforeListTable` slot on `projects`, filtering through `admin.baseFilter`.
+- [StudioAccentSwatches](components/StudioAccentSwatches.md): the field component for `site-settings.accent`.
+- [StudioOverview](components/StudioOverview.md): its Needs a reply rows now open the inbox with the inquiry selected (owner decision 2026-11-12).
+- Button is reused unchanged (`ink`, `outline-ink`, `text`; `gold` inside the swatch preview, with `--color-booking` set on its wrapper).
+- New tokens: semantic `--color-chip-new-*`, `--color-chip-replied-*` and `--color-chip-archived-*` (aliases of existing primitives). Swatch rings and 3:1 field edges reuse `--color-studio-field-border`; pills reuse `--color-action` / `--color-on-action`. No new primitives.
+
+**Inbox layout** (`/admin/collections/inquiries`, screen 27): StudioNav → the page on `--color-studio-page`: header (label, title, description) → status pills → below 1024 px the list, pager and detail stacked; from 1024 px the list (`minmax(var(--grid-min-tile), 1fr)`) beside the detail (`minmax(0, 2.5fr)`), gap `--space-7`. See [StudioInbox](components/StudioInbox.md).
+
+### Studio theme pass (P6)
+
+Screens 22–26 and 28–31 stay Payload's own views (owner decision 2026-11-10). P6 brings them to the captures through `custom.scss` and layout-only admin options: `row`, `collapsible`, unnamed `tabs`, unnamed `group` (titled cards), `admin.position: 'sidebar'`, `admin.width`, field labels and descriptions, and collection and global descriptions (owner decision 2026-11-12). Nothing changes the database schema.
+
+| Screen | Layout options (config) | Theme stylesheet |
+|---|---|---|
+| 22 Projects list | Description line; filter pills | List table as a card with row rules and capture header labels; status cells as Published / Draft chips; display-font title |
+| 23 Project editor (+ SEO tab) | Cards Basics, Cover image, Story, Credits; sidebar cards Organise, Home page, Web address; Year beside Client; capture labels and help text | Cards and card titles; display-font title input; 3:1 field edges; dashed "+ Add" pills; block cards; upload thumbnails; tabs |
+| 24 Collection editor (+ list layout) | Sidebar cards Layout, Opener tint, Order & address (`admin.position`); Highlights card; capture labels | As 23 |
+| 25 Journal posts | Description line ("Stories and notes…") | As 22 |
+| 26 Post editor | Cards Basics, Cover image, Story; sidebar Organise, Related work, Web address; capture labels | As 23 |
+| 28 Media | Description line; "Alt text", "Caption", "Credit" labels and help | List as 22; upload card |
+| 29 Site settings | Cards Identity, Social links, Look & labels, Default search & sharing; fields in thirds; capture labels and card notes; description line | As 23; accent swatches |
+| 30 Home page | Slide image beside its text fields; "Behind the camera" portrait beside heading and body; capture labels; description line | As 23 |
+| 31 About page | Portrait beside the opener text; capture labels; description line | As 23 |
+
+Payload shows a collection's description on its list **and** above each of its edit forms (owner-accepted, 2026-11-12). Payload stacks `row` fields below 1024 px, as the 390 px captures do.
+
+**Left as they are** (recorded deviations; each would need a schema change, a custom view or an option outside owner decision 2026-11-12):
+
+- Page kickers ("STUDIO", "SETTINGS", "LIBRARY") above Payload's titles, and the header layout with buttons beside the title.
+- Payload's own button words ("Save", "Publish changes", "Create New") instead of the captures' "Save changes", "New post", "Upload images", "View page".
+- Grey placeholder text in empty fields (`admin.placeholder`).
+- Array row titles: Payload writes "Section 01", the captures "01 · Section".
+- Collections (24): the switcher pills, "New collection", the opener preview, tint swatches with "Selected: …", layout as radio cards, hiding the highlight and card-shape fields for the list layout, a "View page" link, and the SEO fields inline instead of in their tab.
+- SEO tabs (23, 24, 26): the plugin's checklist and search preview stay; one SEO help text for every collection.
+- Journal (25): the cover column, View/Edit links and the Categories card.
+- Media (28): the grid view, filter pills, drop zone, details panel, "No alt text" badges and the "Showing 12 of [48]" line.
+- Home (30): custom slide headers and the live Selected work list with "Change in Projects".
+- Editing alt text, Replace and Remove on a cover inside the project and post editors (23, 26), and a date-only picker for the post date (26).
