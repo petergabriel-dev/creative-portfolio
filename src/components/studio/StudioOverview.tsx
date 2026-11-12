@@ -188,7 +188,7 @@ export function StudioOverviewView({ data }: { data: StudioOverviewData }) {
                   </div>
                   {/* A wrapped line on narrow panels; `display: contents` (grid cells) on wide ones. */}
                   <div className={styles.details}>
-                    <span className={styles.collection}>{row.collectionName ?? <span aria-hidden="true">—</span>}</span>
+                    <span className={styles.collection}>{row.collectionName ?? <span aria-hidden="true">{t.noCollection}</span>}</span>
                     <span className={`${styles.pill} ${chip[row.status].className}`}>{chip[row.status].label}</span>
                     <When iso={row.updatedAt} />
                     <span aria-hidden="true" className={styles.edit}>

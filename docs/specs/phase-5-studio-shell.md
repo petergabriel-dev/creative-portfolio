@@ -183,4 +183,6 @@ These are recorded as deferred, not passed:
 
 - Merge PR #37 into `dev` after the engineering docs (T8) and ADR-0007 (T9) land on it; release P5 to `main` as `v0.6.0` as for earlier phases.
 - P6: Payload's field edges (3:1), the exceptions above, and screens 22–31.
+- P7: set `NEXT_PUBLIC_SERVER_URL` in production. Without it `adminBaseUrl()` falls back to the Vercel deployment URL (behind Deployment Protection), so password-reset and inquiry-alert links would not open (PR #37 review).
+- From the PR #37 review, deferred: the Overview's version reads populate each version's whole `parent` document (only its id is used); the Overview could read Payload's `thumbnailURL` instead of repeating the Blob-thumb rule; the sidebar's links are fixed paths rather than built from the config's slugs; three Studio CSS Modules each carry a visually-hidden rule. Fixed in review: the log-in redirect now checks the path after dot-segments resolve (`/admin/../…` falls back to `/admin`), the log-out link isn't prefetched, Recently edited reads start in the first parallel round, and two inline strings moved to `copy.ts`. The distinct lock message stays (owner decision 6).
 - `next.config.ts` now sets `logging.serverFunctions: false`, so the dev server no longer prints Server Function arguments (the typed email on the log-in and Book Me forms).

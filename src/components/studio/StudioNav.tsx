@@ -109,7 +109,7 @@ export function StudioNavView({ siteName, userName, newInquiries, current }: Stu
                   {link.label}
                   {link.badge && newInquiries > 0 ? (
                     <span className={styles.badge}>
-                      <span className={styles.visuallyHidden}>, </span>
+                      <span className={styles.visuallyHidden}>{t.badgeSeparator}</span>
                       {t.newCount(newInquiries)}
                     </span>
                   ) : null}
@@ -125,7 +125,7 @@ export function StudioNavView({ siteName, userName, newInquiries, current }: Stu
           <span className={styles.visuallyHidden}> {t.newTab}</span>
         </a>
         <p className={styles.signedIn}>{t.signedInAs(userName)}</p>
-        <Link className={styles.footerLink} href="/admin/logout">
+        <Link className={styles.footerLink} href="/admin/logout" prefetch={false}>
           {t.logOut}
         </Link>
       </div>

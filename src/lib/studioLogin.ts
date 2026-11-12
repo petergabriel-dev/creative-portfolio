@@ -22,15 +22,18 @@ export const INITIAL_LOGIN_STATE: LoginState = { error: null, email: '', invalid
 /**
  * Where to go after logging in: the `?redirect=` value when Payload's `getSafeRedirect` accepts it
  * (same origin, no protocol-relative, encoded-slash, backslash or scheme tricks) **and** it is a
- * Studio path; otherwise `/admin`. Never an absolute URL.
+ * Studio path once dot-segments are resolved; otherwise `/admin`. Never an absolute URL.
  */
 export function safeStudioRedirect(redirectTo: unknown): string {
   const target = getSafeRedirect({
     redirectTo: typeof redirectTo === 'string' ? redirectTo : '',
     fallbackTo: STUDIO_HOME,
   })
-  const inStudio = target === STUDIO_HOME || target.startsWith(`${STUDIO_HOME}/`) || target.startsWith(`${STUDIO_HOME}?`)
-  return inStudio ? target : STUDIO_HOME
+  // Check the path the browser will actually open: the URL parser resolves dot-segments
+  // (`/admin/../api`, `/admin/%2e%2e/`), which a string prefix test would let through.
+  const { pathname, search, hash } = new URL(target, 'http://localhost')
+  const inStudio = pathname === STUDIO_HOME || pathname.startsWith(`${STUDIO_HOME}/`)
+  return inStudio ? `${pathname}${search}${hash}` : STUDIO_HOME
 }
 
 /** A form field as a string; anything else (a File, a missing key) reads as ''. */

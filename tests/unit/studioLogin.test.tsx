@@ -118,6 +118,10 @@ describe('safeStudioRedirect', () => {
     expect(safeStudioRedirect('/admin')).toBe('/admin')
     expect(safeStudioRedirect('/admin/globals/home')).toBe('/admin/globals/home')
     expect(safeStudioRedirect('/admin?tab=1')).toBe('/admin?tab=1')
+    // Dot-segments resolve before the check: escaping /admin falls back, staying inside is normalised.
+    expect(safeStudioRedirect('/admin/../api/users/me')).toBe('/admin')
+    expect(safeStudioRedirect('/admin/%2e%2e/journal')).toBe('/admin')
+    expect(safeStudioRedirect('/admin/collections/../globals/home')).toBe('/admin/globals/home')
     for (const unsafe of ['//evil.example', '/\\evil.example', '/%2F%2Fevil.example', 'https://evil.example', '/javascript:alert(1)', '/administrator', '/', '', undefined, ['/admin']]) {
       expect(safeStudioRedirect(unsafe)).toBe('/admin')
     }

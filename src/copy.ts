@@ -231,6 +231,8 @@ export const copy = {
       users: 'Users',
       /** The inquiries badge; hidden at 0 (owner decision 8). */
       newCount: (count: number) => `${count} new`,
+      /** Visually hidden, so the link reads "Inquiries, 3 new". */
+      badgeSeparator: ', ',
       viewSite: 'View the site',
       viewSiteArrow: '↗',
       newTab: '(opens in a new tab)',
@@ -282,6 +284,8 @@ export const copy = {
       noSlides: 'No hero slides published yet.',
       editHomePage: 'Edit Home page',
       recentlyEdited: 'Recently edited',
+      /** Recently edited's collection column for a post (aria-hidden). */
+      noCollection: '—',
       nothingEdited: 'Nothing edited yet.',
       edit: 'Edit',
       /** Status chips. */

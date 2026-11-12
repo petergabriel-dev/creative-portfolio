@@ -155,7 +155,8 @@ async function latestVersions(
 /** Everything the Overview shows, in at most nine Local API calls run in parallel. */
 export async function studioOverview(reader: Reader): Promise<StudioOverviewData> {
   const { payload, user } = reader
-  const [inquiries, rows, home, settings] = await Promise.all([
+  // Recently edited needs nothing from the main rows, so it starts in the first round.
+  const [inquiries, rows, home, settings, recentProjects, recentPosts] = await Promise.all([
     payload.find({
       collection: 'inquiries',
       where: { status: { equals: 'new' } },
@@ -167,6 +168,8 @@ export async function studioOverview(reader: Reader): Promise<StudioOverviewData
     mainRows(reader),
     payload.findGlobal({ slug: 'home', depth: 0, draft: false, ...asEditor(user) }),
     payload.findGlobal({ slug: 'site-settings', depth: 0, draft: false, ...asEditor(user) }),
+    latestVersions(reader, 'projects', 4),
+    latestVersions(reader, 'posts', 4),
   ])
 
   const draftIds = {
@@ -178,11 +181,9 @@ export async function studioOverview(reader: Reader): Promise<StudioOverviewData
     ...rows.posts.filter((d) => d._status === 'published').map((d) => `posts:${d.id}`),
   ])
 
-  const [draftProjects, draftPosts, recentProjects, recentPosts] = await Promise.all([
+  const [draftProjects, draftPosts] = await Promise.all([
     latestVersions(reader, 'projects', 3, draftIds.projects),
     latestVersions(reader, 'posts', 3, draftIds.posts),
-    latestVersions(reader, 'projects', 4),
-    latestVersions(reader, 'posts', 4),
   ])
 
   const draftRows = [
