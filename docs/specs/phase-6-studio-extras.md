@@ -134,7 +134,7 @@ None specific to this phase.
 
 ## QA log (2026-11-12)
 
-Run on `docs/p6-qa` (plan `p6-studio-extras`, T1–T11 committed on stacked local branches). The checks used a local production build (`pnpm build`, `pnpm start`) on a fresh database: the 8 committed migrations (P6 needs none: `payload migrate:create --skip-empty` wrote no file), seeded twice with the local `./media` folder moved aside (traps.md), plus 45 inquiries inserted by SQL (43 new, one with a very long name, email and unbroken word, one replied with an address Payload wouldn't accept; dev-workflow.md), with an empty `BLOB_READ_WRITE_TOKEN` and `RESEND_API_KEY`. Rows marked "Tn" cite that task's verification on `pnpm dev` with the same code. axe is axe-core 4.14 from the project's own dependencies (WCAG 2.2 AA tags).
+Run on `docs/p6-qa` (plan `p6-studio-extras`, T1–T11 committed on stacked local branches, pushed as `feat/p6-studio-extras`, PR #39). The checks used a local production build (`pnpm build`, `pnpm start`) on a fresh database: the 8 committed migrations (P6 needs none: `payload migrate:create --skip-empty` wrote no file), seeded twice with the local `./media` folder moved aside (traps.md), plus 45 inquiries inserted by SQL (43 new, one with a very long name, email and unbroken word, one replied with an address Payload wouldn't accept; dev-workflow.md), with an empty `BLOB_READ_WRITE_TOKEN` and `RESEND_API_KEY`. Rows marked "Tn" cite that task's verification on `pnpm dev` with the same code. axe is axe-core 4.14 from the project's own dependencies (WCAG 2.2 AA tags).
 
 | Criterion | Result | Evidence |
 |---|---|---|
@@ -158,7 +158,7 @@ Run on `docs/p6-qa` (plan `p6-studio-extras`, T1–T11 committed on stacked loca
 | `next build`: public routes keep their rendering (invariant 22) | Pass | `/`, `/about`, `/portfolio`, `/journal` and `/book` ○; collection, project, `/journal/page/[n]` and `/journal/[slug]` ● |
 | The seed fills a fresh database; a second run creates nothing | Pass | Run 1 created 54 docs, run 2 created 0 (23 projects, 12 posts, 4 disciplines, 4 categories, 4 inquiries, 7 media); `users` empty before the QA editor was registered |
 | DoD: code health | Pass | typecheck, lint, 506 unit tests (101 new in P6) |
-| DoD: Vercel preview | Pending | PR into `dev`: `checks` and `Vercel` to be recorded |
+| DoD: Vercel preview | Pass | PR #39: `checks` and `Vercel` green (the preview build migrated its Neon branch and built). An owner look at the Studio on the protected preview is a deferred check (below) |
 
 ### Fixes made during QA
 
