@@ -41,6 +41,9 @@
   --chip-published-fg: #2F4A3A;
   --chip-draft-bg: #EAE6DF;
   --chip-draft-fg: #5E5A52;
+  /* Studio sidebar (P5, capture 42): current-item fill and the hairline above the footer */
+  --ink-raised: #353331;
+  --ink-rule: #3A3833;
 
   /* Colour: accent options for site-settings.accent */
   --accent-gold: #E9B44C;
@@ -67,6 +70,8 @@
   --fs-hero: clamp(64px, 8.4vw, 128px);
   /* Story card title: fixed, so long names fit the fixed-width card (P4, capture 01) */
   --fs-story-card: 30px;
+  /* Studio page titles ("Overview", "Log in"): fixed, as captures 20 and 21 at 1440 and 390 px (P5) */
+  --fs-studio-title: 64px;
   --fs-quote: clamp(40px, 5vw, 68px);
   --fs-lead: 18px;
   --lh-story: 1.75;
@@ -114,6 +119,9 @@
   --opener-min-h: 600px;
   --hero-min-h: 780px;
   --story-card-w: 204px;
+  /* Studio (P5): sidebar width (capture 42) and Overview row thumbnails, 3:2 (capture 21) */
+  --studio-nav-width: 264px;
+  --studio-thumb-w: 64px;
 
   /* Grid minimum column widths: repeat(auto-fit, minmax(min(N, 100%), 1fr)) */
   --grid-min-tile: 280px;
@@ -140,6 +148,8 @@
   /* Targets */
   --tap-min: 44px;
   --tap-primary: 52px;
+  /* Studio fields and primary buttons (P5, captures 20 and 21) */
+  --tap-cms: 48px;
 
   /* Motion */
   --duration-fast: 150ms;
@@ -188,6 +198,30 @@
   /* Actions */
   --color-action: var(--ink);
   --color-on-action: var(--bone);
+
+  /* Studio (P5): sidebar, page, cards and fields (docs/design/components/Studio*.md) */
+  --color-studio-nav-bg: var(--ink);
+  --color-studio-nav-text: var(--on-dark);
+  --color-studio-nav-text-strong: var(--bone);
+  --color-studio-nav-label: var(--on-ink-muted);
+  --color-studio-nav-current: var(--ink-raised);
+  --color-studio-nav-rule: var(--ink-rule);
+  /* Fixed gold: the Studio brand label and inquiry badge don't follow site-settings.accent */
+  --color-studio-accent: var(--accent-gold);
+  --color-on-studio-accent: var(--ink);
+  --color-studio-page: var(--bone);
+  --color-studio-card: var(--surface);
+  --color-studio-card-border: var(--rule);
+  --color-studio-row-rule: var(--rule-soft);
+  --color-studio-field-bg: var(--field-bg);
+  --color-studio-field-border: var(--field-border);
+  /* Status chips: Published, Draft, and Unpublished changes (outlined) */
+  --color-chip-published-bg: var(--chip-published-bg);
+  --color-chip-published-fg: var(--chip-published-fg);
+  --color-chip-draft-bg: var(--chip-draft-bg);
+  --color-chip-draft-fg: var(--chip-draft-fg);
+  --color-chip-changes-bg: var(--surface);
+  --color-chip-changes-fg: var(--chip-published-fg);
 
   /* Focus ring: ink outline with a bone halo, visible on light and dark */
   --focus-ring-color: var(--ink);

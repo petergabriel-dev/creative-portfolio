@@ -35,6 +35,11 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(dirname),
   },
+  // Next's dev server prints every Server Function call with its arguments; the log-in's and the
+  // inquiry form's previous state carry the typed email, so that logging stays off (invariant 26).
+  logging: {
+    serverFunctions: false,
+  },
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })

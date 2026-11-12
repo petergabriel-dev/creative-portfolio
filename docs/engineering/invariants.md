@@ -51,7 +51,7 @@ Rules that must not break. Each one names where it is enforced.
     - the site header stays outside `<main>` and outside any named `<section>` (the Home hero wraps it in a `div`), so it keeps its banner role;
     - no horizontal scroll at 320 px;
     - a link's accessible name contains its visible label (WCAG 2.5.3): cards and rows link their title and stretch its click area with `::after`, never a whole-block link named by `aria-labelledby` (axe-core 4.14 flags that as serious).
-18. **Components use named tokens only**; hex values exist only in the `@primitive` layer of `src/styles/tokens.css`.
+18. **Components use named tokens only**; hex values exist only in the `@primitive` layer of `src/styles/tokens.css`. The Studio stylesheet (`src/app/(payload)/custom.scss`) and `src/components/studio/*.css` hold none either.
 
 ## Drafts and embeds
 
@@ -72,3 +72,10 @@ Rules that must not break. Each one names where it is enforced.
 25. **An inquiry is saved before any email is sent, and never lost to one.** `submitInquiry` calls `payload.sendEmail` only after `payload.create` returns; send failures and timeouts are caught, logged and never retried. A failed save never answers `sent` ([ADR-0006](decisions/ADR-0006-inquiry-submission.md)).
 26. **Only the form fields are stored, and no visitor data is logged.** The create writes `name`, `email`, `projectType`, `timing`, `message` and `status: 'new'`, nothing else (no IP address, user agent or other form keys). Inquiry log lines carry the inquiry ID and an error's name and HTTP status, never its message or any field (`tests/unit/inquiryAction.test.ts`).
 27. **Spam gets the normal success state and saves nothing.** A filled honeypot, or a valid form sent under 3 seconds after it appeared, answers `sent` without a create (`validateInquiry` in `src/lib/inquiry.ts`).
+
+## Studio
+
+28. **Studio reads run as the editor.** The inquiry badge and the Overview (`src/lib/studio.ts`) pass `overrideAccess: false` with the logged-in `user` on every Local API call; nothing in the Studio reads with `overrideAccess: true` (`tests/unit/studio.test.ts`).
+29. **The Studio log-in goes only through Payload.** `loginAction` (`src/components/studio/loginAction.ts`) calls Payload's `login()`, so the password check, the lockout (invariant 11) and the HTTP-only cookie stay Payload's. After logging in, and for a logged-in visit to `/admin/login`, it redirects only through `safeStudioRedirect` (`src/lib/studioLogin.ts`: Payload's `getSafeRedirect`, then `/admin` paths only). It logs an unexpected error's name only, never the email or password, and `next.config.ts` keeps `logging.serverFunctions: false` so the dev server never prints action arguments (`tests/unit/studioLogin.test.tsx`).
+30. **Links in emails use the trusted base URL, never the request's Host header.** The inquiry alert and the password-reset email (`Users.ts` `auth.forgotPassword.generateEmailHTML` → `resetPasswordEmailHtml`) build links from `adminBaseUrl()`.
+31. **The Studio keeps the dual focus ring on every focusable element**, Payload's included: `custom.scss` adds it to `:focus-visible` and, as shadows, to react-select controls (`.rs__control:has(input:focus-visible)`), which force `outline: 0 !important`. Dark mode stays off (`admin.theme: 'light'`): the Studio tokens have no dark values.

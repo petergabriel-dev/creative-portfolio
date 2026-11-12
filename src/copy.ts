@@ -204,4 +204,108 @@ export const copy = {
       open: 'Open in the Studio',
     },
   },
+  /** The Studio (P5): docs/design/components/StudioOverview.md. */
+  studio: {
+    /** StudioBrand's second line, and the name the icon gives a link that wraps it. */
+    brandLabel: 'Studio · CMS',
+    iconLabel: 'Studio',
+    /** The sidebar (docs/design/components/StudioNav.md). */
+    nav: {
+      ariaLabel: 'Studio',
+      overview: 'Overview',
+      portfolio: 'Portfolio',
+      projects: 'Projects',
+      collections: 'Collections',
+      journal: 'Journal',
+      posts: 'Posts',
+      categories: 'Categories',
+      inbox: 'Inbox',
+      inquiries: 'Inquiries',
+      library: 'Library',
+      media: 'Media',
+      settings: 'Settings',
+      siteSettings: 'Site settings',
+      homePage: 'Home page',
+      aboutPage: 'About page',
+      admin: 'Admin',
+      users: 'Users',
+      /** The inquiries badge; hidden at 0 (owner decision 8). */
+      newCount: (count: number) => `${count} new`,
+      /** Visually hidden, so the link reads "Inquiries, 3 new". */
+      badgeSeparator: ', ',
+      viewSite: 'View the site',
+      viewSiteArrow: '↗',
+      newTab: '(opens in a new tab)',
+      signedInAs: (name: string) => `Signed in as ${name}`,
+      logOut: 'Log out',
+    },
+    /** The log-in at /admin/login (docs/design/components/StudioLogin.md, captures 20 and 20--error). */
+    login: {
+      label: 'Studio',
+      title: 'Log in',
+      email: 'Email',
+      password: 'Password',
+      submit: 'Log in',
+      pending: 'Logging in…',
+      forgot: 'Forgot password?',
+      backToSite: 'Back to the site',
+      lockNote: 'After 5 wrong tries the account locks for 15 minutes.',
+      /** Owner decision 6 (2026-11-11). "invalid" never says whether the email exists. */
+      errors: {
+        empty: 'Enter your email and password to log in.',
+        invalid: "That email and password don't match.",
+        locked: 'This account is locked after too many wrong tries. Try again in 15 minutes.',
+        failed: 'Something went wrong. Try again.',
+      },
+    },
+    /** Payload's password-reset email, with an absolute link (P5 QA fix). */
+    resetEmail: {
+      intro: 'Someone asked to reset the password for your Studio account. If it was you, open this link to choose a new one:',
+      ignore: "If you didn't ask for this, ignore this email; your password stays the same.",
+    },
+    /** The Overview at /admin (docs/design/components/StudioOverview.md, capture 21). */
+    overview: {
+      label: 'Studio',
+      title: 'Overview',
+      greeting: "Good to see you. Here's what needs you today.",
+      viewSite: 'View site',
+      newProject: 'New project',
+      needsReply: 'Needs a reply',
+      newCount: (count: number) => `${count} new`,
+      nothingWaiting: 'Nothing waiting.',
+      openInquiries: 'Open inquiries',
+      drafts: 'Drafts',
+      unpublishedCount: (count: number) => `${count} unpublished`,
+      noDrafts: 'No drafts.',
+      allProjects: 'All projects',
+      allPosts: 'All posts',
+      onTheHomePage: 'On the home page',
+      heroSlides: 'Hero slides, in order',
+      noSlides: 'No hero slides published yet.',
+      editHomePage: 'Edit Home page',
+      recentlyEdited: 'Recently edited',
+      /** Recently edited's collection column for a post (aria-hidden). */
+      noCollection: '—',
+      nothingEdited: 'Nothing edited yet.',
+      edit: 'Edit',
+      /** Status chips. */
+      published: 'Published',
+      draft: 'Draft',
+      changes: 'Unpublished changes',
+    },
+    /** Meta-line prefixes: "Project · Wedding", "Journal · Process". */
+    project: 'Project',
+    journal: 'Journal',
+    /** A doc saved before it had a title. */
+    untitled: 'Untitled',
+    /** The Overview's Selected work line; Home shows at most nine (owner decision 1). */
+    selectedWorkLine: (count: number) =>
+      count <= 0
+        ? 'Nothing is marked “On home” yet.'
+        : count === 1
+          ? "Selected work shows 1 piece you've marked “On home”."
+          : count <= 9
+            ? `Selected work shows ${count} pieces you've marked “On home”.`
+            : `Selected work shows the first 9 of ${count} pieces you've marked “On home”.`,
+  },
 } as const
