@@ -27,6 +27,7 @@ These rank above the Build Spec (see the precedence rules in `README.md`).
 7. **Overview links.** The Overview's "Needs a reply" rows open the inbox with that inquiry selected, instead of Payload's edit view.
 8. **Filter pills.** A pill sets `?collection=<slug>` on the Projects list. Its count is the collection's total number of projects, drafts included, and does not change with search or other filters. Every discipline shows, in `order`, even with no projects.
 9. **Accent swatches.** Each swatch shows its name, so the choice is not made by colour alone (WCAG 1.4.1); capture 29 shows none. Every swatch has a ring with at least 3:1 contrast against the card, so off-white stays visible. The Book Me preview sits on an ink panel, where every accent passes.
+10. **Reply in Gmail** (2026-11-12, after the v0.7.0 release). The owner replies from Gmail in the browser, where the inbox's `mailto:` "Reply by email" opened nothing. It becomes "Reply in Gmail ↗": Gmail's compose window in a new tab, addressed to the visitor with the subject "Re: your Book Me inquiry" and the Google account matching Site settings › Contact email. A "Copy email" button beside it copies the visitor's address and announces "Email copied." This replaces "Reply by email" in decision 3.
 
 ## In scope
 
@@ -44,7 +45,7 @@ These rank above the Build Spec (see the precedence rules in `README.md`).
   - Capture 27 shows extra detail such as "Photography — wedding". Inquiries do not store a sub-type, so only `projectType` is shown.
 - Right panel: the selected inquiry.
   - It shows the name, a status chip, Project, Timing, Email, Received and the full message.
-  - Actions depend on the status (owner decision 3): "Reply by email" (a `mailto:` link to the visitor), then "Mark as replied", "Archive" or "Mark as new".
+  - Actions depend on the status (owner decision 3): "Reply in Gmail ↗" (Gmail's compose window, new tab) and "Copy email" (owner decision 10), then "Mark as replied", "Archive" or "Mark as new".
   - An "Open full record →" link opens the inquiry's edit view.
 - Status changes follow the Build Spec: new → replied → archived, and any status can go back to `new`. Each change updates the filter counts and the "N new" badge.
 - The tab, page and selected inquiry live in the URL; after a status change the inbox selects the next inquiry on the same tab (owner decision 4).
@@ -109,7 +110,7 @@ No changes. The pills read `disciplines` and the project counts. The inbox reads
 - **Inbox:**
   - "Mark as replied", "Archive" and returning to `new` update the status, the filter counts and the nav badge;
   - after a change the next inquiry on the tab is selected, the change is announced and focus is on its heading;
-  - "Reply by email" opens a `mailto:` link to the visitor's address;
+  - "Reply in Gmail" opens Gmail's compose window in a new tab, addressed to the visitor; "Copy email" copies the visitor's address and announces it (owner decision 10; it replaced the `mailto:` "Reply by email" after release);
   - more than 20 inquiries on a tab page through "Newer" and "Older", and reload or back keeps the tab, page and selection;
   - an Overview "Needs a reply" row opens the inbox with that inquiry selected;
   - the inbox works by keyboard alone.
