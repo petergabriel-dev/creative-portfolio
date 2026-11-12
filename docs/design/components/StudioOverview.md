@@ -32,7 +32,7 @@ The Studio's home at `/admin` (screen 21): what needs the editor today. It repla
 
 | Panel | Count pill | Rows | Empty line | Footer |
 |---|---|---|---|---|
-| Needs a reply | "{n} new": `--color-action` fill, `--color-on-action` text | Up to 3 newest `new` inquiries: name (title link → the inquiry), meta = `projectType`, date received at the inline end | "Nothing waiting." | "Open inquiries" → `/admin/collections/inquiries` |
+| Needs a reply | "{n} new": `--color-action` fill, `--color-on-action` text | Up to 3 newest `new` inquiries: name (title link → the [inbox](StudioInbox.md) with that inquiry selected, `/admin/collections/inquiries?status=new&id=<id>`; P6 owner decision 7), meta = `projectType`, date received at the inline end | "Nothing waiting." | "Open inquiries" → `/admin/collections/inquiries` |
 | Drafts | "{n} unpublished": `--color-chip-draft-bg` / `--color-chip-draft-fg` | Up to 3 draft projects and posts, newest saved first: thumbnail, title link → editor, meta "{collection name} · {projectType}" for a project, "Journal · {category}" for a post | "No drafts." | "All projects" → `/admin/collections/projects`; "All posts" → `/admin/collections/posts` |
 | On the home page | none | Sub-label "Hero slides, in order" inside the panel head, under the heading, so the head's rule falls below it as in capture 21 (`--fs-label`, `--fw-semibold`, `--tracking-label`, uppercase, `--color-text-muted`, `--space-3` above), then an `<ol>` of the published slide titles: the number "01" (`--fs-sm`, `--color-text-muted`, tabular figures, `--space-6` wide) and the title (`--fs-body`, `--color-text`). Plain text, no links. Then the Selected work line (`<p>`, `--fs-sm`, `--lh-body`, `--color-text-muted`, `--space-5` above) | Rows: "No hero slides published yet." The Selected work line always shows | "Edit Home page" → `/admin/globals/home` |
 | Recently edited | none | 4 latest saved projects and posts: thumbnail, title link → editor, meta "Project · {projectType}" / "Journal · {category}", collection name ("—" for a post, `aria-hidden`), status chip, date, "Edit" (`aria-hidden`, underlined, `--fs-sm`, `--fw-medium`) | "Nothing edited yet." | none |
@@ -100,7 +100,7 @@ type StudioDocRow = {
   editUrl: string
   updatedAt: string
 }
-type NeedsReply = { total: number; rows: { id: string | number; name: string; projectType: string; receivedAt: string; editUrl: string }[] }
+type NeedsReply = { total: number; rows: { id: string | number; name: string; projectType: string; receivedAt: string; editUrl: string }[] } // editUrl: the inbox link (P6)
 type Drafts = { total: number; rows: StudioDocRow[] }
 type HomeLineup = { slideTitles: string[]; selectedWorkCount: number }
 type RecentRow = StudioDocRow & { collectionName: string | null; status: 'published' | 'draft' | 'changes' }

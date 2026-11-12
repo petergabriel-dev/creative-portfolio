@@ -120,7 +120,7 @@ describe('studioOverview: access and cost', () => {
 })
 
 describe('studioOverview: Needs a reply', () => {
-  it('lists the newest new inquiries with the total and edit links', async () => {
+  it('lists the newest new inquiries with the total and links into the inbox (P6 decision 7)', async () => {
     const { payload, result } = run({
       inquiries: {
         totalDocs: 5,
@@ -139,7 +139,7 @@ describe('studioOverview: Needs a reply', () => {
           name: '[Couple names]',
           projectType: 'Photography',
           receivedAt: '2026-11-06T02:00:00.000Z',
-          editUrl: '/admin/collections/inquiries/9',
+          editUrl: '/admin/collections/inquiries?status=new&id=9',
         },
       ],
     })

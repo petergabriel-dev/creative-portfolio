@@ -293,6 +293,46 @@ export const copy = {
       draft: 'Draft',
       changes: 'Unpublished changes',
     },
+    /** The inquiries inbox (docs/design/components/StudioInbox.md, capture 27, P6 owner decisions 3–7). */
+    inbox: {
+      label: 'Studio',
+      title: 'Inquiries',
+      description: 'Messages sent from the Book Me form. Reply from your own email, then mark them as replied.',
+      statusNav: 'Inquiry status',
+      statuses: { new: 'New', replied: 'Replied', archived: 'Archived' },
+      list: 'Inquiries',
+      pages: 'Inquiry pages',
+      newer: 'Newer',
+      older: 'Older',
+      facts: { project: 'Project', timing: 'Timing', email: 'Email', received: 'Received' },
+      notGiven: 'Not given',
+      nothingWaiting: 'Nothing waiting.',
+      reply: 'Reply by email',
+      /** Status buttons, by the status they set. */
+      actions: { replied: 'Mark as replied', archived: 'Archive', new: 'Mark as new' },
+      openRecord: 'Open full record',
+      /** Announced after a status change, by the status the inquiry now has. */
+      notices: { new: 'Marked as new.', replied: 'Marked as replied.', archived: 'Archived.' },
+      errors: {
+        failed: "Couldn't change the status. Try again.",
+        signedOut: "You're logged out. Log in again to change the status.",
+      },
+      /** Ends a message excerpt cut on the server. */
+      ellipsis: '…',
+    },
+    /** Site settings › accent (docs/design/components/StudioAccentSwatches.md). */
+    swatches: {
+      preview: 'Preview',
+      /** The preview button's words while Booking button label is blank. */
+      fallbackLabel: 'Book Me',
+    },
+    /** Collection filter pills on the Projects list (docs/design/components/StudioFilterPills.md). */
+    pills: {
+      label: 'Filter by collection',
+      all: 'All',
+      /** Visually hidden after the count, so a pill reads "Photography 3 projects". */
+      countSuffix: (count: number) => (count === 1 ? ' project' : ' projects'),
+    },
     /** Meta-line prefixes: "Project · Wedding", "Journal · Process". */
     project: 'Project',
     journal: 'Journal',

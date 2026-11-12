@@ -222,6 +222,13 @@
   --color-chip-draft-fg: var(--chip-draft-fg);
   --color-chip-changes-bg: var(--surface);
   --color-chip-changes-fg: var(--chip-published-fg);
+  /* Inquiry status chips (P6, capture 27): New (ink), Replied, Archived */
+  --color-chip-new-bg: var(--ink);
+  --color-chip-new-fg: var(--bone);
+  --color-chip-replied-bg: var(--chip-published-bg);
+  --color-chip-replied-fg: var(--chip-published-fg);
+  --color-chip-archived-bg: var(--chip-draft-bg);
+  --color-chip-archived-fg: var(--chip-draft-fg);
 
   /* Focus ring: ink outline with a bone halo, visible on light and dark */
   --focus-ring-color: var(--ink);

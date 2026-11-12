@@ -75,7 +75,12 @@ Rules that must not break. Each one names where it is enforced.
 
 ## Studio
 
-28. **Studio reads run as the editor.** The inquiry badge and the Overview (`src/lib/studio.ts`) pass `overrideAccess: false` with the logged-in `user` on every Local API call; nothing in the Studio reads with `overrideAccess: true` (`tests/unit/studio.test.ts`).
+28. **Studio reads and writes run as the editor.** The inquiry badge, the Overview, the inbox, the filter pills and the projects `baseFilter` (`src/lib/studio.ts`) pass `overrideAccess: false` with the logged-in `user` on every Local API call; nothing in the Studio reads or writes with `overrideAccess: true` (`tests/unit/studio.test.ts`, `tests/unit/studioInbox.test.ts`). The inbox's `setInquiryStatus` server action (`src/components/studio/inboxActions.ts`), a public endpoint like every server action:
+    - checks every field before any database call (status and tab from `new`, `replied`, `archived`; ids and page positive integers);
+    - gets the editor from the session (`payload.auth`) and writes nothing without one;
+    - updates only `status`, as that editor;
+    - returns a URL built only by `inboxHref()`, so it never points outside the inbox;
+    - logs the inquiry ID and the error's name only (invariant 26) (`tests/unit/inboxActions.test.ts`).
 29. **The Studio log-in goes only through Payload.** `loginAction` (`src/components/studio/loginAction.ts`) calls Payload's `login()`, so the password check, the lockout (invariant 11) and the HTTP-only cookie stay Payload's. After logging in, and for a logged-in visit to `/admin/login`, it redirects only through `safeStudioRedirect` (`src/lib/studioLogin.ts`: Payload's `getSafeRedirect`, then `/admin` paths only). It logs an unexpected error's name only, never the email or password, and `next.config.ts` keeps `logging.serverFunctions: false` so the dev server never prints action arguments (`tests/unit/studioLogin.test.tsx`).
 30. **Links in emails use the trusted base URL, never the request's Host header.** The inquiry alert and the password-reset email (`Users.ts` `auth.forgotPassword.generateEmailHTML` → `resetPasswordEmailHtml`) build links from `adminBaseUrl()`.
 31. **The Studio keeps the dual focus ring on every focusable element**, Payload's included: `custom.scss` adds it to `:focus-visible` and, as shadows, to react-select controls (`.rs__control:has(input:focus-visible)`), which force `outline: 0 !important`. Dark mode stays off (`admin.theme: 'light'`): the Studio tokens have no dark values.

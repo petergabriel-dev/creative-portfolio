@@ -19,6 +19,7 @@ export const Home: GlobalConfig = {
   label: 'Home',
   admin: {
     group: 'Settings',
+    description: 'The hero slider and the sections under it. Changes stay in draft until you publish.',
     livePreview: {
       url: () => previewUrl(HOME_PATH),
       breakpoints: LIVE_PREVIEW_BREAKPOINTS,
@@ -35,82 +36,152 @@ export const Home: GlobalConfig = {
     beforeChange: [hooks.beforeChange],
     afterChange: [hooks.afterChange],
   },
+  // Cards as capture 30 (P6): unnamed groups and rows are layout only; `meet` stays a named group.
   fields: [
     {
-      name: 'heroSlides',
-      type: 'array',
-      required: true,
-      minRows: 1,
-      maxRows: 6,
-      admin: { description: 'One to six slides. The order here is the slider order.' },
+      type: 'group',
+      label: 'Hero slides · 1 to 6',
+      admin: { description: 'Slide one opens the site; this order is the slider order.' },
       fields: [
         {
-          name: 'title',
-          type: 'text',
-          // Optional (P4 owner decision 3): a blank title shows the site headline.
-          admin: { description: 'Leave blank to use the site headline from Site settings.' },
-        },
-        {
-          name: 'placeLine',
-          type: 'text',
+          name: 'heroSlides',
+          type: 'array',
           required: true,
-          admin: { description: 'The line above the title, e.g. "Featured · Project title".' },
-        },
-        { name: 'body', type: 'textarea', required: true, admin: { description: 'About 20 words.' } },
-        {
-          name: 'link',
-          type: 'relationship',
-          relationTo: ['disciplines', 'projects'],
-          required: true,
-          admin: { description: 'The collection or project the second button opens.' },
-        },
-        {
-          name: 'linkLabel',
-          type: 'text',
-          required: true,
-          admin: { description: 'The second button\'s words, e.g. "View photography".' },
-        },
-        { name: 'image', type: 'upload', relationTo: 'media', required: true },
-        {
-          name: 'cardKicker',
-          type: 'text',
-          required: true,
-          admin: { description: 'The small line on the story card, e.g. "Collection 01".' },
-        },
-        {
-          name: 'tint',
-          type: 'select',
-          required: true,
-          defaultValue: 'default',
-          options: OPENER_TINTS.map(({ label, value }) => ({ label, value })),
-          admin: { description: 'Shows while the photo loads.' },
+          minRows: 1,
+          maxRows: 6,
+          label: false,
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                  label: 'Image · full-bleed',
+                  // Payload's upload card needs about 370 px; 30% keeps it beside the fields at 1440.
+                  admin: { width: '30%' },
+                },
+                {
+                  type: 'group',
+                  label: false,
+                  admin: { width: '70%' },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      // Optional (P4 owner decision 3): a blank title shows the site headline.
+                      admin: { description: 'Leave blank to use the site headline from Site settings.' },
+                    },
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'placeLine',
+                          type: 'text',
+                          required: true,
+                          label: 'Place line',
+                          admin: { width: '50%', description: 'e.g. "Featured · Project title".' },
+                        },
+                        {
+                          name: 'cardKicker',
+                          type: 'text',
+                          required: true,
+                          label: 'Card kicker',
+                          admin: { width: '50%', description: 'e.g. "Collection 01".' },
+                        },
+                      ],
+                    },
+                    { name: 'body', type: 'textarea', required: true, label: 'Body · about 20 words' },
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'link',
+                          type: 'relationship',
+                          relationTo: ['disciplines', 'projects'],
+                          required: true,
+                          label: 'Button links to',
+                          admin: { width: '50%' },
+                        },
+                        {
+                          name: 'linkLabel',
+                          type: 'text',
+                          required: true,
+                          label: 'Button label',
+                          admin: { width: '50%', description: 'e.g. "View photography".' },
+                        },
+                      ],
+                    },
+                    {
+                      name: 'tint',
+                      type: 'select',
+                      required: true,
+                      label: 'Loading tint',
+                      defaultValue: 'default',
+                      options: OPENER_TINTS.map(({ label, value }) => ({ label, value })),
+                      admin: { description: 'Shows while the photo loads.' },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
       ],
     },
     {
-      name: 'selectedWorkIntro',
-      type: 'text',
-      required: true,
-      admin: { description: 'One line under "Selected work".' },
+      type: 'group',
+      label: 'Chapter 01 · Selected work',
+      admin: { description: 'Shows up to 9 projects ticked “Show in Selected work”, chosen in Projects.' },
+      fields: [{ name: 'selectedWorkIntro', type: 'text', required: true, label: 'Intro line' }],
     },
     {
       name: 'meet',
       type: 'group',
-      label: 'Behind the camera',
+      label: 'Chapter 02 · Behind the camera',
       fields: [
-        { name: 'heading', type: 'text', required: true },
-        { name: 'body', type: 'textarea', required: true },
-        { name: 'portrait', type: 'upload', relationTo: 'media', required: true },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'portrait',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+              label: 'Portrait · 4:5',
+              admin: { width: '30%' },
+            },
+            {
+              type: 'group',
+              label: false,
+              admin: { width: '70%' },
+              fields: [
+                { name: 'heading', type: 'text', required: true },
+                { name: 'body', type: 'textarea', required: true },
+              ],
+            },
+          ],
+        },
       ],
     },
     {
-      name: 'journalCount',
-      type: 'number',
-      required: true,
-      min: 1,
-      max: 6,
-      defaultValue: 2,
-      admin: { step: 1, description: 'How many of the latest journal posts "From the journal" shows.' },
+      type: 'group',
+      label: 'Chapter 04 · From the journal',
+      admin: { description: 'The newest published posts show automatically.' },
+      fields: [
+        {
+          name: 'journalCount',
+          type: 'number',
+          required: true,
+          min: 1,
+          max: 6,
+          defaultValue: 2,
+          label: 'Posts to show',
+          admin: { step: 1, width: '25%' },
+        },
+      ],
     },
   ],
 }

@@ -11,6 +11,8 @@ export const Media: CollectionConfig = {
     group: 'Library',
     useAsTitle: 'alt',
     defaultColumns: ['filename', 'alt', 'updatedAt'],
+    // Capture 28's line; Payload also shows it above each image's edit form (P6 owner decision 2).
+    description: "Every image on the site. An image can't be saved without alt text.",
   },
   access: {
     read: anyone,
@@ -26,18 +28,13 @@ export const Media: CollectionConfig = {
       name: 'alt',
       type: 'text',
       required: true,
+      label: 'Alt text',
       admin: {
-        description: 'Describes the image for screen readers.',
+        description: 'Describe the image before saving — screen readers read this aloud.',
       },
     },
-    {
-      name: 'caption',
-      type: 'text',
-    },
-    {
-      name: 'credit',
-      type: 'text',
-    },
+    { name: 'caption', type: 'text', label: 'Caption · optional' },
+    { name: 'credit', type: 'text', label: 'Credit · optional' },
   ],
   upload: {
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
