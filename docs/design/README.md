@@ -271,6 +271,8 @@ Screens 22–26 and 28–31 stay Payload's own views (owner decision 2026-11-10)
 
 Payload shows a collection's description on its list **and** above each of its edit forms (owner-accepted, 2026-11-12). Payload stacks `row` fields below 1024 px, as the 390 px captures do.
 
+**Stylesheet** (`custom.scss`, P6 section): list and editor titles in `--font-display` (lists `--fs-studio-title`, editors `--fs-card`); description lines `--fs-body` muted; every top-level group a card (`--color-studio-card`, `--color-studio-card-border`, `--radius-cms-card`, `--space-6` padding, `--space-5` apart) with a small-caps title (`--fs-label-lg`, `--tracking-nav`) and its note on the same line; untitled groups inside rows lose Payload's gutter rule; field labels `--fs-sm` semibold; resting edges of text inputs, textareas, selects and upload boxes `--color-studio-field-border` (3:1); list tables one card with `--color-studio-row-rule` rules, small-caps column labels and Published / Draft chips (`--color-chip-*`); "Create New" ink; tabs small caps; "Add" buttons dashed pills; block row titles small caps.
+
 **Left as they are** (recorded deviations; each would need a schema change, a custom view or an option outside owner decision 2026-11-12):
 
 - Page kickers ("STUDIO", "SETTINGS", "LIBRARY") above Payload's titles, and the header layout with buttons beside the title.
@@ -283,3 +285,10 @@ Payload shows a collection's description on its list **and** above each of its e
 - Media (28): the grid view, filter pills, drop zone, details panel, "No alt text" badges and the "Showing 12 of [48]" line.
 - Home (30): custom slide headers and the live Selected work list with "Change in Projects".
 - Editing alt text, Replace and Remove on a cover inside the project and post editors (23, 26), and a date-only picker for the post date (26).
+- Found in the P6 build:
+  - Web address fields are labelled with the real path (`/portfolio/[collection]/`, `/portfolio/`, `/journal/`), not the captures' placeholder domain ("yourname.com/…"); the domain is set in P7.
+  - Payload's list shows the "Show in Selected work" column as `true` / `false`, not capture 22's "★ On home" / "—".
+  - Repeating rows (social links, hero slides, credits, About sections) keep Payload's collapsible "Row 01" headers and Collapse All / Show All controls; captures 29–31 draw them inline or with slide thumbnails.
+  - Block rows read "01 Chapter heading" in small caps, without capture 23's "·" between number and name (no text in the stylesheet), next to Payload's optional block name ("Untitled").
+  - Image and portrait columns are 30% wide on Home (33% on About): Payload's upload box needs about 370 px; below about 1300 px the image stacks above its fields.
+  - The SEO tab's checklist colours are the plugin's inline styles (grey help text 2.7:1, white on red "Missing" 4.0:1). They can't be overridden without colour values and `!important`, so they are recorded as Payload exceptions in the P6 QA log.

@@ -12,6 +12,12 @@
 // .blocks-field__drawer-toggler, .sort-column__label, .sort-column__button,
 // .date-time-picker__clear-button, .relationship--multi-value-label__drawer-toggler,
 // .multi-value-remove, .date-time-field.read-only.
+// P6 theme pass (screens 22–31): .list-header__title, .doc-header__title, .custom-view-description,
+// .field-type, .field-label, .upload-field-card, .upload__dropzone, .group-field--top-level,
+// .group-field__header, .group-field__title, .group-field--within-row, .group-field--gutter,
+// .table, .cell-_status, .selected--published,
+// .selected--draft, .list-create-new-doc__create-new-button, .blocks-field__block-number,
+// .blocks-field__block-pill, .pill__label.
 
 :root {
   --theme-bg: var(--color-studio-page);
@@ -156,4 +162,178 @@
 // nor a dead tab stop.
 .date-time-field.read-only .date-time-picker__clear-button {
   display: none;
+}
+
+// ── P6 theme pass: Payload's own screens 22–26 and 28–31 (docs/design/README.md › "Studio theme
+// pass (P6)"). Layout-only admin config (cards, rows, labels) lives in the collections and globals;
+// these rules give it the captures' look. Payload's views are not rebuilt (owner decision 2026-11-10).
+
+// Page titles in the display face, as captures 22–31: list titles at the Overview's size, editor
+// titles (often long) at the fluid card size.
+.list-header__title,
+.doc-header__title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-section);
+  text-transform: uppercase;
+}
+
+.list-header__title {
+  font-size: var(--fs-studio-title);
+}
+
+.doc-header__title {
+  font-size: var(--fs-card);
+}
+
+// Collection and global description lines (owner decision 2).
+.custom-view-description {
+  color: var(--color-text-muted);
+  font-size: var(--fs-body);
+}
+
+// WCAG 1.4.11 (left from P5): Payload's resting field edge is --theme-elevation-150 (1.5:1 on
+// white). Text inputs, textareas, selects and upload boxes get the 3:1 Studio field edge instead;
+// --theme-elevation-150 stays the card border. Checkboxes and the accent swatches keep their own.
+.field-type :is(input:not([type='checkbox'], [type='radio'], [type='hidden']), textarea),
+.rs__control,
+.upload-field-card,
+.upload__dropzone {
+  border-color: var(--color-studio-field-border);
+}
+
+.field-type > .field-label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+
+// Cards: every top-level group (the unnamed layout groups and the named defaultMeta and meet) is
+// a Studio card with a small-caps title and its note on the same line, as captures 23–31.
+.group-field--top-level {
+  // Payload bleeds top-level groups into the gutter (negative inline margins); cards sit inside it.
+  margin: 0 0 var(--space-5);
+  padding: var(--space-6);
+  border: var(--border-hairline) solid var(--color-studio-card-border);
+  border-radius: var(--radius-cms-card);
+  background-color: var(--color-studio-card);
+}
+
+.group-field--top-level > .group-field__wrap > .group-field__header header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  // Payload's header shrink-wraps; full width puts the note at the end of the title's line.
+  width: 100%;
+}
+
+// Untitled groups that only make a column inside a row (Home's slide fields, About's opener
+// text) drop Payload's gutter rule: the card around them already groups them.
+.group-field--within-row.group-field--gutter {
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  border-inline-start: 0;
+}
+
+.group-field--top-level .group-field__title {
+  margin: 0;
+}
+
+.group-field--top-level .group-field__title .field-label {
+  color: var(--color-text);
+  font-size: var(--fs-label-lg);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-nav);
+  text-transform: uppercase;
+}
+
+.group-field--top-level > .group-field__wrap > .group-field__header .field-description {
+  flex: 0 1 auto;
+  width: auto;
+  margin: 0;
+}
+
+// Lists (22, 25, 28): the table as one card with row rules, small-caps column labels and status
+// chips, as captures 22 and 25.
+.table {
+  padding-inline: var(--space-6);
+  border: var(--border-hairline) solid var(--color-studio-card-border);
+  border-radius: var(--radius-cms-card);
+  background-color: var(--color-studio-card);
+}
+
+.table tbody tr {
+  background-color: transparent;
+}
+
+.table th,
+.table td {
+  border-bottom: var(--border-hairline) solid var(--color-studio-row-rule);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.sort-column__label,
+.sort-column__label .field-label {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.cell-_status > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-6);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-chip-draft-bg);
+  color: var(--color-chip-draft-fg);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+
+.cell-_status > .selected--published {
+  background-color: var(--color-chip-published-bg);
+  color: var(--color-chip-published-fg);
+}
+
+// "Create New" is the page's primary action, ink like the captures' "New project".
+.list-create-new-doc__create-new-button {
+  background-color: var(--color-action);
+  color: var(--color-on-action);
+}
+
+// Editors (23–26, 29–31): small-caps tabs, dashed "Add" pills and quiet block row titles
+// ("01 Chapter heading", capture 23).
+.tabs-field__tab-button {
+  font-size: var(--fs-label-lg);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-nav);
+  text-transform: uppercase;
+}
+
+.array-field__add-row,
+.blocks-field__drawer-toggler {
+  border: var(--border-hairline) dashed var(--color-studio-field-border);
+  border-radius: var(--radius-pill);
+}
+
+.blocks-field__block-number,
+.blocks-field__block-pill .pill__label {
+  color: var(--color-text);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.blocks-field__block-pill {
+  border: 0;
+  background-color: transparent;
 }
