@@ -1,0 +1,353 @@
+/* docs/design/components/StudioInbox.md (capture 27). Mobile first. */
+.focusRoot {
+  min-width: 0;
+}
+
+.page {
+  padding: var(--space-8) var(--space-5) var(--space-12);
+  background-color: var(--color-studio-page);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  /* Payload's admin body is 13 px; the inbox sets its own base. */
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.label {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-studio-title);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-section);
+  text-transform: uppercase;
+}
+
+.description {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-body);
+}
+
+/* Status links: pills, the current one filled */
+.statusNav {
+  margin-top: var(--space-7);
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-min);
+  padding-inline: var(--space-5);
+  border: var(--border-hairline) solid var(--color-studio-field-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.pill:hover,
+.pill:active {
+  border-color: var(--color-text);
+}
+
+.pillCurrent,
+.pillCurrent:hover {
+  border-color: var(--color-action);
+  background-color: var(--color-action);
+  color: var(--color-on-action);
+}
+
+.count {
+  font-weight: var(--fw-regular);
+}
+
+.panels {
+  display: grid;
+  gap: var(--space-7);
+  margin-top: var(--space-7);
+}
+
+.listColumn {
+  min-width: 0;
+}
+
+/* List cards: the name is the only link and its ::after covers the card (conventions) */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  padding: var(--space-4) var(--space-5);
+  border: var(--border-hairline) solid var(--color-studio-card-border);
+  border-radius: var(--radius-cms-card);
+  background-color: var(--color-studio-card);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.card:hover {
+  border-color: var(--color-text);
+}
+
+.cardSelected {
+  border-color: var(--color-text);
+  background-color: var(--color-studio-field-bg);
+}
+
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.cardName {
+  min-width: 0;
+  margin: 0;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-body);
+  overflow-wrap: anywhere;
+}
+
+.cardLink {
+  color: var(--color-text);
+  text-decoration: none;
+  text-underline-offset: var(--underline-offset);
+}
+
+.cardLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.cardLink:hover {
+  text-decoration: underline;
+}
+
+.cardDate {
+  flex: none;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+.cardType {
+  margin: var(--space-1) 0 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  overflow-wrap: anywhere;
+}
+
+.cardExcerpt {
+  margin: var(--space-1) 0 0;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+}
+
+/* Detail panel */
+.detail {
+  min-width: 0;
+  padding: var(--space-6);
+  border: var(--border-hairline) solid var(--color-studio-card-border);
+  border-radius: var(--radius-cms-card);
+  background-color: var(--color-studio-card);
+}
+
+.detailHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding-bottom: var(--space-6);
+  border-bottom: var(--border-hairline) solid var(--color-studio-row-rule);
+}
+
+.detailHeading {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-card);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-card);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.chip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  min-height: var(--space-6);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+
+.chipNew {
+  background-color: var(--color-chip-new-bg);
+  color: var(--color-chip-new-fg);
+}
+
+.chipReplied {
+  background-color: var(--color-chip-replied-bg);
+  color: var(--color-chip-replied-fg);
+}
+
+.chipArchived {
+  background-color: var(--color-chip-archived-bg);
+  color: var(--color-chip-archived-fg);
+}
+
+.facts {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding-block: var(--space-6);
+  border-bottom: var(--border-hairline) solid var(--color-studio-row-rule);
+}
+
+.facts dt {
+  color: var(--color-text-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.facts dd {
+  margin: var(--space-1) 0 0;
+  font-size: var(--fs-body);
+  overflow-wrap: anywhere;
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.message {
+  max-width: var(--measure-story);
+  margin: 0;
+  padding-top: var(--space-6);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body-loose);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+/* Reply link and the status form's buttons share one wrapping row. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+}
+
+.statusForm {
+  display: contents;
+}
+
+.error {
+  flex-basis: 100%;
+  margin: var(--space-4) 0 0;
+  color: var(--color-error);
+  font-weight: var(--fw-semibold);
+}
+
+.record {
+  margin: var(--space-5) 0 0;
+}
+
+.emptyCard {
+  margin-top: var(--space-7);
+  padding: var(--space-6);
+  border: var(--border-hairline) solid var(--color-studio-card-border);
+  border-radius: var(--radius-cms-card);
+  background-color: var(--color-studio-card);
+}
+
+.empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-body);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: var(--border-hairline);
+  height: var(--border-hairline);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding-inline: var(--space-12);
+  }
+
+  .detail {
+    padding: var(--space-10);
+  }
+}
+
+@media (min-width: 1024px) {
+  .panels {
+    grid-template-columns: minmax(var(--grid-min-tile), 1fr) minmax(0, 2.5fr);
+    align-items: start;
+  }
+
+  /* Four columns when the detail is wide enough (capture 27), fewer before an email would break. */
+  .facts {
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-detail), 100%), 1fr));
+    gap: var(--space-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill,
+  .card {
+    transition: none;
+  }
+}

@@ -18,6 +18,7 @@ export const About: GlobalConfig = {
   label: 'About',
   admin: {
     group: 'Settings',
+    description: 'The opener, portrait and the short sections about you.',
     livePreview: {
       url: () => previewUrl(ABOUT_PATH),
       breakpoints: LIVE_PREVIEW_BREAKPOINTS,
@@ -34,33 +35,61 @@ export const About: GlobalConfig = {
     beforeChange: [hooks.beforeChange],
     afterChange: [hooks.afterChange],
   },
+  // Cards as capture 31 (P6): unnamed groups and rows are layout only and store nothing.
   fields: [
     {
-      name: 'contextLine',
-      type: 'text',
-      required: true,
-      admin: { description: 'e.g. "About · the person behind the work".' },
-    },
-    { name: 'title', type: 'text', required: true },
-    { name: 'lead', type: 'textarea', required: true },
-    {
-      name: 'portrait',
-      type: 'upload',
-      relationTo: 'media',
-      required: true,
-      admin: { description: 'Shown at 4:5; set the focal point in the media library.' },
-    },
-    {
-      name: 'sections',
-      type: 'array',
-      required: true,
-      minRows: 1,
-      maxRows: 4,
-      admin: { description: 'One to four sections, shown as Chapter 01, 02 and so on.' },
+      type: 'group',
+      label: 'Opener',
       fields: [
-        { name: 'heading', type: 'text', required: true },
-        // Same rich text as the story Text block: safe links only (invariant 13).
-        { name: 'body', type: 'richText', required: true, editor: safeRichTextEditor },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'portrait',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+              label: 'Portrait · 4:5',
+              admin: { width: '33.33%', description: 'Set the focal point in the media library.' },
+            },
+            {
+              type: 'group',
+              label: false,
+              admin: { width: '66.67%' },
+              fields: [
+                {
+                  name: 'contextLine',
+                  type: 'text',
+                  required: true,
+                  label: 'Context line',
+                  admin: { description: 'e.g. "About · the person behind the work".' },
+                },
+                { name: 'title', type: 'text', required: true },
+                { name: 'lead', type: 'textarea', required: true },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'group',
+      label: 'Sections · 1 to 4',
+      admin: { description: 'Shown beside the portrait, in this order, as Chapter 01, 02 and so on.' },
+      fields: [
+        {
+          name: 'sections',
+          type: 'array',
+          required: true,
+          minRows: 1,
+          maxRows: 4,
+          label: false,
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            // Same rich text as the story Text block: safe links only (invariant 13).
+            { name: 'body', type: 'richText', required: true, editor: safeRichTextEditor },
+          ],
+        },
       ],
     },
   ],

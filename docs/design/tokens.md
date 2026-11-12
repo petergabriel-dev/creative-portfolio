@@ -129,12 +129,18 @@
 |---|---|---|
 | --color-action | var(--ink) | — |
 | --color-booking | var(--gold) | — |
+| --color-chip-archived-bg | var(--chip-draft-bg) | — |
+| --color-chip-archived-fg | var(--chip-draft-fg) | — |
 | --color-chip-changes-bg | var(--surface) | — |
 | --color-chip-changes-fg | var(--chip-published-fg) | — |
 | --color-chip-draft-bg | var(--chip-draft-bg) | — |
 | --color-chip-draft-fg | var(--chip-draft-fg) | — |
+| --color-chip-new-bg | var(--ink) | — |
+| --color-chip-new-fg | var(--bone) | — |
 | --color-chip-published-bg | var(--chip-published-bg) | — |
 | --color-chip-published-fg | var(--chip-published-fg) | — |
+| --color-chip-replied-bg | var(--chip-published-bg) | — |
+| --color-chip-replied-fg | var(--chip-published-fg) | — |
 | --color-error | var(--error) | — |
 | --color-field-bg | var(--surface) | — |
 | --color-field-border | var(--field-border) | — |

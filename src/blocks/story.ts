@@ -15,14 +15,15 @@ import { validateVideoUrl } from '@/lib/video'
 
 /**
  * Story blocks (Build Spec › Story blocks): six blocks shared unchanged by projects (P1) and
- * posts (P2). Admin labels follow the prototype editor ("01 · Chapter heading", …). Image blocks
+ * posts (P2). Admin labels are the block names only: Payload numbers each row itself, so the
+ * Studio reads "01 · Chapter heading" as in capture 23 (P6; the number was doubled before). Image blocks
  * never ask for alt text: it comes from the media doc.
  */
 
 const chapter: Block = {
   slug: 'chapter',
   interfaceName: 'ChapterBlock',
-  labels: { singular: '01 · Chapter heading', plural: '01 · Chapter headings' },
+  labels: { singular: 'Chapter heading', plural: 'Chapter headings' },
   fields: [{ name: 'heading', type: 'text', required: true }],
 }
 
@@ -58,14 +59,14 @@ export const safeRichTextEditor = lexicalEditor({
 const text: Block = {
   slug: 'text',
   interfaceName: 'TextBlock',
-  labels: { singular: '02 · Text', plural: '02 · Text' },
+  labels: { singular: 'Text', plural: 'Text' },
   fields: [{ name: 'body', type: 'richText', required: true, editor: safeRichTextEditor }],
 }
 
 const image: Block = {
   slug: 'image',
   interfaceName: 'ImageBlock',
-  labels: { singular: '03 · Image', plural: '03 · Images' },
+  labels: { singular: 'Image', plural: 'Images' },
   fields: [
     { name: 'image', type: 'upload', relationTo: 'media', required: true },
     {
@@ -95,7 +96,7 @@ const image: Block = {
 const gallery: Block = {
   slug: 'gallery',
   interfaceName: 'GalleryBlock',
-  labels: { singular: '04 · Gallery', plural: '04 · Galleries' },
+  labels: { singular: 'Gallery', plural: 'Galleries' },
   fields: [
     {
       name: 'images',
@@ -128,7 +129,7 @@ const gallery: Block = {
 const video: Block = {
   slug: 'video',
   interfaceName: 'VideoBlock',
-  labels: { singular: '05 · Video', plural: '05 · Videos' },
+  labels: { singular: 'Video', plural: 'Videos' },
   fields: [
     {
       name: 'url',
@@ -152,7 +153,7 @@ const video: Block = {
 const quote: Block = {
   slug: 'quote',
   interfaceName: 'QuoteBlock',
-  labels: { singular: '06 · Quote', plural: '06 · Quotes' },
+  labels: { singular: 'Quote', plural: 'Quotes' },
   fields: [
     { name: 'quote', type: 'textarea', required: true },
     { name: 'attribution', type: 'text' },

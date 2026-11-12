@@ -50,70 +50,104 @@ export const Disciplines: CollectionConfig = {
       tabs: [
         {
           label: 'Content',
+          // Cards as capture 24 (P6): unnamed groups are layout only and store nothing.
           fields: [
-            { name: 'name', type: 'text', required: true },
             {
-              name: 'order',
-              type: 'number',
-              required: true,
-              min: 1,
-              admin: { description: 'Position on the Portfolio page, 1 first.' },
-            },
-            {
-              name: 'intro',
-              type: 'textarea',
-              required: true,
-              admin: { description: 'Opener paragraph, about 25 words.' },
-            },
-            {
-              name: 'openerTint',
-              type: 'select',
-              required: true,
-              defaultValue: 'default',
-              options: OPENER_TINTS.map(({ label, value }) => ({ label, value })),
-            },
-            {
-              name: 'layout',
-              type: 'select',
-              required: true,
-              defaultValue: 'projects',
-              options: [
-                { label: 'Projects (highlights strip + project cards)', value: 'projects' },
-                { label: 'List (text-led, e.g. Writing & More)', value: 'list' },
+              type: 'group',
+              label: 'Opener',
+              fields: [
+                { name: 'name', type: 'text', required: true },
+                { name: 'intro', type: 'textarea', required: true, label: 'Intro · about 25 words' },
               ],
             },
             {
-              name: 'highlights',
-              type: 'upload',
-              relationTo: 'media',
-              hasMany: true,
-              admin: { description: 'Ordered images for the Chapter 01 strip.' },
+              type: 'group',
+              label: 'Chapter 01 · Highlights',
+              admin: { description: 'Edge-to-edge strip, 4px gaps, in this order.' },
+              fields: [
+                { name: 'highlights', type: 'upload', relationTo: 'media', hasMany: true, label: false },
+                {
+                  name: 'highlightAspect',
+                  type: 'select',
+                  required: true,
+                  label: 'Highlight shape',
+                  defaultValue: '4:5',
+                  options: [
+                    { label: '4:5 portrait', value: '4:5' },
+                    { label: '16:9 landscape', value: '16:9' },
+                    { label: '1:1 square', value: '1:1' },
+                  ],
+                },
+              ],
             },
             {
-              name: 'highlightAspect',
-              type: 'select',
-              required: true,
-              defaultValue: '4:5',
-              options: ['4:5', '16:9', '1:1'].map((value) => ({ label: value, value })),
-            },
-            {
-              name: 'cardAspect',
-              type: 'select',
-              required: true,
-              defaultValue: '3:2',
-              options: ['3:2', '16:9', '4:3'].map((value) => ({ label: value, value })),
-            },
-            { name: 'finaleHeadline', type: 'text', required: true },
-            {
-              name: 'finaleBody',
-              type: 'textarea',
-              required: true,
-              admin: { description: 'One sentence under the finale headline.' },
+              type: 'group',
+              label: 'Finale',
+              fields: [
+                { name: 'finaleHeadline', type: 'text', required: true, label: 'Headline' },
+                { name: 'finaleBody', type: 'textarea', required: true, label: 'One sentence under it' },
+              ],
             },
           ],
         },
       ],
     },
-    ...slugFields('name'),
+    {
+      type: 'group',
+      label: 'Layout',
+      admin: { position: 'sidebar' },
+      fields: [
+        {
+          name: 'layout',
+          type: 'select',
+          required: true,
+          label: false,
+          defaultValue: 'projects',
+          options: [
+            { label: 'Projects: highlights strip + project cards', value: 'projects' },
+            { label: 'List: text-led rows, for writing', value: 'list' },
+          ],
+        },
+        {
+          name: 'cardAspect',
+          type: 'select',
+          required: true,
+          label: 'Project card shape',
+          defaultValue: '3:2',
+          options: ['3:2', '16:9', '4:3'].map((value) => ({ label: value, value })),
+        },
+      ],
+    },
+    {
+      type: 'group',
+      label: 'Opener tint',
+      admin: { position: 'sidebar' },
+      fields: [
+        {
+          name: 'openerTint',
+          type: 'select',
+          required: true,
+          label: false,
+          defaultValue: 'default',
+          options: OPENER_TINTS.map(({ label, value }) => ({ label, value })),
+        },
+      ],
+    },
+    {
+      type: 'group',
+      label: 'Order & address',
+      admin: { position: 'sidebar' },
+      fields: [
+        {
+          name: 'order',
+          type: 'number',
+          required: true,
+          min: 1,
+          label: 'Order · Portfolio, menu, Book Me list',
+          admin: { description: '1 comes first.' },
+        },
+        ...slugFields('name', { label: '/portfolio/' }),
+      ],
+    },
   ],
 }

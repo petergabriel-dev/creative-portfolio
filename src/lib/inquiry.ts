@@ -34,6 +34,9 @@ const EMAIL_MAX = 254
 const EMAIL_PATTERN =
   /^(?!.*\.\.)[\w!#$%&'*+/=?^`{|}~-](?:[\w!#$%&'*+/=?^`{|}~.-]*[\w!#$%&'*+/=?^`{|}~-])?@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)*\.[a-z]{2,}$/i
 
+/** An address Payload's email field would accept (the Book Me form and the Studio inbox's reply link). */
+export const isEmail = (value: string) => value.length <= EMAIL_MAX && EMAIL_PATTERN.test(value)
+
 const field = (formData: FormData, key: string) => {
   const value = formData.get(key)
   return typeof value === 'string' ? value.trim() : ''
@@ -68,7 +71,7 @@ export function validateInquiry(formData: FormData, options: readonly string[]):
   const messages = copy.book.form.errors
   const errors: InquiryErrors = {}
   if (values.name.length < 1 || values.name.length > NAME_MAX) errors.name = messages.name
-  if (values.email.length > EMAIL_MAX || !EMAIL_PATTERN.test(values.email)) errors.email = messages.email
+  if (!isEmail(values.email)) errors.email = messages.email
   if (!options.includes(values.projectType)) errors.projectType = messages.projectType
   if (values.message.length < MESSAGE_MIN || values.message.length > MESSAGE_MAX) errors.message = messages.message
 
