@@ -190,3 +190,19 @@ These are recorded as deferred, not passed:
 - On each Payload upgrade: re-check the inbox list-view props, `ListQueryProvider`'s URL handling (the empty-parameter and Back/Forward workarounds), `baseFilter`, the swatch field props and the classes listed in `custom.scss` (ADR-0008).
 - Upstream: the SEO plugin's inline colours and Payload's unnamed controls above.
 - Left by choice: Payload still runs its own list query before the inbox renders (one small read per load); the inbox has no bulk actions or search (owner decision 5).
+
+### After release: Reply in Gmail (2026-11-12)
+
+The owner found that "Reply by email" did nothing: they reply from Gmail in Brave, which has no `mailto:` handler. Owner decision 10 replaced it (branch `fix/p6-gmail-reply`). Checked on `pnpm dev` with a fresh, seeded throwaway database:
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| "Reply in Gmail" opens Gmail's compose window for the visitor | Pass | `href` `https://mail.google.com/mail/?view=cm&fs=1&to=client-2%40example.com&su=Re%3A+your+Book+Me+inquiry&authuser=hello%40example.com` (the seed's contact email); a click opened a new tab with no `window.opener`, which went to Google's sign-in (the QA browser has no Google account) |
+| It says it opens a new tab | Pass | Accessible name "Reply in Gmail ↗ (opens in a new tab)"; the ↗ is `aria-hidden` |
+| No Gmail link for an address Payload wouldn't accept | Pass | Unit tests (`gmailReplyHref`, the view) |
+| "Copy email" copies the address and says so | Pass | Enter on it put `client-2@example.com` on the clipboard and the live region read "Email copied."; without the Clipboard API it read "Couldn't copy. Select the address above." |
+| Keyboard | Pass | Tab moves from "Reply in Gmail" to "Copy email", then to the status buttons |
+| axe and layout | Pass | 0 violations on the inbox at 1440 and 390 px; no horizontal scroll at 320, 390 and 1440 px |
+| Code health | Pass | typecheck, lint, 518 unit tests |
+
+Deferred owner check: on the preview, signed into Gmail in Brave, "Reply in Gmail" opens a prefilled compose window from the contact-email account.
