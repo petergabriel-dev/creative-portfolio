@@ -129,7 +129,7 @@ A pure `StudioInboxView({ data })` renders every state in tests without a databa
 ## Responsive
 
 - **Below 1024 px:** one column, in order: header, status links (wrapping), list, pager, detail (capture 27 at 390 px). Facts stack one group per line, `--space-4` apart. Action Buttons wrap, one per line on a phone.
-- **1024 px and up:** two columns, `grid-template-columns: minmax(var(--grid-min-tile), 1fr) minmax(0, 2.5fr)`, gap `--space-7`, `align-items: start`. Facts sit in four columns (`repeat(4, minmax(0, 1fr))`, gap `--space-6`).
+- **1024 px and up:** two columns, `grid-template-columns: minmax(var(--grid-min-tile), 1fr) minmax(0, 2.5fr)`, gap `--space-7`, `align-items: start`. Facts sit in columns of at least `--grid-min-detail` (`repeat(auto-fit, minmax(min(var(--grid-min-detail), 100%), 1fr))`, gap `--space-6`): four in a wide detail, as capture 27, fewer at 1024 px so an email doesn't break mid-word (found in T4 QA).
 - 1024 px is the Studio's literal breakpoint here, as in the site header and the log-in.
 - No horizontal scroll at 320 px. Long names, emails and unbroken message words wrap (`overflow-wrap: anywhere`).
 

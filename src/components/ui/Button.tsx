@@ -35,6 +35,9 @@ type ActionButtonProps = CommonProps & {
   href?: undefined
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
+  /** A submit button's own form value (the Studio inbox's status buttons, P6). */
+  name?: string
+  value?: string
   /** Client components only (e.g. RevealMore). */
   onClick?: MouseEventHandler<HTMLButtonElement>
   'aria-controls'?: string
@@ -67,8 +70,10 @@ export function Button(props: LinkButtonProps | ActionButtonProps) {
       aria-controls={props['aria-controls']}
       className={className}
       disabled={props.disabled}
+      name={props.name}
       onClick={props.onClick}
       type={props.type ?? 'button'}
+      value={props.value}
     >
       {content}
     </button>

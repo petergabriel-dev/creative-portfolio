@@ -295,6 +295,22 @@ export const copy = {
     },
     /** The inquiries inbox (docs/design/components/StudioInbox.md, capture 27, P6 owner decisions 3–7). */
     inbox: {
+      label: 'Studio',
+      title: 'Inquiries',
+      description: 'Messages sent from the Book Me form. Reply from your own email, then mark them as replied.',
+      statusNav: 'Inquiry status',
+      statuses: { new: 'New', replied: 'Replied', archived: 'Archived' },
+      list: 'Inquiries',
+      pages: 'Inquiry pages',
+      newer: 'Newer',
+      older: 'Older',
+      facts: { project: 'Project', timing: 'Timing', email: 'Email', received: 'Received' },
+      notGiven: 'Not given',
+      nothingWaiting: 'Nothing waiting.',
+      reply: 'Reply by email',
+      /** Status buttons, by the status they set. */
+      actions: { replied: 'Mark as replied', archived: 'Archive', new: 'Mark as new' },
+      openRecord: 'Open full record',
       /** Announced after a status change, by the status the inquiry now has. */
       notices: { new: 'Marked as new.', replied: 'Marked as replied.', archived: 'Archived.' },
       errors: {

@@ -20,6 +20,10 @@ export const Inquiries: CollectionConfig = {
     group: 'Inbox',
     useAsTitle: 'name',
     defaultColumns: ['name', 'projectType', 'status', 'createdAt'],
+    // The two-panel inbox replaces Payload's list view (P6, docs/design/components/StudioInbox.md).
+    components: {
+      views: { list: { Component: '/components/studio/StudioInbox#StudioInbox' } },
+    },
   },
   defaultSort: '-createdAt',
   disableDuplicate: true,
