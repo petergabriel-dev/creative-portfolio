@@ -62,4 +62,20 @@ describe('Button', () => {
     )
     expect(html).toContain('Browse the portfolio<span aria-hidden="true"> →</span>')
   })
+
+  it('passes target and rel to a link only when given', () => {
+    const tab = renderToStaticMarkup(
+      <Button href="https://example.com/" rel="noopener noreferrer" target="_blank" variant="ink">
+        Open
+      </Button>,
+    )
+    expect(tab).toMatch(/^<a [^>]*rel="noopener noreferrer" target="_blank"/)
+    const plain = renderToStaticMarkup(
+      <Button href="/book" variant="ink">
+        Book Me
+      </Button>,
+    )
+    expect(plain).not.toContain('target=')
+    expect(plain).not.toContain('rel=')
+  })
 })

@@ -27,6 +27,7 @@ These rank above the Build Spec (see the precedence rules in `README.md`).
 7. **Overview links.** The Overview's "Needs a reply" rows open the inbox with that inquiry selected, instead of Payload's edit view.
 8. **Filter pills.** A pill sets `?collection=<slug>` on the Projects list. Its count is the collection's total number of projects, drafts included, and does not change with search or other filters. Every discipline shows, in `order`, even with no projects.
 9. **Accent swatches.** Each swatch shows its name, so the choice is not made by colour alone (WCAG 1.4.1); capture 29 shows none. Every swatch has a ring with at least 3:1 contrast against the card, so off-white stays visible. The Book Me preview sits on an ink panel, where every accent passes.
+10. **Reply in Gmail** (2026-11-12, after the v0.7.0 release). The owner replies from Gmail in the browser, where the inbox's `mailto:` "Reply by email" opened nothing. It becomes "Reply in Gmail ↗": Gmail's compose window in a new tab, addressed to the visitor with the subject "Re: your Book Me inquiry" and the Google account matching Site settings › Contact email. A "Copy email" button beside it copies the visitor's address and announces "Email copied." This replaces "Reply by email" in decision 3.
 
 ## In scope
 
@@ -44,7 +45,7 @@ These rank above the Build Spec (see the precedence rules in `README.md`).
   - Capture 27 shows extra detail such as "Photography — wedding". Inquiries do not store a sub-type, so only `projectType` is shown.
 - Right panel: the selected inquiry.
   - It shows the name, a status chip, Project, Timing, Email, Received and the full message.
-  - Actions depend on the status (owner decision 3): "Reply by email" (a `mailto:` link to the visitor), then "Mark as replied", "Archive" or "Mark as new".
+  - Actions depend on the status (owner decision 3): "Reply in Gmail ↗" (Gmail's compose window, new tab) and "Copy email" (owner decision 10), then "Mark as replied", "Archive" or "Mark as new".
   - An "Open full record →" link opens the inquiry's edit view.
 - Status changes follow the Build Spec: new → replied → archived, and any status can go back to `new`. Each change updates the filter counts and the "N new" badge.
 - The tab, page and selected inquiry live in the URL; after a status change the inbox selects the next inquiry on the same tab (owner decision 4).
@@ -109,7 +110,7 @@ No changes. The pills read `disciplines` and the project counts. The inbox reads
 - **Inbox:**
   - "Mark as replied", "Archive" and returning to `new` update the status, the filter counts and the nav badge;
   - after a change the next inquiry on the tab is selected, the change is announced and focus is on its heading;
-  - "Reply by email" opens a `mailto:` link to the visitor's address;
+  - "Reply in Gmail" opens Gmail's compose window in a new tab, addressed to the visitor; "Copy email" copies the visitor's address and announces it (owner decision 10; it replaced the `mailto:` "Reply by email" after release);
   - more than 20 inquiries on a tab page through "Newer" and "Older", and reload or back keeps the tab, page and selection;
   - an Overview "Needs a reply" row opens the inbox with that inquiry selected;
   - the inbox works by keyboard alone.
@@ -189,3 +190,19 @@ These are recorded as deferred, not passed:
 - On each Payload upgrade: re-check the inbox list-view props, `ListQueryProvider`'s URL handling (the empty-parameter and Back/Forward workarounds), `baseFilter`, the swatch field props and the classes listed in `custom.scss` (ADR-0008).
 - Upstream: the SEO plugin's inline colours and Payload's unnamed controls above.
 - Left by choice: Payload still runs its own list query before the inbox renders (one small read per load); the inbox has no bulk actions or search (owner decision 5).
+
+### After release: Reply in Gmail (2026-11-12)
+
+The owner found that "Reply by email" did nothing: they reply from Gmail in Brave, which has no `mailto:` handler. Owner decision 10 replaced it (branch `fix/p6-gmail-reply`). Checked on `pnpm dev` with a fresh, seeded throwaway database:
+
+| Criterion | Result | Evidence |
+|---|---|---|
+| "Reply in Gmail" opens Gmail's compose window for the visitor | Pass | `href` `https://mail.google.com/mail/?view=cm&fs=1&to=client-2%40example.com&su=Re%3A+your+Book+Me+inquiry&authuser=hello%40example.com` (the seed's contact email); a click opened a new tab with no `window.opener`, which went to Google's sign-in (the QA browser has no Google account) |
+| It says it opens a new tab | Pass | Accessible name "Reply in Gmail ↗ (opens in a new tab)"; the ↗ is `aria-hidden` |
+| No Gmail link for an address Payload wouldn't accept | Pass | Unit tests (`gmailReplyHref`, the view) |
+| "Copy email" copies the address and says so | Pass | Enter on it put `client-2@example.com` on the clipboard and the live region read "Email copied."; without the Clipboard API it read "Couldn't copy. Select the address above." |
+| Keyboard | Pass | Tab moves from "Reply in Gmail" to "Copy email", then to the status buttons |
+| axe and layout | Pass | 0 violations on the inbox at 1440 and 390 px; no horizontal scroll at 320, 390 and 1440 px |
+| Code health | Pass | typecheck, lint, 518 unit tests |
+
+Deferred owner check: on the preview, signed into Gmail in Brave, "Reply in Gmail" opens a prefilled compose window from the contact-email account.

@@ -31,6 +31,7 @@ const emptyData: StudioInboxData = {
   nextId: null,
   newerHref: null,
   olderHref: null,
+  replyAccount: null,
 }
 
 const data = (status: InquiryStatus = 'new', overrides: Partial<StudioInboxData> = {}): StudioInboxData => ({
@@ -67,6 +68,7 @@ const data = (status: InquiryStatus = 'new', overrides: Partial<StudioInboxData>
   nextId: 1,
   newerHref: null,
   olderHref: null,
+  replyAccount: 'owner@example.com',
   ...overrides,
 })
 
@@ -134,17 +136,33 @@ describe('StudioInboxView: detail', () => {
     expect(html).toContain('Line one\nLine two</p>')
   })
 
-  it('links Reply by email to the visitor and Open full record to the edit view', () => {
+  it('opens Gmail compose for the visitor in a new tab, says so, and links Open full record to the edit view', () => {
     const html = render(data())
-    expect(html).toMatch(/<a href="mailto:couple@example.com" class="[^"]*">Reply by email<\/a>/)
-    expect(html).toMatch(/<a href="\/admin\/collections\/inquiries\/2" class="[^"]*">Open full record<span aria-hidden="true"> →<\/span><\/a>/)
+    const m = /<a href="(https:\/\/mail\.google\.com\/mail\/\?[^"]*)" class="[^"]*" rel="noopener noreferrer" target="_blank">Reply in Gmail <span aria-hidden="true">↗<\/span><span class="[^"]*"> \(opens in a new tab\)<\/span><\/a>/.exec(html)
+    expect(m).not.toBeNull()
+    const params = Object.fromEntries(new URL(m![1].replaceAll('&amp;', '&')).searchParams)
+    expect(params).toEqual({ view: 'cm', fs: '1', to: 'couple@example.com', su: 'Re: your Book Me inquiry', authuser: 'owner@example.com' })
+    expect(html).not.toContain('mailto:')
+    expect(html).toMatch(/<a href="\/admin\/collections\/inquiries\/2" class="[^"]*">Open full record<span aria-hidden="true">\u00a0→<\/span><\/a>/)
   })
 
-  it('gives no reply link for an address Payload would not accept', () => {
+  it('offers Copy email as a button before the status buttons', () => {
+    const html = render(data())
+    expect(html).toMatch(/<button class="[^"]*" type="button">Copy email<\/button><form/)
+  })
+
+  it('gives no Gmail link for an address Payload would not accept, but still offers Copy email', () => {
     const d = data()
     const html = render({ ...d, selected: { ...d.selected!, email: 'javascript:alert(1)' } })
-    expect(html).not.toContain('mailto:')
-    expect(html).not.toContain('Reply by email')
+    expect(html).not.toContain('mail.google.com')
+    expect(html).not.toContain('Reply in Gmail')
+    expect(html).toContain('>Copy email</button>')
+  })
+
+  it('leaves the account out without a valid contact email', () => {
+    const html = render(data('new', { replyAccount: null }))
+    expect(html).toContain('href="https://mail.google.com/mail/?')
+    expect(html).not.toContain('authuser')
   })
 
   it.each([

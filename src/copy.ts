@@ -307,7 +307,11 @@ export const copy = {
       facts: { project: 'Project', timing: 'Timing', email: 'Email', received: 'Received' },
       notGiven: 'Not given',
       nothingWaiting: 'Nothing waiting.',
-      reply: 'Reply by email',
+      /** Opens Gmail's compose window in a new tab (owner decision 10). */
+      reply: 'Reply in Gmail',
+      replySubject: 'Re: your Book Me inquiry',
+      copyEmail: 'Copy email',
+      copied: 'Email copied.',
       /** Status buttons, by the status they set. */
       actions: { replied: 'Mark as replied', archived: 'Archive', new: 'Mark as new' },
       openRecord: 'Open full record',
@@ -316,6 +320,7 @@ export const copy = {
       errors: {
         failed: "Couldn't change the status. Try again.",
         signedOut: "You're logged out. Log in again to change the status.",
+        copyFailed: "Couldn't copy. Select the address above.",
       },
       /** Ends a message excerpt cut on the server. */
       ellipsis: '…',

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { copy } from '@/copy'
 import { formatDate, isoDate } from '@/lib/date'
 import { studioEditUrl, studioInbox, type StudioInboxData } from '@/lib/studio'
-import { inboxHref, INQUIRY_STATUSES, type InquiryStatus, parseInboxQuery, replyHref } from '@/lib/studioInbox'
+import { gmailReplyHref, inboxHref, INQUIRY_STATUSES, type InquiryStatus, parseInboxQuery } from '@/lib/studioInbox'
 
 import styles from './StudioInbox.module.css'
 import { StudioInboxActions } from './StudioInboxActions'
@@ -23,8 +23,8 @@ const When = ({ iso }: { iso: string }) => <time dateTime={isoDate(iso)}>{format
 
 /** The inbox's content; a pure view, so every state renders in tests (StudioInbox.md). */
 export function StudioInboxView({ data }: { data: StudioInboxData }) {
-  const { query, counts, rows, selected, nextId, newerHref, olderHref } = data
-  const reply = selected ? replyHref(selected.email) : null
+  const { query, counts, rows, selected, nextId, newerHref, olderHref, replyAccount } = data
+  const reply = selected ? gmailReplyHref(selected.email, replyAccount) : null
 
   return (
     <StudioInboxFocus selectionKey={`${query.status}:${query.page}:${selected?.id ?? 'none'}`}>
@@ -130,11 +130,14 @@ export function StudioInboxView({ data }: { data: StudioInboxData }) {
               <p className={styles.message}>{selected.message}</p>
               <div className={styles.actions}>
                 {reply ? (
-                  <Button href={reply} variant="ink">
-                    {t.reply}
+                  // Gmail's compose window, in a new tab (owner decision 10); said for screen readers.
+                  <Button href={reply} rel="noopener noreferrer" target="_blank" variant="ink">
+                    {t.reply} <span aria-hidden="true">{copy.studio.nav.viewSiteArrow}</span>
+                    <span className={styles.visuallyHidden}> {copy.studio.nav.newTab}</span>
                   </Button>
                 ) : null}
                 <StudioInboxActions
+                  email={selected.email}
                   id={selected.id}
                   key={selected.id}
                   nextId={nextId}
