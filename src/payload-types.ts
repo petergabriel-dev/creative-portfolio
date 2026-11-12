@@ -145,16 +145,13 @@ export interface Project {
   id: number;
   title: string;
   /**
-   * One or two sentences; the opener paragraph.
+   * One or two sentences.
    */
   summary: string;
-  /**
-   * 21:9 crop on the project page; card crop elsewhere.
-   */
   cover: number | Media;
   story?: (ChapterBlock | TextBlock | ImageBlock | GalleryBlock | VideoBlock | QuoteBlock)[] | null;
   /**
-   * Client, collaborators, made with.
+   * e.g. Client, Collaborators, Made with.
    */
   credits?:
     | {
@@ -186,9 +183,6 @@ export interface Project {
    */
   role?: string | null;
   showOnHome?: boolean | null;
-  /**
-   * Lower comes first.
-   */
   homeOrder?: number | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -201,13 +195,15 @@ export interface Project {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Every image on the site. An image can't be saved without alt text.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
   id: number;
   /**
-   * Describes the image for screen readers.
+   * Describe the image before saving — screen readers read this aloud.
    */
   alt: string;
   caption?: string | null;
@@ -355,26 +351,10 @@ export interface QuoteBlock {
 export interface Discipline {
   id: number;
   name: string;
-  /**
-   * Position on the Portfolio page, 1 first.
-   */
-  order: number;
-  /**
-   * Opener paragraph, about 25 words.
-   */
   intro: string;
-  openerTint: 'warm' | 'plum' | 'forest' | 'clay' | 'default';
-  layout: 'projects' | 'list';
-  /**
-   * Ordered images for the Chapter 01 strip.
-   */
   highlights?: (number | Media)[] | null;
   highlightAspect: '4:5' | '16:9' | '1:1';
-  cardAspect: '3:2' | '16:9' | '4:3';
   finaleHeadline: string;
-  /**
-   * One sentence under the finale headline.
-   */
   finaleBody: string;
   meta?: {
     title?: string | null;
@@ -384,6 +364,13 @@ export interface Discipline {
      */
     image?: (number | null) | Media;
   };
+  layout: 'projects' | 'list';
+  cardAspect: '3:2' | '16:9' | '4:3';
+  openerTint: 'warm' | 'plum' | 'forest' | 'clay' | 'default';
+  /**
+   * 1 comes first.
+   */
+  order: number;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -394,19 +381,15 @@ export interface Discipline {
   createdAt: string;
 }
 /**
+ * Stories and notes. Posts use the same block editor as projects.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
 export interface Post {
   id: number;
   title: string;
-  /**
-   * Shown on Home and the Journal list.
-   */
   excerpt: string;
-  /**
-   * 3:2 on cards, 21:9 on the entry.
-   */
   cover: number | Media;
   story: (ChapterBlock | TextBlock | ImageBlock | GalleryBlock | VideoBlock | QuoteBlock)[];
   meta?: {
@@ -419,12 +402,9 @@ export interface Post {
   };
   category: number | Category;
   /**
-   * Filled on first publish if left empty. Sorts the journal, newest first.
+   * Filled on first publish if left empty. Newest first.
    */
   publishedAt: string;
-  /**
-   * Optional "See the work" links.
-   */
   relatedProjects?: (number | Project)[] | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -705,13 +685,9 @@ export interface QuoteBlockSelect<T extends boolean = true> {
  */
 export interface DisciplinesSelect<T extends boolean = true> {
   name?: T;
-  order?: T;
   intro?: T;
-  openerTint?: T;
-  layout?: T;
   highlights?: T;
   highlightAspect?: T;
-  cardAspect?: T;
   finaleHeadline?: T;
   finaleBody?: T;
   meta?:
@@ -721,6 +697,10 @@ export interface DisciplinesSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
+  layout?: T;
+  cardAspect?: T;
+  openerTint?: T;
+  order?: T;
   generateSlug?: T;
   slug?: T;
   previousSlugs?: T;

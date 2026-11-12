@@ -22,7 +22,16 @@ const fillSlugOnCreate =
  */
 export const slugFields = (
   useAsSlug: string,
-  { previousSlugs = true }: { previousSlugs?: boolean } = {},
+  {
+    previousSlugs = true,
+    label,
+    description,
+  }: {
+    previousSlugs?: boolean
+    /** The Studio label for the slug input (P6: the page's path, e.g. "/journal/"). */
+    label?: string
+    description?: string
+  } = {},
 ): Field[] => [
   slugField({
     useAsSlug,
@@ -31,6 +40,8 @@ export const slugFields = (
     overrides: (row) => {
       for (const field of row.fields) {
         if (field.type === 'text' && field.name === 'slug' && !field.hasMany) {
+          if (label) field.label = label
+          if (description) field.admin = { ...field.admin, description }
           field.validate = validateSlug
           field.hooks = {
             ...field.hooks,
