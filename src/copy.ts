@@ -293,6 +293,17 @@ export const copy = {
       draft: 'Draft',
       changes: 'Unpublished changes',
     },
+    /** The inquiries inbox (docs/design/components/StudioInbox.md, capture 27, P6 owner decisions 3–7). */
+    inbox: {
+      /** Announced after a status change, by the status the inquiry now has. */
+      notices: { new: 'Marked as new.', replied: 'Marked as replied.', archived: 'Archived.' },
+      errors: {
+        failed: "Couldn't change the status. Try again.",
+        signedOut: "You're logged out. Log in again to change the status.",
+      },
+      /** Ends a message excerpt cut on the server. */
+      ellipsis: '…',
+    },
     /** Meta-line prefixes: "Project · Wedding", "Journal · Process". */
     project: 'Project',
     journal: 'Journal',

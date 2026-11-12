@@ -26,7 +26,7 @@ const empty: StudioOverviewData = {
 const full: StudioOverviewData = {
   needsReply: {
     total: 5,
-    rows: [{ id: 9, name: '[Couple names]', projectType: 'Photography', receivedAt: '2026-11-06T02:00:00.000Z', editUrl: '/admin/collections/inquiries/9' }],
+    rows: [{ id: 9, name: '[Couple names]', projectType: 'Photography', receivedAt: '2026-11-06T02:00:00.000Z', editUrl: '/admin/collections/inquiries?status=new&id=9' }],
   },
   drafts: {
     total: 3,
@@ -83,7 +83,7 @@ describe('StudioOverviewView', () => {
 
   it('links each row by its title only; Edit and the dash are hidden', () => {
     const html = render(full)
-    expect(html).toMatch(/<a href="\/admin\/collections\/inquiries\/9" class="[^"]*">\[Couple names\]<\/a>/)
+    expect(html).toMatch(/<a href="\/admin\/collections\/inquiries\?status=new&amp;id=9" class="[^"]*">\[Couple names\]<\/a>/)
     expect(html).toMatch(/<span aria-hidden="true" class="[^"]*">Edit<\/span>/)
     expect(html).toContain('<span aria-hidden="true">—</span>')
     expect(html).toMatch(/<img alt="" class="[^"]*" src="\/thumb.webp"/)
